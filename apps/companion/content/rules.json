@@ -1,0 +1,1684 @@
+{
+    "rules":  [
+                  {
+                      "title":  "A Common Goal",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "A Gruesome Display",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "A Kensai\u0027s Art",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "A Kensai\u0027s Victory",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "A Kensai\u0027s Will",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "A Life for a Soul",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "A New Wall",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "A Tranquil Mind",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "A Walking Death",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Akodo Kusamoto",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Bamboo Harvesters",
+                      "label":  {
+                                    "text":  "Bamboo Harvesters",
+                                    "color":  "#8B4513"
+                                }
+                  },
+                  {
+                      "title":  "Bamboo Harvesters - exp",
+                      "label":  {
+                                    "text":  "Bamboo Harvesters",
+                                    "color":  "#8B4513"
+                                }
+                  },
+                  {
+                      "title":  "Bamboo Harvesters - exp2",
+                      "label":  {
+                                    "text":  "Bamboo Harvesters",
+                                    "color":  "#8B4513"
+                                }
+                  },
+                  {
+                      "title":  "Bandit\u0027s Sanctuary",
+                      "maxCopies":  5,
+                      "label":  {
+                                    "text":  "MAX 5",
+                                    "color":  "#FFFFFF"
+                                },
+                      "note":  "5 copias max"
+                  },
+                  {
+                      "title":  "Bayushi Kazutoshi - exp2",
+                      "note":  "Bayushi Kazutoshi Experienced 2 is considered to have the Keyword “Experienced The Student 3”."
+                  },
+                  {
+                      "title":  "Birth of the Blood Heir",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Border Keep",
+                      "label":  {
+                                    "text":  "Border Keep",
+                                    "color":  "#8B4513"
+                                }
+                  },
+                  {
+                      "title":  "Border Keep - exp",
+                      "label":  {
+                                    "text":  "Border Keep",
+                                    "color":  "#8B4513"
+                                },
+                      "preferredPrinting":  "FL"
+                  },
+                  {
+                      "title":  "Border Keep - exp2",
+                      "label":  {
+                                    "text":  "Border Keep",
+                                    "color":  "#8B4513"
+                                }
+                  },
+                  {
+                      "title":  "Border Keep - inexp",
+                      "label":  {
+                                    "text":  "Border Keep",
+                                    "color":  "#8B4513"
+                                }
+                  },
+                  {
+                      "title":  "Building Contract",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Call of Thunder",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Caught Unawares",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Celestial Alignment",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Celestial Disfavor",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Celestial Unrest",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Celestial Vision",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Ceremony of Planting",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Charter of the Legion of Two Thousand",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Clan Mon",
+                      "maxCopies":  40,
+                      "label":  {
+                                    "text":  "MAX 40",
+                                    "color":  "#FFFFFF"
+                                },
+                      "note":  "40 copias max"
+                  },
+                  {
+                      "title":  "Clash of Blades",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Consecration of Steel",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Conspiracy",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Coronation of Jade",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Crossing the Forbidden Sea",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Daidoji Soken",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Daigotsu Hotako - exp3",
+                      "note":  "Daigotsu Hotako Experienced 3 is considered to have the Keyword “Experienced 3 Yoritomo Hotako”."
+                  },
+                  {
+                      "title":  "Daigotsu Kanpeki, the Shadow Emperor",
+                      "note":  "When this card mentions “Fear Action(s)” it\u0027s always considered to be referring to Abilities and Actions that create a Fear effect (e.g. “Fear X”), and not Abilities and Actions with the Fear Keyword"
+                  },
+                  {
+                      "title":  "Darling of the Season",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Dawn of the Spider",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Decree of Peace",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Embassy of the Crane",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Espionage",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Fading Shadows",
+                      "maxCopies":  10,
+                      "label":  {
+                                    "text":  "MAX 10",
+                                    "color":  "#FFFFFF"
+                                },
+                      "note":  "10 copias max"
+                  },
+                  {
+                      "title":  "Fall of Greatness",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Festival of Cherry Blossoms",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "First and Final Strike",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Flame Lash",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Foothold of the Mad",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Fortune Favors the Bold",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Fortune\u0027s Favor",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Generosity",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Gujo Odori",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Hisako Sensei",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Hurried Gempukku",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "I Am Ready",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Ide Hinobu",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Ideal Conditions",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Ignoble Demise",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Imperial Adjudication",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Imperial Arrival",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Imperial Census",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Impromptu Duel",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "In Time of War",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Inferno",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Inheriting an Heirloom",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Investigation",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Iuchi Wattu",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Izuna Sensei",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Jimen\u0027s Decree",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Jurojin\u0027s Blessing",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Kalani\u0027s Landing",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Kamoko\u0027s Avatar",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Keigo Sensei",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Koan\u0027s Jingasa",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Koan\u0027s Robes",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Lack of Vigilance",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Last Line of Defense",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Lies, Lies, Lies...",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Luxurious Silk",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Masters of Steel",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Meanwhile...",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Midnight Assault",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Missing Caravan",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Naseru\u0027s Funeral",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Night of the Blood Moon",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Offered Gift",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "On All Sides",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "One Koku",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Pierce the Tapestry",
+                      "maxCopies":  7,
+                      "label":  {
+                                    "text":  "MAX 7",
+                                    "color":  "#FFFFFF"
+                                },
+                      "note":  "7 copias max"
+                  },
+                  {
+                      "title":  "Political Standoff",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Power of the Masters",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Proposal of Peace",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Raze to the Ground",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Reinforce the Line",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Resumed Hostilities",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Return to the Heavens",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Rich Coffers",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "School of Wizardry",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Silence the Future",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Stand Alone",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Stone of Remembrance",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Superior Strategist",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Susumu Yanada",
+                      "note":  "When this card mentions “Fear Action(s)” it\u0027s always considered to be referring to Abilities and Actions that create a Fear effect (e.g. “Fear X”), and not Abilities and Actions with the Fear Keyword"
+                  },
+                  {
+                      "title":  "Swordcatcher",
+                      "maxCopies":  4,
+                      "label":  {
+                                    "text":  "MAX 4",
+                                    "color":  "#FFFFFF"
+                                },
+                      "note":  "4 copias max"
+                  },
+                  {
+                      "title":  "Tadanobu Sensei",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Temple of Purity",
+                      "note":  "Errated"
+                  },
+                  {
+                      "title":  "Test of the Emerald Champion",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Test of the Jade Champion",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Badgers Live",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Balance Shifts",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Elements\u0027 Path",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "The Fall of Shiro Moto",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Inevitable Grasp of Conquest",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "The Karmic Cycle",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Loss of the Soul",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Lost Path",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Portals Open",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Remote Monastery of the Dragon (1)",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "The Remote Monastery of the Dragon (2)",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "The Second Death of Kisada",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Shogun\u0027s Peace",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Spider\u0027s Shadow",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Stone Discovered",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Third Yasuki War",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Throne Stands Empty",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Wall is Breached",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "The Wrath of Kali-Ma",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Tomorrow",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Triumph Before Battle",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Twisted Fate",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Under Siege",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Unexpected Betrayal",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Unshakable",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Untouchable Escort",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Uta",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Victory Through Deference",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Wartime Allies",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Whispers of the Dying Moon",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Whispers of the Dying Sun",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Winter Solstice",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Winter Storm",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Winter Warfare",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Winter\u0027s Embrace",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Wisdom of the Keepers",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Word of Heaven",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Wrath of the People",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Yobanjin Alliance",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Yodotai Legionnaire",
+                      "maxCopies":  40,
+                      "label":  {
+                                    "text":  "MAX 40",
+                                    "color":  "#FFFFFF"
+                                },
+                      "note":  "40 copias max"
+                  },
+                  {
+                      "title":  "Yoritomo Yashinko - exp",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Yoritomo Yusuke",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Turning the Story",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Grateful Reward",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Seized Territory",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Yoritomo Haruna",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Ingenuity",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Seppun Jiramu",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Wildfire",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Sought for Justice",
+                      "banned":  true,
+                      "label":  {
+                                    "text":  "BANNED",
+                                    "color":  "#FF0000"
+                                },
+                      "highlight":  {
+                                        "color":  "#FF0000"
+                                    }
+                  },
+                  {
+                      "title":  "Commanding Favor",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Favor of the Emerald Champion",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Festival of Coronation",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The God-Beast Unleashed",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Festival of Drifting Souls",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Hunger of the Dead",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Festival of Founding",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Imperial Ambassadorship",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Lion and Unicorn",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "Redrawing the Maps",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Empire Awaits",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Heart Speaks",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Heavens Reborn",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The Race Begins",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                      "title":  "The War of Dark Fire",
+                      "maxCopies":  1,
+                      "label":  {
+                                    "text":  "UNIQUE",
+                                    "color":  "#000000"
+                                }
+                  },
+                  {
+                    "title":  "Ring of Air - Samurai Edition",
+                    "label":  {
+                                    "text":  "Samurai Edition",
+                                    "color":  "#ffb20f"
+                                }
+                    }, 
+                    {
+                    "title":  "Ring of Air - Celestial Edition",
+                    "label":  {
+                                    "text":  "Celestial Edition",
+                                    "color":  "#506fe1"
+                                }
+                    },
+                    {
+                    "title":  "Ring of Air - Emperor Edition",
+                    "label":  {
+                                    "text":  "Emperor Edition",
+                                    "color":  "#5bd454"
+                                }
+                    },
+                    {
+                    "title":  "Ring of Fire - Samurai Edition",
+                    "label":  {
+                                    "text":  "Samurai Edition",
+                                    "color":  "#ffb20f"
+                                }
+                    }, 
+                    {
+                    "title":  "Ring of Fire - Celestial Edition",
+                    "label":  {
+                                    "text":  "Celestial Edition",
+                                    "color":  "#506fe1"
+                                }
+                    },
+                    {
+                    "title":  "Ring of Fire - Emperor Edition",
+                    "label":  {
+                                    "text":  "Emperor Edition",
+                                    "color":  "#5bd454"
+                                }
+                    },
+                    {
+                    "title":  "Ring of Water - Samurai Edition",
+                    "label":  {
+                                    "text":  "Samurai Edition",
+                                    "color":  "#ffb20f"
+                                }
+                    }, 
+                    {
+                    "title":  "Ring of Water - Celestial Edition",
+                    "label":  {
+                                    "text":  "Celestial Edition",
+                                    "color":  "#506fe1"
+                                }
+                    },
+                    {
+                    "title":  "Ring of Water - Emperor Edition",
+                    "label":  {
+                                    "text":  "Emperor Edition",
+                                    "color":  "#5bd454"
+                                }
+                    },
+                    {
+                    "title":  "Ring of Earth - Samurai Edition",
+                    "label":  {
+                                    "text":  "Samurai Edition",
+                                    "color":  "#ffb20f"
+                                }
+                    }, 
+                    {
+                    "title":  "Ring of Earth - Celestial Edition",
+                    "label":  {
+                                    "text":  "Celestial Edition",
+                                    "color":  "#506fe1"
+                                }
+                    },
+                    {
+                    "title":  "Ring of Earth - Emperor Edition",
+                    "label":  {
+                                    "text":  "Emperor Edition",
+                                    "color":  "#5bd454"
+                                }
+                    },
+                    {
+                    "title":  "Ring of Air - Samurai Edition",
+                    "label":  {
+                                    "text":  "Samurai Edition",
+                                    "color":  "#ffb20f"
+                                }
+                    }, 
+                    {
+                    "title":  "Ring of Air - Celestial Edition",
+                    "label":  {
+                                    "text":  "Celestial Edition",
+                                    "color":  "#506fe1"
+                                }
+                    },
+                    {
+                    "title":  "Ring of Air - Emperor Edition",
+                    "label":  {
+                                    "text":  "Emperor Edition",
+                                    "color":  "#5bd454"
+                                }
+                    },
+
+
+                    {
+                    "title":  "Ring of the Void - Samurai Edition",
+                    "label":  {
+                                    "text":  "Samurai Edition",
+                                    "color":  "#ffb20f"
+                                }
+                    }, 
+                    {
+                    "title":  "Ring of the Void - Celestial Edition",
+                    "label":  {
+                                    "text":  "Celestial Edition",
+                                    "color":  "#506fe1"
+                                }
+                    },
+                    {
+                    "title":  "Ring of the Void - Emperor Edition",
+                    "label":  {
+                                    "text":  "Emperor Edition",
+                                    "color":  "#5bd454"
+                                }
+                    }
+              ]
+}

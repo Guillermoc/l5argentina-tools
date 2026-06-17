@@ -1,0 +1,17 @@
+# dependencias
+node_modules/
+
+# binarios pesados / con copyright — NUNCA van a git, viven solo en R2
+apps/*/assets/
+
+# artefactos generados
+apps/*/dist/
+
+# credenciales
+.env
+.env.local
+
+# basura del SO / editor
+.DS_Store
+Thumbs.db
+*.log

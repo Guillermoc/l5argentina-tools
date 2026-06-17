@@ -1,0 +1,20 @@
+{
+  "app": "companion",
+  "baseUrl": "https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/",
+  "poolPrefix": "pool",
+  "channels": ["debug", "staging", "production"],
+  "packages": [
+    { "id": "filters",   "type": "filters",   "source": "content/filters.json" },
+    { "id": "cards_db",  "type": "database",  "source": "assets/cards" },
+    { "id": "rules",     "type": "rules",     "source": "content/rules.json" },
+    { "id": "20F",       "type": "images",    "source": "assets/images/20F" },
+    { "id": "celestial", "type": "images",    "source": "assets/images/celestial" },
+    { "id": "emperor",   "type": "images",    "source": "assets/images/emperor" },
+    { "id": "ivory",     "type": "images",    "source": "assets/images/ivory" },
+    { "id": "lotus",     "type": "images",    "source": "assets/images/lotus" },
+    { "id": "promo",     "type": "images",    "source": "assets/images/promo" },
+    { "id": "samurai",   "type": "images",    "source": "assets/images/samurai" },
+    { "id": "samuraiEx", "type": "images",    "source": "assets/images/samuraiEx" },
+    { "id": "changelog", "type": "changelog", "source": "content/changelog.md" }
+  ]
+}

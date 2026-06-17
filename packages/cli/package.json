@@ -1,0 +1,14 @@
+{
+  "name": "@l5a/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "l5a": "./src/index.ts"
+  },
+  "dependencies": {
+    "@l5a/core": "*",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5"
+  }
+}

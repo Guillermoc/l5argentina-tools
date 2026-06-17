@@ -1,0 +1,19 @@
+{
+  "name": "l5argentina-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "L5Argentina (L5A) — tooling para sincronizar y gestionar el bucket R2 (build / publish / promote / verify / gc)",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "l5a": "tsx packages/cli/src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

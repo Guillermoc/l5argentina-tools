@@ -1,0 +1,3600 @@
+{
+    "_release":  {
+                     "source":  "json-filters/filters.json",
+                     "generatedAt":  "2026-05-05T22:17:22",
+                     "version":  "1.1.6"
+                 },
+    "sets":  [
+                 {
+                     "code":  "Samurai",
+                     "name":  "Samurai Edition"
+                 },
+                 {
+                     "code":  "STS",
+                     "name":  "Stronger than Steel"
+                 },
+                 {
+                     "code":  "EJC",
+                     "name":  "Test of the Emerald and Jade Championships"
+                 },
+                 {
+                     "code":  "HV",
+                     "name":  "Honor\u0027s Veil"
+                 },
+                 {
+                     "code":  "WaD",
+                     "name":  "Words and Deeds"
+                 },
+                 {
+                     "code":  "THW",
+                     "name":  "The Heaven\u0027s Will"
+                 },
+                 {
+                     "code":  "GotE",
+                     "name":  "Glory of the Empire"
+                 },
+                 {
+                     "code":  "IG1",
+                     "name":  "The Imperial Gift 1"
+                 },
+                 {
+                     "code":  "DaK",
+                     "name":  "Death at Koten"
+                 },
+                 {
+                     "code":  "Celestial",
+                     "name":  "Celestial Edition"
+                 },
+                 {
+                     "code":  "IG2",
+                     "name":  "The Imperial Gift 2"
+                 },
+                 {
+                     "code":  "PotD",
+                     "name":  "Path of the Destroyer"
+                 },
+                 {
+                     "code":  "TH",
+                     "name":  "The Harbinger"
+                 },
+                 {
+                     "code":  "KD",
+                     "name":  "Khan\u0027s Defiance"
+                 },
+                 {
+                     "code":  "TPW",
+                     "name":  "The Plague War"
+                 },
+                 {
+                     "code":  "IG3",
+                     "name":  "The Imperial Gift 3"
+                 },
+                 {
+                     "code":  "BoKT",
+                     "name":  "Battle of Kyuden Tonbo"
+                 },
+                 {
+                     "code":  "EaW",
+                     "name":  "Empire at War"
+                 },
+                 {
+                     "code":  "TDoW",
+                     "name":  "The Dead of Winter"
+                 },
+                 {
+                     "code":  "BtD",
+                     "name":  "Before the Dawn"
+                 },
+                 {
+                     "code":  "FL",
+                     "name":  "Forgotten Legacy"
+                 },
+                 {
+                     "code":  "SC",
+                     "name":  "Second City"
+                 },
+                 {
+                     "code":  "Emperor",
+                     "name":  "Emperor Edition"
+                 },
+                 {
+                     "code":  "EoW",
+                     "name":  "Embers of War"
+                 },
+                 {
+                     "code":  "TSE",
+                     "name":  "The Shadow\u0027s Embrace"
+                 },
+                 {
+                     "code":  "SoD",
+                     "name":  "Seeds of Decay"
+                 },
+                 {
+                     "code":  "HaT",
+                     "name":  "Honor and Treachery"
+                 },
+                 {
+                     "code":  "EEGempukku",
+                     "name":  "Emperor Edition: Gempukku"
+                 },
+                 {
+                     "code":  "TA",
+                     "name":  "Torn Asunder"
+                 },
+                 {
+                     "code":  "CoM",
+                     "name":  "Coils of Madness"
+                 },
+                 {
+                     "code":  "GoC",
+                     "name":  "Gates of Chaos"
+                 },
+                 {
+                     "code":  "AM",
+                     "name":  "Aftermath"
+                 },
+                 {
+                     "code":  "AMoH",
+                     "name":  "A Matter of Honor"
+                 },
+                 {
+                     "code":  "Ivory",
+                     "name":  "Ivory Edition"
+                 },
+                 {
+                     "code":  "TCS",
+                     "name":  "The Coming Storm"
+                 },
+                 {
+                     "code":  "ALitS",
+                     "name":  "A Line in the Sand"
+                 },
+                 {
+                     "code":  "TNO",
+                     "name":  "The New Order"
+                 },
+                 {
+                     "code":  "TCW",
+                     "name":  "The Currency of War"
+                 },
+                 {
+                     "code":  "TwentyFestivals",
+                     "name":  "Twenty Festivals"
+                 },
+                 {
+                     "code":  "ThA",
+                     "name":  "Thunderous Acclaim"
+                 },
+                 {
+                     "code":  "EP",
+                     "name":  "Evil Portents"
+                 },
+                 {
+                     "code":  "Tomorrow",
+                     "name":  "Tomorrow"
+                 },
+                 {
+                     "code":  "TTT",
+                     "name":  "The True Test"
+                 },
+                 {
+                     "code":  "CotM",
+                     "name":  "CotM"
+                 },
+                 {
+                     "code":  "P",
+                     "name":  "Promotional Cards"
+                 }
+             ],
+    "formats":  [
+                    {
+                        "code":  "samurai",
+                        "name":  "Samurai",
+                        "initialHoldingSlots":  [
+                                                    {
+                                                        "id":  "bamboo",
+                                                        "label":  "Bamboo Harvesters",
+                                                        "required":  true,
+                                                        "eligibleCards":  [
+                                                                              "Bamboo Harvesters",
+                                                                              "Bamboo Harvesters - exp",
+                                                                              "Bamboo Harvesters - exp2"
+                                                                          ]
+                                                    },
+                                                    {
+                                                        "id":  "border",
+                                                        "label":  "Border Keep",
+                                                        "required":  true,
+                                                        "eligibleCards":  [
+                                                                              "Border Keep - inexp",
+                                                                              "Border Keep",
+                                                                              "Border Keep - exp",
+                                                                              "Border Keep - exp2"
+                                                                          ]
+                                                    }
+                                                ]
+                    },
+                    {
+                        "code":  "celestial",
+                        "name":  "Celestial",
+                        "initialHoldingSlots":  [
+
+                                                ]
+                    },
+                    {
+                        "code":  "emperor",
+                        "name":  "Emperor",
+                        "initialHoldingSlots":  [
+
+                                                ]
+                    },
+                    {
+                        "code":  "ivory",
+                        "name":  "Ivory",
+                        "initialHoldingSlots":  [
+
+                                                ]
+                    },
+                    {
+                        "code":  "20F",
+                        "name":  "Twenty Festivals",
+                        "initialHoldingSlots":  [
+
+                                                ]
+                    }
+                ],
+    "keywords":  [
+                     {
+                         "code":  "Abomination",
+                         "name":  "Abomination"
+                     },
+                     {
+                         "code":  "Accuser",
+                         "name":  "Accuser"
+                     },
+                     {
+                         "code":  "Acolyte",
+                         "name":  "Acolyte"
+                     },
+                     {
+                         "code":  "Acrobat",
+                         "name":  "Acrobat"
+                     },
+                     {
+                         "code":  "Actor",
+                         "name":  "Actor"
+                     },
+                     {
+                         "code":  "Advisor from the Shogun",
+                         "name":  "Advisor from the Shogun"
+                     },
+                     {
+                         "code":  "Advisor to the Amethyst Champion",
+                         "name":  "Advisor to the Amethyst Champion"
+                     },
+                     {
+                         "code":  "Advisor to the Emerald Champion",
+                         "name":  "Advisor to the Emerald Champion"
+                     },
+                     {
+                         "code":  "Advisor to the Jade Champion",
+                         "name":  "Advisor to the Jade Champion"
+                     },
+                     {
+                         "code":  "Advisor to the Ruby Champion",
+                         "name":  "Advisor to the Ruby Champion"
+                     },
+                     {
+                         "code":  "Air",
+                         "name":  "Air"
+                     },
+                     {
+                         "code":  "Akkuai-uo",
+                         "name":  "Akkuai-uo"
+                     },
+                     {
+                         "code":  "Alchemist",
+                         "name":  "Alchemist"
+                     },
+                     {
+                         "code":  "All Clans",
+                         "name":  "All Clans"
+                     },
+                     {
+                         "code":  "Allegiance",
+                         "name":  "Allegiance"
+                     },
+                     {
+                         "code":  "Ambassador",
+                         "name":  "Ambassador"
+                     },
+                     {
+                         "code":  "Ambassador to the Empire",
+                         "name":  "Ambassador to the Empire"
+                     },
+                     {
+                         "code":  "Ambassador to the Lost",
+                         "name":  "Ambassador to the Lost"
+                     },
+                     {
+                         "code":  "Amethyst Champion",
+                         "name":  "Amethyst Champion"
+                     },
+                     {
+                         "code":  "Ancestor",
+                         "name":  "Ancestor"
+                     },
+                     {
+                         "code":  "Angry Crab",
+                         "name":  "Angry Crab"
+                     },
+                     {
+                         "code":  "Apprentice",
+                         "name":  "Apprentice"
+                     },
+                     {
+                         "code":  "Archivist",
+                         "name":  "Archivist"
+                     },
+                     {
+                         "code":  "Armor",
+                         "name":  "Armor"
+                     },
+                     {
+                         "code":  "Artisan",
+                         "name":  "Artisan"
+                     },
+                     {
+                         "code":  "Ashalan",
+                         "name":  "Ashalan"
+                     },
+                     {
+                         "code":  "Ashigaru",
+                         "name":  "Ashigaru"
+                     },
+                     {
+                         "code":  "Aspirant",
+                         "name":  "Aspirant"
+                     },
+                     {
+                         "code":  "Assassin",
+                         "name":  "Assassin"
+                     },
+                     {
+                         "code":  "Atemi",
+                         "name":  "Atemi"
+                     },
+                     {
+                         "code":  "Avalanche Guard",
+                         "name":  "Avalanche Guard"
+                     },
+                     {
+                         "code":  "Badger Clan",
+                         "name":  "Badger Clan"
+                     },
+                     {
+                         "code":  "Bake-kujira",
+                         "name":  "Bake-kujira"
+                     },
+                     {
+                         "code":  "Bandit",
+                         "name":  "Bandit"
+                     },
+                     {
+                         "code":  "Banker",
+                         "name":  "Banker"
+                     },
+                     {
+                         "code":  "Barracks",
+                         "name":  "Barracks"
+                     },
+                     {
+                         "code":  "Bashe",
+                         "name":  "Bashe"
+                     },
+                     {
+                         "code":  "Bat Clan",
+                         "name":  "Bat Clan"
+                     },
+                     {
+                         "code":  "Battle Maiden",
+                         "name":  "Battle Maiden"
+                     },
+                     {
+                         "code":  "Beastmaster",
+                         "name":  "Beastmaster"
+                     },
+                     {
+                         "code":  "Berserker",
+                         "name":  "Berserker"
+                     },
+                     {
+                         "code":  "Bitter Lies",
+                         "name":  "Bitter Lies"
+                     },
+                     {
+                         "code":  "Bitter Lies Champion",
+                         "name":  "Bitter Lies Champion"
+                     },
+                     {
+                         "code":  "Black Scroll",
+                         "name":  "Black Scroll"
+                     },
+                     {
+                         "code":  "Blacksmith",
+                         "name":  "Blacksmith"
+                     },
+                     {
+                         "code":  "Blade of Vengeance",
+                         "name":  "Blade of Vengeance"
+                     },
+                     {
+                         "code":  "Blessed by Benten",
+                         "name":  "Blessed by Benten"
+                     },
+                     {
+                         "code":  "Blessed by the Keepers",
+                         "name":  "Blessed by the Keepers"
+                     },
+                     {
+                         "code":  "Blessed of the Fortune of Persistence",
+                         "name":  "Blessed of the Fortune of Persistence"
+                     },
+                     {
+                         "code":  "Blind Phoenix",
+                         "name":  "Blind Phoenix"
+                     },
+                     {
+                         "code":  "Blood of Kinuye",
+                         "name":  "Blood of Kinuye"
+                     },
+                     {
+                         "code":  "Bloodspeaker",
+                         "name":  "Bloodspeaker"
+                     },
+                     {
+                         "code":  "Boar Clan",
+                         "name":  "Boar Clan"
+                     },
+                     {
+                         "code":  "Boat",
+                         "name":  "Boat"
+                     },
+                     {
+                         "code":  "Bog Hag",
+                         "name":  "Bog Hag"
+                     },
+                     {
+                         "code":  "Bounty Hunter",
+                         "name":  "Bounty Hunter"
+                     },
+                     {
+                         "code":  "Bow",
+                         "name":  "Bow"
+                     },
+                     {
+                         "code":  "Braggart",
+                         "name":  "Braggart"
+                     },
+                     {
+                         "code":  "Brash",
+                         "name":  "Brash"
+                     },
+                     {
+                         "code":  "Broken Shinbone Tribe",
+                         "name":  "Broken Shinbone Tribe"
+                     },
+                     {
+                         "code":  "Brother",
+                         "name":  "Brother"
+                     },
+                     {
+                         "code":  "Brothers of Rebirth",
+                         "name":  "Brothers of Rebirth"
+                     },
+                     {
+                         "code":  "Brute",
+                         "name":  "Brute"
+                     },
+                     {
+                         "code":  "Budoka",
+                         "name":  "Budoka"
+                     },
+                     {
+                         "code":  "Bully",
+                         "name":  "Bully"
+                     },
+                     {
+                         "code":  "Bureaucrat",
+                         "name":  "Bureaucrat"
+                     },
+                     {
+                         "code":  "Bushi",
+                         "name":  "Bushi"
+                     },
+                     {
+                         "code":  "Bushido Virtue",
+                         "name":  "Bushido Virtue"
+                     },
+                     {
+                         "code":  "Camel",
+                         "name":  "Camel"
+                     },
+                     {
+                         "code":  "Captain of The Fourth Storm",
+                         "name":  "Captain of The Fourth Storm"
+                     },
+                     {
+                         "code":  "Captain of The Tachikaze",
+                         "name":  "Captain of The Tachikaze"
+                     },
+                     {
+                         "code":  "Captain of the Third Kama",
+                         "name":  "Captain of the Third Kama"
+                     },
+                     {
+                         "code":  "Captain of the Venture",
+                         "name":  "Captain of the Venture"
+                     },
+                     {
+                         "code":  "Castle",
+                         "name":  "Castle"
+                     },
+                     {
+                         "code":  "Cat",
+                         "name":  "Cat"
+                     },
+                     {
+                         "code":  "Cavalry",
+                         "name":  "Cavalry"
+                     },
+                     {
+                         "code":  "Chain",
+                         "name":  "Chain"
+                     },
+                     {
+                         "code":  "Champion",
+                         "name":  "Champion"
+                     },
+                     {
+                         "code":  "Champion of Chugo",
+                         "name":  "Champion of Chugo"
+                     },
+                     {
+                         "code":  "Champion of Ji",
+                         "name":  "Champion of Ji"
+                     },
+                     {
+                         "code":  "Champion of Rei",
+                         "name":  "Champion of Rei"
+                     },
+                     {
+                         "code":  "Chancellor",
+                         "name":  "Chancellor"
+                     },
+                     {
+                         "code":  "Charitable",
+                         "name":  "Charitable"
+                     },
+                     {
+                         "code":  "Chief",
+                         "name":  "Chief"
+                     },
+                     {
+                         "code":  "Chieftain",
+                         "name":  "Chieftain"
+                     },
+                     {
+                         "code":  "Child of Prophecy",
+                         "name":  "Child of Prophecy"
+                     },
+                     {
+                         "code":  "Chipped Tooth Tribe",
+                         "name":  "Chipped Tooth Tribe"
+                     },
+                     {
+                         "code":  "Chui",
+                         "name":  "Chui"
+                     },
+                     {
+                         "code":  "Churetsu",
+                         "name":  "Churetsu"
+                     },
+                     {
+                         "code":  "City",
+                         "name":  "City"
+                     },
+                     {
+                         "code":  "Clan Champion",
+                         "name":  "Clan Champion"
+                     },
+                     {
+                         "code":  "Clay Soldier",
+                         "name":  "Clay Soldier"
+                     },
+                     {
+                         "code":  "Cobra",
+                         "name":  "Cobra"
+                     },
+                     {
+                         "code":  "Commander",
+                         "name":  "Commander"
+                     },
+                     {
+                         "code":  "Commander of the 9th Legion",
+                         "name":  "Commander of the 9th Legion"
+                     },
+                     {
+                         "code":  "Compassion",
+                         "name":  "Compassion"
+                     },
+                     {
+                         "code":  "Conqueror",
+                         "name":  "Conqueror"
+                     },
+                     {
+                         "code":  "Conscript",
+                         "name":  "Conscript"
+                     },
+                     {
+                         "code":  "Constrictor",
+                         "name":  "Constrictor"
+                     },
+                     {
+                         "code":  "Consumer",
+                         "name":  "Consumer"
+                     },
+                     {
+                         "code":  "Control",
+                         "name":  "Control"
+                     },
+                     {
+                         "code":  "Corrupt",
+                         "name":  "Corrupt"
+                     },
+                     {
+                         "code":  "Corrupter",
+                         "name":  "Corrupter"
+                     },
+                     {
+                         "code":  "Courage",
+                         "name":  "Courage"
+                     },
+                     {
+                         "code":  "Court",
+                         "name":  "Court"
+                     },
+                     {
+                         "code":  "Courtesy",
+                         "name":  "Courtesy"
+                     },
+                     {
+                         "code":  "Courtier",
+                         "name":  "Courtier"
+                     },
+                     {
+                         "code":  "Crab",
+                         "name":  "Crab"
+                     },
+                     {
+                         "code":  "Crab Clan",
+                         "name":  "Crab Clan"
+                     },
+                     {
+                         "code":  "Crane",
+                         "name":  "Crane"
+                     },
+                     {
+                         "code":  "Crane Clan",
+                         "name":  "Crane Clan"
+                     },
+                     {
+                         "code":  "Creature",
+                         "name":  "Creature"
+                     },
+                     {
+                         "code":  "Crime Boss",
+                         "name":  "Crime Boss"
+                     },
+                     {
+                         "code":  "Crippled Bone Tribe",
+                         "name":  "Crippled Bone Tribe"
+                     },
+                     {
+                         "code":  "Cultist",
+                         "name":  "Cultist"
+                     },
+                     {
+                         "code":  "Cursed",
+                         "name":  "Cursed"
+                     },
+                     {
+                         "code":  "Daimyo",
+                         "name":  "Daimyo"
+                     },
+                     {
+                         "code":  "Damned",
+                         "name":  "Damned"
+                     },
+                     {
+                         "code":  "Dark Ambition",
+                         "name":  "Dark Ambition"
+                     },
+                     {
+                         "code":  "Dark Art",
+                         "name":  "Dark Art"
+                     },
+                     {
+                         "code":  "Dark Beauty",
+                         "name":  "Dark Beauty"
+                     },
+                     {
+                         "code":  "Dark Conquest",
+                         "name":  "Dark Conquest"
+                     },
+                     {
+                         "code":  "Dark Death",
+                         "name":  "Dark Death"
+                     },
+                     {
+                         "code":  "Dark Deeds",
+                         "name":  "Dark Deeds"
+                     },
+                     {
+                         "code":  "Dark Dementia",
+                         "name":  "Dark Dementia"
+                     },
+                     {
+                         "code":  "Dark Destiny",
+                         "name":  "Dark Destiny"
+                     },
+                     {
+                         "code":  "Dark Dominion",
+                         "name":  "Dark Dominion"
+                     },
+                     {
+                         "code":  "Dark Dreams",
+                         "name":  "Dark Dreams"
+                     },
+                     {
+                         "code":  "Dark Fist of Iron",
+                         "name":  "Dark Fist of Iron"
+                     },
+                     {
+                         "code":  "Dark Fortune",
+                         "name":  "Dark Fortune"
+                     },
+                     {
+                         "code":  "Dark Oracle",
+                         "name":  "Dark Oracle"
+                     },
+                     {
+                         "code":  "Dark Perfection",
+                         "name":  "Dark Perfection"
+                     },
+                     {
+                         "code":  "Dark Power",
+                         "name":  "Dark Power"
+                     },
+                     {
+                         "code":  "Dark Pride",
+                         "name":  "Dark Pride"
+                     },
+                     {
+                         "code":  "Dark Prophet",
+                         "name":  "Dark Prophet"
+                     },
+                     {
+                         "code":  "Dark Resolve",
+                         "name":  "Dark Resolve"
+                     },
+                     {
+                         "code":  "Dark Scion of Fire",
+                         "name":  "Dark Scion of Fire"
+                     },
+                     {
+                         "code":  "Dark Stalker",
+                         "name":  "Dark Stalker"
+                     },
+                     {
+                         "code":  "Dark Stone",
+                         "name":  "Dark Stone"
+                     },
+                     {
+                         "code":  "Dark Storm",
+                         "name":  "Dark Storm"
+                     },
+                     {
+                         "code":  "Dark Strength",
+                         "name":  "Dark Strength"
+                     },
+                     {
+                         "code":  "Dark Truth",
+                         "name":  "Dark Truth"
+                     },
+                     {
+                         "code":  "Dark Virtue",
+                         "name":  "Dark Virtue"
+                     },
+                     {
+                         "code":  "Dark Will",
+                         "name":  "Dark Will"
+                     },
+                     {
+                         "code":  "Dark Wind",
+                         "name":  "Dark Wind"
+                     },
+                     {
+                         "code":  "Death Priest",
+                         "name":  "Death Priest"
+                     },
+                     {
+                         "code":  "Deathseeker",
+                         "name":  "Deathseeker"
+                     },
+                     {
+                         "code":  "Defender",
+                         "name":  "Defender"
+                     },
+                     {
+                         "code":  "Defender of the Imperial City",
+                         "name":  "Defender of the Imperial City"
+                     },
+                     {
+                         "code":  "Defender of the Temples",
+                         "name":  "Defender of the Temples"
+                     },
+                     {
+                         "code":  "Demon Slayer",
+                         "name":  "Demon Slayer"
+                     },
+                     {
+                         "code":  "Destined",
+                         "name":  "Destined"
+                     },
+                     {
+                         "code":  "Determination",
+                         "name":  "Determination"
+                     },
+                     {
+                         "code":  "Devourer of Dreams",
+                         "name":  "Devourer of Dreams"
+                     },
+                     {
+                         "code":  "Devourer of Gods",
+                         "name":  "Devourer of Gods"
+                     },
+                     {
+                         "code":  "Disciple",
+                         "name":  "Disciple"
+                     },
+                     {
+                         "code":  "Disciple of P\u0027an Ku",
+                         "name":  "Disciple of P\u0027an Ku"
+                     },
+                     {
+                         "code":  "Disciple of Sun Tao",
+                         "name":  "Disciple of Sun Tao"
+                     },
+                     {
+                         "code":  "Displacer",
+                         "name":  "Displacer"
+                     },
+                     {
+                         "code":  "Djinn",
+                         "name":  "Djinn"
+                     },
+                     {
+                         "code":  "Dog",
+                         "name":  "Dog"
+                     },
+                     {
+                         "code":  "Dojo",
+                         "name":  "Dojo"
+                     },
+                     {
+                         "code":  "Doomseeker",
+                         "name":  "Doomseeker"
+                     },
+                     {
+                         "code":  "Double Chi",
+                         "name":  "Double Chi"
+                     },
+                     {
+                         "code":  "Dragon",
+                         "name":  "Dragon"
+                     },
+                     {
+                         "code":  "Dragon Child",
+                         "name":  "Dragon Child"
+                     },
+                     {
+                         "code":  "Dragon Clan",
+                         "name":  "Dragon Clan"
+                     },
+                     {
+                         "code":  "Dragonfly Clan",
+                         "name":  "Dragonfly Clan"
+                     },
+                     {
+                         "code":  "Drunkard",
+                         "name":  "Drunkard"
+                     },
+                     {
+                         "code":  "Drunken Master",
+                         "name":  "Drunken Master"
+                     },
+                     {
+                         "code":  "Duelist",
+                         "name":  "Duelist"
+                     },
+                     {
+                         "code":  "Duty",
+                         "name":  "Duty"
+                     },
+                     {
+                         "code":  "Earth",
+                         "name":  "Earth"
+                     },
+                     {
+                         "code":  "Economic",
+                         "name":  "Economic"
+                     },
+                     {
+                         "code":  "Elemental Master",
+                         "name":  "Elemental Master"
+                     },
+                     {
+                         "code":  "Elephant",
+                         "name":  "Elephant"
+                     },
+                     {
+                         "code":  "Elite",
+                         "name":  "Elite"
+                     },
+                     {
+                         "code":  "Emerald Champion",
+                         "name":  "Emerald Champion"
+                     },
+                     {
+                         "code":  "Emerald Champion\u0027s Advisor",
+                         "name":  "Emerald Champion\u0027s Advisor"
+                     },
+                     {
+                         "code":  "Emerald Magistrate",
+                         "name":  "Emerald Magistrate"
+                     },
+                     {
+                         "code":  "Emperor",
+                         "name":  "Emperor"
+                     },
+                     {
+                         "code":  "Empress",
+                         "name":  "Empress"
+                     },
+                     {
+                         "code":  "Empty Hand",
+                         "name":  "Empty Hand"
+                     },
+                     {
+                         "code":  "Ender of Dreams",
+                         "name":  "Ender of Dreams"
+                     },
+                     {
+                         "code":  "Engineer",
+                         "name":  "Engineer"
+                     },
+                     {
+                         "code":  "Enginoshi",
+                         "name":  "Enginoshi"
+                     },
+                     {
+                         "code":  "Enigma",
+                         "name":  "Enigma"
+                     },
+                     {
+                         "code":  "Enlightened",
+                         "name":  "Enlightened"
+                     },
+                     {
+                         "code":  "Expendable",
+                         "name":  "Expendable"
+                     },
+                     {
+                         "code":  "Experienced",
+                         "name":  "Experienced"
+                     },
+                     {
+                         "code":  "Experienced 2",
+                         "name":  "Experienced 2"
+                     },
+                     {
+                         "code":  "Experienced 2 Matsu Nimuro",
+                         "name":  "Experienced 2 Matsu Nimuro"
+                     },
+                     {
+                         "code":  "Experienced 2 Moto Chaozhu",
+                         "name":  "Experienced 2 Moto Chaozhu"
+                     },
+                     {
+                         "code":  "Experienced 2 Oni no Akuma",
+                         "name":  "Experienced 2 Oni no Akuma"
+                     },
+                     {
+                         "code":  "Experienced 2 Toturi Miyako",
+                         "name":  "Experienced 2 Toturi Miyako"
+                     },
+                     {
+                         "code":  "Experienced 2 Yoritomo Hotako",
+                         "name":  "Experienced 2 Yoritomo Hotako"
+                     },
+                     {
+                         "code":  "Experienced 3",
+                         "name":  "Experienced 3"
+                     },
+                     {
+                         "code":  "Experienced 3 Yasuki Jinn-Kuen",
+                         "name":  "Experienced 3 Yasuki Jinn-Kuen"
+                     },
+                     {
+                         "code":  "Experienced 4",
+                         "name":  "Experienced 4"
+                     },
+                     {
+                         "code":  "Experienced 4 Daidoji Rekai",
+                         "name":  "Experienced 4 Daidoji Rekai"
+                     },
+                     {
+                         "code":  "Experienced 5",
+                         "name":  "Experienced 5"
+                     },
+                     {
+                         "code":  "Experienced 6 Bayushi Paneki",
+                         "name":  "Experienced 6 Bayushi Paneki"
+                     },
+                     {
+                         "code":  "Experienced Akodo Ieshige",
+                         "name":  "Experienced Akodo Ieshige"
+                     },
+                     {
+                         "code":  "Experienced Akodo Itoku",
+                         "name":  "Experienced Akodo Itoku"
+                     },
+                     {
+                         "code":  "Experienced Akodo Rokku",
+                         "name":  "Experienced Akodo Rokku"
+                     },
+                     {
+                         "code":  "Experienced Asako Makito",
+                         "name":  "Experienced Asako Makito"
+                     },
+                     {
+                         "code":  "Experienced Bayushi Keirei",
+                         "name":  "Experienced Bayushi Keirei"
+                     },
+                     {
+                         "code":  "Experienced Bayushi Tenzan",
+                         "name":  "Experienced Bayushi Tenzan"
+                     },
+                     {
+                         "code":  "Experienced Bound Spirit",
+                         "name":  "Experienced Bound Spirit"
+                     },
+                     {
+                         "code":  "Experienced Chuda Fukuzo",
+                         "name":  "Experienced Chuda Fukuzo"
+                     },
+                     {
+                         "code":  "Experienced Hidekazu",
+                         "name":  "Experienced Hidekazu"
+                     },
+                     {
+                         "code":  "Experienced Hitaka",
+                         "name":  "Experienced Hitaka"
+                     },
+                     {
+                         "code":  "Experienced Hitomi Hogai",
+                         "name":  "Experienced Hitomi Hogai"
+                     },
+                     {
+                         "code":  "Experienced Isawa Tokiko",
+                         "name":  "Experienced Isawa Tokiko"
+                     },
+                     {
+                         "code":  "Experienced Keeper of Water",
+                         "name":  "Experienced Keeper of Water"
+                     },
+                     {
+                         "code":  "Experienced Mahatsu",
+                         "name":  "Experienced Mahatsu"
+                     },
+                     {
+                         "code":  "Experienced Mirumoto Taishuu",
+                         "name":  "Experienced Mirumoto Taishuu"
+                     },
+                     {
+                         "code":  "Experienced Oni no Tadaka",
+                         "name":  "Experienced Oni no Tadaka"
+                     },
+                     {
+                         "code":  "Experienced Pearl-Encrusted Staff",
+                         "name":  "Experienced Pearl-Encrusted Staff"
+                     },
+                     {
+                         "code":  "Experienced Pride of the Hand",
+                         "name":  "Experienced Pride of the Hand"
+                     },
+                     {
+                         "code":  "Experienced Shinbone Pack",
+                         "name":  "Experienced Shinbone Pack"
+                     },
+                     {
+                         "code":  "Experienced Shoju\u0027s Armor",
+                         "name":  "Experienced Shoju\u0027s Armor"
+                     },
+                     {
+                         "code":  "Experienced Shosuro Yasuko",
+                         "name":  "Experienced Shosuro Yasuko"
+                     },
+                     {
+                         "code":  "Experienced Tamori Shaiko",
+                         "name":  "Experienced Tamori Shaiko"
+                     },
+                     {
+                         "code":  "Experienced The Student",
+                         "name":  "Experienced The Student"
+                     },
+                     {
+                         "code":  "Experienced Tsubo the Drunk",
+                         "name":  "Experienced Tsubo the Drunk"
+                     },
+                     {
+                         "code":  "Experienced Unicorn War Dogs",
+                         "name":  "Experienced Unicorn War Dogs"
+                     },
+                     {
+                         "code":  "Experienced Yoritomo\u0027s Armor",
+                         "name":  "Experienced Yoritomo\u0027s Armor"
+                     },
+                     {
+                         "code":  "ExperiencedCoM",
+                         "name":  "ExperiencedCoM"
+                     },
+                     {
+                         "code":  "Extortionist",
+                         "name":  "Extortionist"
+                     },
+                     {
+                         "code":  "Eye of Shadow",
+                         "name":  "Eye of Shadow"
+                     },
+                     {
+                         "code":  "Face of Ghosts",
+                         "name":  "Face of Ghosts"
+                     },
+                     {
+                         "code":  "Fallen",
+                         "name":  "Fallen"
+                     },
+                     {
+                         "code":  "Farm",
+                         "name":  "Farm"
+                     },
+                     {
+                         "code":  "Favor",
+                         "name":  "Favor"
+                     },
+                     {
+                         "code":  "Favored of the Air Dragon",
+                         "name":  "Favored of the Air Dragon"
+                     },
+                     {
+                         "code":  "Favored of the Celestial Dragon",
+                         "name":  "Favored of the Celestial Dragon"
+                     },
+                     {
+                         "code":  "Favored of the Earth Dragon",
+                         "name":  "Favored of the Earth Dragon"
+                     },
+                     {
+                         "code":  "Favored of the Fire Dragon",
+                         "name":  "Favored of the Fire Dragon"
+                     },
+                     {
+                         "code":  "Favored of the Lords of Death",
+                         "name":  "Favored of the Lords of Death"
+                     },
+                     {
+                         "code":  "Favored of the Void Dragon",
+                         "name":  "Favored of the Void Dragon"
+                     },
+                     {
+                         "code":  "Favored of the Water Dragon",
+                         "name":  "Favored of the Water Dragon"
+                     },
+                     {
+                         "code":  "Fear",
+                         "name":  "Fear"
+                     },
+                     {
+                         "code":  "Fenghuang",
+                         "name":  "Fenghuang"
+                     },
+                     {
+                         "code":  "Festival",
+                         "name":  "Festival"
+                     },
+                     {
+                         "code":  "Final Student",
+                         "name":  "Final Student"
+                     },
+                     {
+                         "code":  "Fire",
+                         "name":  "Fire"
+                     },
+                     {
+                         "code":  "Firestorm Legion",
+                         "name":  "Firestorm Legion"
+                     },
+                     {
+                         "code":  "First Legion",
+                         "name":  "First Legion"
+                     },
+                     {
+                         "code":  "First Magistrate",
+                         "name":  "First Magistrate"
+                     },
+                     {
+                         "code":  "First Mate of the Unknown Path",
+                         "name":  "First Mate of the Unknown Path"
+                     },
+                     {
+                         "code":  "Fist of Osano-Wo",
+                         "name":  "Fist of Osano-Wo"
+                     },
+                     {
+                         "code":  "Forest",
+                         "name":  "Forest"
+                     },
+                     {
+                         "code":  "Fortification",
+                         "name":  "Fortification"
+                     },
+                     {
+                         "code":  "Fortune",
+                         "name":  "Fortune"
+                     },
+                     {
+                         "code":  "Fox Clan",
+                         "name":  "Fox Clan"
+                     },
+                     {
+                         "code":  "Foxwife",
+                         "name":  "Foxwife"
+                     },
+                     {
+                         "code":  "Friend of Thunder",
+                         "name":  "Friend of Thunder"
+                     },
+                     {
+                         "code":  "Fu Lion",
+                         "name":  "Fu Lion"
+                     },
+                     {
+                         "code":  "Fudo",
+                         "name":  "Fudo"
+                     },
+                     {
+                         "code":  "Gaijin",
+                         "name":  "Gaijin"
+                     },
+                     {
+                         "code":  "Gamekeeper",
+                         "name":  "Gamekeeper"
+                     },
+                     {
+                         "code":  "Gardener",
+                         "name":  "Gardener"
+                     },
+                     {
+                         "code":  "Geisha",
+                         "name":  "Geisha"
+                     },
+                     {
+                         "code":  "Geisha House",
+                         "name":  "Geisha House"
+                     },
+                     {
+                         "code":  "Genius",
+                         "name":  "Genius"
+                     },
+                     {
+                         "code":  "Ghost Guard",
+                         "name":  "Ghost Guard"
+                     },
+                     {
+                         "code":  "Ghul",
+                         "name":  "Ghul"
+                     },
+                     {
+                         "code":  "Go Master",
+                         "name":  "Go Master"
+                     },
+                     {
+                         "code":  "Goblin",
+                         "name":  "Goblin"
+                     },
+                     {
+                         "code":  "Golden Arm",
+                         "name":  "Golden Arm"
+                     },
+                     {
+                         "code":  "Golden Arm Prodigy",
+                         "name":  "Golden Arm Prodigy"
+                     },
+                     {
+                         "code":  "Golem",
+                         "name":  "Golem"
+                     },
+                     {
+                         "code":  "Goryo",
+                         "name":  "Goryo"
+                     },
+                     {
+                         "code":  "Governor",
+                         "name":  "Governor"
+                     },
+                     {
+                         "code":  "Grand Master of the Elements",
+                         "name":  "Grand Master of the Elements"
+                     },
+                     {
+                         "code":  "Grasping Paw Tribe",
+                         "name":  "Grasping Paw Tribe"
+                     },
+                     {
+                         "code":  "Greensnake",
+                         "name":  "Greensnake"
+                     },
+                     {
+                         "code":  "Guard",
+                         "name":  "Guard"
+                     },
+                     {
+                         "code":  "Guardian",
+                         "name":  "Guardian"
+                     },
+                     {
+                         "code":  "Gunso",
+                         "name":  "Gunso"
+                     },
+                     {
+                         "code":  "Half-Naga",
+                         "name":  "Half-Naga"
+                     },
+                     {
+                         "code":  "Hare Clan",
+                         "name":  "Hare Clan"
+                     },
+                     {
+                         "code":  "Harrier",
+                         "name":  "Harrier"
+                     },
+                     {
+                         "code":  "Hatamoto",
+                         "name":  "Hatamoto"
+                     },
+                     {
+                         "code":  "Head Inquisitor",
+                         "name":  "Head Inquisitor"
+                     },
+                     {
+                         "code":  "Head Librarian",
+                         "name":  "Head Librarian"
+                     },
+                     {
+                         "code":  "Head of the Second City Guardsmen",
+                         "name":  "Head of the Second City Guardsmen"
+                     },
+                     {
+                         "code":  "Heavy Weapon",
+                         "name":  "Heavy Weapon"
+                     },
+                     {
+                         "code":  "Heir",
+                         "name":  "Heir"
+                     },
+                     {
+                         "code":  "Henshin",
+                         "name":  "Henshin"
+                     },
+                     {
+                         "code":  "Herald",
+                         "name":  "Herald"
+                     },
+                     {
+                         "code":  "Hero",
+                         "name":  "Hero"
+                     },
+                     {
+                         "code":  "Heroic",
+                         "name":  "Heroic"
+                     },
+                     {
+                         "code":  "Hidden Guard",
+                         "name":  "Hidden Guard"
+                     },
+                     {
+                         "code":  "Historian",
+                         "name":  "Historian"
+                     },
+                     {
+                         "code":  "Honesty",
+                         "name":  "Honesty"
+                     },
+                     {
+                         "code":  "Honor",
+                         "name":  "Honor"
+                     },
+                     {
+                         "code":  "Horse",
+                         "name":  "Horse"
+                     },
+                     {
+                         "code":  "Horse Master",
+                         "name":  "Horse Master"
+                     },
+                     {
+                         "code":  "Hunter",
+                         "name":  "Hunter"
+                     },
+                     {
+                         "code":  "Iaijutsu",
+                         "name":  "Iaijutsu"
+                     },
+                     {
+                         "code":  "Immortal",
+                         "name":  "Immortal"
+                     },
+                     {
+                         "code":  "Imperial",
+                         "name":  "Imperial"
+                     },
+                     {
+                         "code":  "Imperial Advisor",
+                         "name":  "Imperial Advisor"
+                     },
+                     {
+                         "code":  "Imperial Bank of Rokugan",
+                         "name":  "Imperial Bank of Rokugan"
+                     },
+                     {
+                         "code":  "Imperial Chancellor",
+                         "name":  "Imperial Chancellor"
+                     },
+                     {
+                         "code":  "Imperial Explorer",
+                         "name":  "Imperial Explorer"
+                     },
+                     {
+                         "code":  "Imperial Legion",
+                         "name":  "Imperial Legion"
+                     },
+                     {
+                         "code":  "Imperial Treasurer",
+                         "name":  "Imperial Treasurer"
+                     },
+                     {
+                         "code":  "Incense Master",
+                         "name":  "Incense Master"
+                     },
+                     {
+                         "code":  "Incubator",
+                         "name":  "Incubator"
+                     },
+                     {
+                         "code":  "Inexperienced",
+                         "name":  "Inexperienced"
+                     },
+                     {
+                         "code":  "Infiltrator",
+                         "name":  "Infiltrator"
+                     },
+                     {
+                         "code":  "Innkeeper of the House of the Blue Tanuki",
+                         "name":  "Innkeeper of the House of the Blue Tanuki"
+                     },
+                     {
+                         "code":  "Inquisitor",
+                         "name":  "Inquisitor"
+                     },
+                     {
+                         "code":  "Insight",
+                         "name":  "Insight"
+                     },
+                     {
+                         "code":  "Interrogator",
+                         "name":  "Interrogator"
+                     },
+                     {
+                         "code":  "Intimidator",
+                         "name":  "Intimidator"
+                     },
+                     {
+                         "code":  "Iron Crane",
+                         "name":  "Iron Crane"
+                     },
+                     {
+                         "code":  "Iron Flower",
+                         "name":  "Iron Flower"
+                     },
+                     {
+                         "code":  "Iron Samurai",
+                         "name":  "Iron Samurai"
+                     },
+                     {
+                         "code":  "Isawa Nakamuro Experienced 2",
+                         "name":  "Isawa Nakamuro Experienced 2"
+                     },
+                     {
+                         "code":  "Isawa Scroll",
+                         "name":  "Isawa Scroll"
+                     },
+                     {
+                         "code":  "Ishiken",
+                         "name":  "Ishiken"
+                     },
+                     {
+                         "code":  "Ivory Champion",
+                         "name":  "Ivory Champion"
+                     },
+                     {
+                         "code":  "Ivory Champion\u0027s Advisor",
+                         "name":  "Ivory Champion\u0027s Advisor"
+                     },
+                     {
+                         "code":  "Jackal",
+                         "name":  "Jackal"
+                     },
+                     {
+                         "code":  "Jade",
+                         "name":  "Jade"
+                     },
+                     {
+                         "code":  "Jade Champion",
+                         "name":  "Jade Champion"
+                     },
+                     {
+                         "code":  "Jade Hand",
+                         "name":  "Jade Hand"
+                     },
+                     {
+                         "code":  "Jade Legion",
+                         "name":  "Jade Legion"
+                     },
+                     {
+                         "code":  "Jakla",
+                         "name":  "Jakla"
+                     },
+                     {
+                         "code":  "Jester",
+                         "name":  "Jester"
+                     },
+                     {
+                         "code":  "Jingasa",
+                         "name":  "Jingasa"
+                     },
+                     {
+                         "code":  "Jorogumo",
+                         "name":  "Jorogumo"
+                     },
+                     {
+                         "code":  "Junshin",
+                         "name":  "Junshin"
+                     },
+                     {
+                         "code":  "Justicar",
+                         "name":  "Justicar"
+                     },
+                     {
+                         "code":  "Kabuki Master",
+                         "name":  "Kabuki Master"
+                     },
+                     {
+                         "code":  "Kami",
+                         "name":  "Kami"
+                     },
+                     {
+                         "code":  "Kappa",
+                         "name":  "Kappa"
+                     },
+                     {
+                         "code":  "Kata",
+                         "name":  "Kata"
+                     },
+                     {
+                         "code":  "Keeper",
+                         "name":  "Keeper"
+                     },
+                     {
+                         "code":  "Keeper of Obsidian",
+                         "name":  "Keeper of Obsidian"
+                     },
+                     {
+                         "code":  "Keitaku",
+                         "name":  "Keitaku"
+                     },
+                     {
+                         "code":  "Kenku",
+                         "name":  "Kenku"
+                     },
+                     {
+                         "code":  "Kensai",
+                         "name":  "Kensai"
+                     },
+                     {
+                         "code":  "Kenshinzen",
+                         "name":  "Kenshinzen"
+                     },
+                     {
+                         "code":  "Keukegen",
+                         "name":  "Keukegen"
+                     },
+                     {
+                         "code":  "Khadi",
+                         "name":  "Khadi"
+                     },
+                     {
+                         "code":  "Kharmic",
+                         "name":  "Kharmic"
+                     },
+                     {
+                         "code":  "Kiho",
+                         "name":  "Kiho"
+                     },
+                     {
+                         "code":  "Kitsune",
+                         "name":  "Kitsune"
+                     },
+                     {
+                         "code":  "Knife",
+                         "name":  "Knife"
+                     },
+                     {
+                         "code":  "Knowledge",
+                         "name":  "Knowledge"
+                     },
+                     {
+                         "code":  "Koan",
+                         "name":  "Koan"
+                     },
+                     {
+                         "code":  "Kodama",
+                         "name":  "Kodama"
+                     },
+                     {
+                         "code":  "Kolat",
+                         "name":  "Kolat"
+                     },
+                     {
+                         "code":  "Kshatriya",
+                         "name":  "Kshatriya"
+                     },
+                     {
+                         "code":  "Kuroiban",
+                         "name":  "Kuroiban"
+                     },
+                     {
+                         "code":  "Lady of the Sun",
+                         "name":  "Lady of the Sun"
+                     },
+                     {
+                         "code":  "Legacy",
+                         "name":  "Legacy"
+                     },
+                     {
+                         "code":  "Legacy of the Naga",
+                         "name":  "Legacy of the Naga"
+                     },
+                     {
+                         "code":  "Legendary",
+                         "name":  "Legendary"
+                     },
+                     {
+                         "code":  "Legion of Flame",
+                         "name":  "Legion of Flame"
+                     },
+                     {
+                         "code":  "Legion of Stone",
+                         "name":  "Legion of Stone"
+                     },
+                     {
+                         "code":  "Legionnaire",
+                         "name":  "Legionnaire"
+                     },
+                     {
+                         "code":  "Liaison",
+                         "name":  "Liaison"
+                     },
+                     {
+                         "code":  "Librarian",
+                         "name":  "Librarian"
+                     },
+                     {
+                         "code":  "Library",
+                         "name":  "Library"
+                     },
+                     {
+                         "code":  "Lion",
+                         "name":  "Lion"
+                     },
+                     {
+                         "code":  "Lion Clan",
+                         "name":  "Lion Clan"
+                     },
+                     {
+                         "code":  "Lion\u0027s Pride",
+                         "name":  "Lion\u0027s Pride"
+                     },
+                     {
+                         "code":  "Little Bear",
+                         "name":  "Little Bear"
+                     },
+                     {
+                         "code":  "Lord of Blades",
+                         "name":  "Lord of Blades"
+                     },
+                     {
+                         "code":  "Lorekeeper",
+                         "name":  "Lorekeeper"
+                     },
+                     {
+                         "code":  "Lost",
+                         "name":  "Lost"
+                     },
+                     {
+                         "code":  "Love Letter",
+                         "name":  "Love Letter"
+                     },
+                     {
+                         "code":  "Loyal",
+                         "name":  "Loyal"
+                     },
+                     {
+                         "code":  "Mad Dragon",
+                         "name":  "Mad Dragon"
+                     },
+                     {
+                         "code":  "Madman",
+                         "name":  "Madman"
+                     },
+                     {
+                         "code":  "Magistrate",
+                         "name":  "Magistrate"
+                     },
+                     {
+                         "code":  "Maho",
+                         "name":  "Maho"
+                     },
+                     {
+                         "code":  "Mai Master",
+                         "name":  "Mai Master"
+                     },
+                     {
+                         "code":  "Maigo no Musha",
+                         "name":  "Maigo no Musha"
+                     },
+                     {
+                         "code":  "Maiko",
+                         "name":  "Maiko"
+                     },
+                     {
+                         "code":  "Mantis",
+                         "name":  "Mantis"
+                     },
+                     {
+                         "code":  "Mantis Clan",
+                         "name":  "Mantis Clan"
+                     },
+                     {
+                         "code":  "Market",
+                         "name":  "Market"
+                     },
+                     {
+                         "code":  "Martyr",
+                         "name":  "Martyr"
+                     },
+                     {
+                         "code":  "Master Archer",
+                         "name":  "Master Archer"
+                     },
+                     {
+                         "code":  "Master Artificer",
+                         "name":  "Master Artificer"
+                     },
+                     {
+                         "code":  "Master Bowman",
+                         "name":  "Master Bowman"
+                     },
+                     {
+                         "code":  "Master Chef",
+                         "name":  "Master Chef"
+                     },
+                     {
+                         "code":  "Master Coin",
+                         "name":  "Master Coin"
+                     },
+                     {
+                         "code":  "Master Killer",
+                         "name":  "Master Killer"
+                     },
+                     {
+                         "code":  "Master of Bushido",
+                         "name":  "Master of Bushido"
+                     },
+                     {
+                         "code":  "Master of Ceremonies",
+                         "name":  "Master of Ceremonies"
+                     },
+                     {
+                         "code":  "Master of Guile",
+                         "name":  "Master of Guile"
+                     },
+                     {
+                         "code":  "Master of Lies",
+                         "name":  "Master of Lies"
+                     },
+                     {
+                         "code":  "Master of Shourido",
+                         "name":  "Master of Shourido"
+                     },
+                     {
+                         "code":  "Master of the Blade",
+                         "name":  "Master of the Blade"
+                     },
+                     {
+                         "code":  "Master of the Swift Waves",
+                         "name":  "Master of the Swift Waves"
+                     },
+                     {
+                         "code":  "Master Sensei",
+                         "name":  "Master Sensei"
+                     },
+                     {
+                         "code":  "Master Steel",
+                         "name":  "Master Steel"
+                     },
+                     {
+                         "code":  "Master Tactician",
+                         "name":  "Master Tactician"
+                     },
+                     {
+                         "code":  "Mastermind",
+                         "name":  "Mastermind"
+                     },
+                     {
+                         "code":  "Meddler",
+                         "name":  "Meddler"
+                     },
+                     {
+                         "code":  "Megumi",
+                         "name":  "Megumi"
+                     },
+                     {
+                         "code":  "Mempo",
+                         "name":  "Mempo"
+                     },
+                     {
+                         "code":  "Mercenary",
+                         "name":  "Mercenary"
+                     },
+                     {
+                         "code":  "Merchant",
+                         "name":  "Merchant"
+                     },
+                     {
+                         "code":  "Messenger",
+                         "name":  "Messenger"
+                     },
+                     {
+                         "code":  "Mine",
+                         "name":  "Mine"
+                     },
+                     {
+                         "code":  "Monk",
+                         "name":  "Monk"
+                     },
+                     {
+                         "code":  "Monkey Clan",
+                         "name":  "Monkey Clan"
+                     },
+                     {
+                         "code":  "Moon-Blessed",
+                         "name":  "Moon-Blessed"
+                     },
+                     {
+                         "code":  "Mountain",
+                         "name":  "Mountain"
+                     },
+                     {
+                         "code":  "Mountaineer",
+                         "name":  "Mountaineer"
+                     },
+                     {
+                         "code":  "Mujina",
+                         "name":  "Mujina"
+                     },
+                     {
+                         "code":  "Musha",
+                         "name":  "Musha"
+                     },
+                     {
+                         "code":  "Musician",
+                         "name":  "Musician"
+                     },
+                     {
+                         "code":  "Mutant",
+                         "name":  "Mutant"
+                     },
+                     {
+                         "code":  "Naga",
+                         "name":  "Naga"
+                     },
+                     {
+                         "code":  "Naval",
+                         "name":  "Naval"
+                     },
+                     {
+                         "code":  "Nemuranai",
+                         "name":  "Nemuranai"
+                     },
+                     {
+                         "code":  "Nightingale",
+                         "name":  "Nightingale"
+                     },
+                     {
+                         "code":  "Nikutai",
+                         "name":  "Nikutai"
+                     },
+                     {
+                         "code":  "Ningyo",
+                         "name":  "Ningyo"
+                     },
+                     {
+                         "code":  "Ninja",
+                         "name":  "Ninja"
+                     },
+                     {
+                         "code":  "Nobori Raiu",
+                         "name":  "Nobori Raiu"
+                     },
+                     {
+                         "code":  "Nokatsu\u0027s Heir",
+                         "name":  "Nokatsu\u0027s Heir"
+                     },
+                     {
+                         "code":  "Nonhuman",
+                         "name":  "Nonhuman"
+                     },
+                     {
+                         "code":  "Obsidian",
+                         "name":  "Obsidian"
+                     },
+                     {
+                         "code":  "Obsidian Champion",
+                         "name":  "Obsidian Champion"
+                     },
+                     {
+                         "code":  "Obsidian Claw",
+                         "name":  "Obsidian Claw"
+                     },
+                     {
+                         "code":  "Ogre",
+                         "name":  "Ogre"
+                     },
+                     {
+                         "code":  "Omoidasu",
+                         "name":  "Omoidasu"
+                     },
+                     {
+                         "code":  "One Tribe",
+                         "name":  "One Tribe"
+                     },
+                     {
+                         "code":  "One-Handed",
+                         "name":  "One-Handed"
+                     },
+                     {
+                         "code":  "Oni",
+                         "name":  "Oni"
+                     },
+                     {
+                         "code":  "Onyx Champion",
+                         "name":  "Onyx Champion"
+                     },
+                     {
+                         "code":  "Oracle",
+                         "name":  "Oracle"
+                     },
+                     {
+                         "code":  "Orator",
+                         "name":  "Orator"
+                     },
+                     {
+                         "code":  "Order of Death",
+                         "name":  "Order of Death"
+                     },
+                     {
+                         "code":  "Order of Heroes",
+                         "name":  "Order of Heroes"
+                     },
+                     {
+                         "code":  "Order of Strength",
+                         "name":  "Order of Strength"
+                     },
+                     {
+                         "code":  "Order of the Spider",
+                         "name":  "Order of the Spider"
+                     },
+                     {
+                         "code":  "Order of the Wooden Blade",
+                         "name":  "Order of the Wooden Blade"
+                     },
+                     {
+                         "code":  "Order of Venom",
+                         "name":  "Order of Venom"
+                     },
+                     {
+                         "code":  "Origami Master",
+                         "name":  "Origami Master"
+                     },
+                     {
+                         "code":  "Oriole Clan",
+                         "name":  "Oriole Clan"
+                     },
+                     {
+                         "code":  "Orochi",
+                         "name":  "Orochi"
+                     },
+                     {
+                         "code":  "Overconfident",
+                         "name":  "Overconfident"
+                     },
+                     {
+                         "code":  "Overlord",
+                         "name":  "Overlord"
+                     },
+                     {
+                         "code":  "Ox Clan",
+                         "name":  "Ox Clan"
+                     },
+                     {
+                         "code":  "Oyabun",
+                         "name":  "Oyabun"
+                     },
+                     {
+                         "code":  "Pack",
+                         "name":  "Pack"
+                     },
+                     {
+                         "code":  "Paragon",
+                         "name":  "Paragon"
+                     },
+                     {
+                         "code":  "Pearl",
+                         "name":  "Pearl"
+                     },
+                     {
+                         "code":  "Pearl Bed",
+                         "name":  "Pearl Bed"
+                     },
+                     {
+                         "code":  "Peasant",
+                         "name":  "Peasant"
+                     },
+                     {
+                         "code":  "Perfect",
+                         "name":  "Perfect"
+                     },
+                     {
+                         "code":  "Perfection",
+                         "name":  "Perfection"
+                     },
+                     {
+                         "code":  "Phoenix",
+                         "name":  "Phoenix"
+                     },
+                     {
+                         "code":  "Phoenix Clan",
+                         "name":  "Phoenix Clan"
+                     },
+                     {
+                         "code":  "Pirate",
+                         "name":  "Pirate"
+                     },
+                     {
+                         "code":  "Plague",
+                         "name":  "Plague"
+                     },
+                     {
+                         "code":  "Plains",
+                         "name":  "Plains"
+                     },
+                     {
+                         "code":  "Poet",
+                         "name":  "Poet"
+                     },
+                     {
+                         "code":  "Poison Blade",
+                         "name":  "Poison Blade"
+                     },
+                     {
+                         "code":  "Poison Master",
+                         "name":  "Poison Master"
+                     },
+                     {
+                         "code":  "Polearm",
+                         "name":  "Polearm"
+                     },
+                     {
+                         "code":  "Political",
+                         "name":  "Political"
+                     },
+                     {
+                         "code":  "Port",
+                         "name":  "Port"
+                     },
+                     {
+                         "code":  "Prodigy",
+                         "name":  "Prodigy"
+                     },
+                     {
+                         "code":  "Prophet",
+                         "name":  "Prophet"
+                     },
+                     {
+                         "code":  "Prophetess",
+                         "name":  "Prophetess"
+                     },
+                     {
+                         "code":  "Protector",
+                         "name":  "Protector"
+                     },
+                     {
+                         "code":  "Protector of the Second City",
+                         "name":  "Protector of the Second City"
+                     },
+                     {
+                         "code":  "Ratling",
+                         "name":  "Ratling"
+                     },
+                     {
+                         "code":  "Recon",
+                         "name":  "Recon"
+                     },
+                     {
+                         "code":  "Recruiter",
+                         "name":  "Recruiter"
+                     },
+                     {
+                         "code":  "Recruitment Officer",
+                         "name":  "Recruitment Officer"
+                     },
+                     {
+                         "code":  "Redeemer",
+                         "name":  "Redeemer"
+                     },
+                     {
+                         "code":  "Rememberer",
+                         "name":  "Rememberer"
+                     },
+                     {
+                         "code":  "Reserve",
+                         "name":  "Reserve"
+                     },
+                     {
+                         "code":  "Resilient",
+                         "name":  "Resilient"
+                     },
+                     {
+                         "code":  "Resourceful",
+                         "name":  "Resourceful"
+                     },
+                     {
+                         "code":  "Retainer",
+                         "name":  "Retainer"
+                     },
+                     {
+                         "code":  "Revenge",
+                         "name":  "Revenge"
+                     },
+                     {
+                         "code":  "Riddle",
+                         "name":  "Riddle"
+                     },
+                     {
+                         "code":  "Rikugunshokan",
+                         "name":  "Rikugunshokan"
+                     },
+                     {
+                         "code":  "Ritual",
+                         "name":  "Ritual"
+                     },
+                     {
+                         "code":  "Ritual Master",
+                         "name":  "Ritual Master"
+                     },
+                     {
+                         "code":  "Ronin",
+                         "name":  "Ronin"
+                     },
+                     {
+                         "code":  "Ruby Champion",
+                         "name":  "Ruby Champion"
+                     },
+                     {
+                         "code":  "Rumormonger",
+                         "name":  "Rumormonger"
+                     },
+                     {
+                         "code":  "Ryu",
+                         "name":  "Ryu"
+                     },
+                     {
+                         "code":  "Sacrosanct",
+                         "name":  "Sacrosanct"
+                     },
+                     {
+                         "code":  "Sake",
+                         "name":  "Sake"
+                     },
+                     {
+                         "code":  "Sake Addict",
+                         "name":  "Sake Addict"
+                     },
+                     {
+                         "code":  "Sake House",
+                         "name":  "Sake House"
+                     },
+                     {
+                         "code":  "Sake Master",
+                         "name":  "Sake Master"
+                     },
+                     {
+                         "code":  "Sake Works",
+                         "name":  "Sake Works"
+                     },
+                     {
+                         "code":  "Samurai",
+                         "name":  "Samurai"
+                     },
+                     {
+                         "code":  "Sapphire Legion",
+                         "name":  "Sapphire Legion"
+                     },
+                     {
+                         "code":  "Savior",
+                         "name":  "Savior"
+                     },
+                     {
+                         "code":  "Scavenger",
+                         "name":  "Scavenger"
+                     },
+                     {
+                         "code":  "Scholar",
+                         "name":  "Scholar"
+                     },
+                     {
+                         "code":  "Scion of Flame",
+                         "name":  "Scion of Flame"
+                     },
+                     {
+                         "code":  "Scion of Stone",
+                         "name":  "Scion of Stone"
+                     },
+                     {
+                         "code":  "Scion of the Sea",
+                         "name":  "Scion of the Sea"
+                     },
+                     {
+                         "code":  "Scion of the Void",
+                         "name":  "Scion of the Void"
+                     },
+                     {
+                         "code":  "Scion of the Wind",
+                         "name":  "Scion of the Wind"
+                     },
+                     {
+                         "code":  "Scorpion",
+                         "name":  "Scorpion"
+                     },
+                     {
+                         "code":  "Scorpion Clan",
+                         "name":  "Scorpion Clan"
+                     },
+                     {
+                         "code":  "Scourge of Darkness",
+                         "name":  "Scourge of Darkness"
+                     },
+                     {
+                         "code":  "Scourge of the Scorpion",
+                         "name":  "Scourge of the Scorpion"
+                     },
+                     {
+                         "code":  "Scout",
+                         "name":  "Scout"
+                     },
+                     {
+                         "code":  "Scribe",
+                         "name":  "Scribe"
+                     },
+                     {
+                         "code":  "Sculptor",
+                         "name":  "Sculptor"
+                     },
+                     {
+                         "code":  "Sculptor of Flesh",
+                         "name":  "Sculptor of Flesh"
+                     },
+                     {
+                         "code":  "Second City Governor",
+                         "name":  "Second City Governor"
+                     },
+                     {
+                         "code":  "Seductress",
+                         "name":  "Seductress"
+                     },
+                     {
+                         "code":  "Sensei",
+                         "name":  "Sensei"
+                     },
+                     {
+                         "code":  "Serving Girl of the Blue Tanuki",
+                         "name":  "Serving Girl of the Blue Tanuki"
+                     },
+                     {
+                         "code":  "Settler",
+                         "name":  "Settler"
+                     },
+                     {
+                         "code":  "Shadowlands",
+                         "name":  "Shadowlands"
+                     },
+                     {
+                         "code":  "Shadowspawn",
+                         "name":  "Shadowspawn"
+                     },
+                     {
+                         "code":  "Shamesword",
+                         "name":  "Shamesword"
+                     },
+                     {
+                         "code":  "Shapeshifter",
+                         "name":  "Shapeshifter"
+                     },
+                     {
+                         "code":  "Shiba\u0027s Soul",
+                         "name":  "Shiba\u0027s Soul"
+                     },
+                     {
+                         "code":  "Shinrai",
+                         "name":  "Shinrai"
+                     },
+                     {
+                         "code":  "Ship",
+                         "name":  "Ship"
+                     },
+                     {
+                         "code":  "Shogun",
+                         "name":  "Shogun"
+                     },
+                     {
+                         "code":  "Shojo",
+                         "name":  "Shojo"
+                     },
+                     {
+                         "code":  "Shoju\u0027s Soul",
+                         "name":  "Shoju\u0027s Soul"
+                     },
+                     {
+                         "code":  "Shugenja",
+                         "name":  "Shugenja"
+                     },
+                     {
+                         "code":  "Siege",
+                         "name":  "Siege"
+                     },
+                     {
+                         "code":  "Siege Master",
+                         "name":  "Siege Master"
+                     },
+                     {
+                         "code":  "Silk Fever",
+                         "name":  "Silk Fever"
+                     },
+                     {
+                         "code":  "Silken Sect",
+                         "name":  "Silken Sect"
+                     },
+                     {
+                         "code":  "Sincerity",
+                         "name":  "Sincerity"
+                     },
+                     {
+                         "code":  "Singular",
+                         "name":  "Singular"
+                     },
+                     {
+                         "code":  "Sinner",
+                         "name":  "Sinner"
+                     },
+                     {
+                         "code":  "Skirmisher",
+                         "name":  "Skirmisher"
+                     },
+                     {
+                         "code":  "Slave",
+                         "name":  "Slave"
+                     },
+                     {
+                         "code":  "Smith",
+                         "name":  "Smith"
+                     },
+                     {
+                         "code":  "Smuggler",
+                         "name":  "Smuggler"
+                     },
+                     {
+                         "code":  "Snow Maiden",
+                         "name":  "Snow Maiden"
+                     },
+                     {
+                         "code":  "Sober",
+                         "name":  "Sober"
+                     },
+                     {
+                         "code":  "Sociopath",
+                         "name":  "Sociopath"
+                     },
+                     {
+                         "code":  "Sodan Senzo",
+                         "name":  "Sodan Senzo"
+                     },
+                     {
+                         "code":  "Soul of Agasha Seruma",
+                         "name":  "Soul of Agasha Seruma"
+                     },
+                     {
+                         "code":  "Soul of Agasha Tomioko",
+                         "name":  "Soul of Agasha Tomioko"
+                     },
+                     {
+                         "code":  "Soul of Agasha Yuhiko",
+                         "name":  "Soul of Agasha Yuhiko"
+                     },
+                     {
+                         "code":  "Soul of Akodo Dosei",
+                         "name":  "Soul of Akodo Dosei"
+                     },
+                     {
+                         "code":  "Soul of Akodo Ebiro",
+                         "name":  "Soul of Akodo Ebiro"
+                     },
+                     {
+                         "code":  "Soul of Akodo Ieshige",
+                         "name":  "Soul of Akodo Ieshige"
+                     },
+                     {
+                         "code":  "Soul of Akodo Ijiasu",
+                         "name":  "Soul of Akodo Ijiasu"
+                     },
+                     {
+                         "code":  "Soul of Akodo Michio",
+                         "name":  "Soul of Akodo Michio"
+                     },
+                     {
+                         "code":  "Soul of Akodo Mirotai",
+                         "name":  "Soul of Akodo Mirotai"
+                     },
+                     {
+                         "code":  "Soul of Akodo Nakama",
+                         "name":  "Soul of Akodo Nakama"
+                     },
+                     {
+                         "code":  "Soul of Akodo Shunori",
+                         "name":  "Soul of Akodo Shunori"
+                     },
+                     {
+                         "code":  "Soul of Asahina Kimita",
+                         "name":  "Soul of Asahina Kimita"
+                     },
+                     {
+                         "code":  "Soul of Asahina Minori",
+                         "name":  "Soul of Asahina Minori"
+                     },
+                     {
+                         "code":  "Soul of Asahina Yoshino",
+                         "name":  "Soul of Asahina Yoshino"
+                     },
+                     {
+                         "code":  "Soul of Asako Hoshimi",
+                         "name":  "Soul of Asako Hoshimi"
+                     },
+                     {
+                         "code":  "Soul of Asako Suda",
+                         "name":  "Soul of Asako Suda"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Goshiu Experienced 3",
+                         "name":  "Soul of Bayushi Goshiu Experienced 3"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Himaru",
+                         "name":  "Soul of Bayushi Himaru"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Jou",
+                         "name":  "Soul of Bayushi Jou"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Kasata",
+                         "name":  "Soul of Bayushi Kasata"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Kwanchai",
+                         "name":  "Soul of Bayushi Kwanchai"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Maemi",
+                         "name":  "Soul of Bayushi Maemi"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Motomu",
+                         "name":  "Soul of Bayushi Motomu"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Muhito",
+                         "name":  "Soul of Bayushi Muhito"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Muraisan",
+                         "name":  "Soul of Bayushi Muraisan"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Saya",
+                         "name":  "Soul of Bayushi Saya"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Shigeru",
+                         "name":  "Soul of Bayushi Shigeru"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Sunetra",
+                         "name":  "Soul of Bayushi Sunetra"
+                     },
+                     {
+                         "code":  "Soul of Bayushi Tai",
+                         "name":  "Soul of Bayushi Tai"
+                     },
+                     {
+                         "code":  "Soul of Chuda Rintaro",
+                         "name":  "Soul of Chuda Rintaro"
+                     },
+                     {
+                         "code":  "Soul of Daidoji Gempachi",
+                         "name":  "Soul of Daidoji Gempachi"
+                     },
+                     {
+                         "code":  "Soul of Daidoji Tae",
+                         "name":  "Soul of Daidoji Tae"
+                     },
+                     {
+                         "code":  "Soul of Daigotsu Arima",
+                         "name":  "Soul of Daigotsu Arima"
+                     },
+                     {
+                         "code":  "Soul of Daigotsu Bundoru",
+                         "name":  "Soul of Daigotsu Bundoru"
+                     },
+                     {
+                         "code":  "Soul of Daigotsu Keigo",
+                         "name":  "Soul of Daigotsu Keigo"
+                     },
+                     {
+                         "code":  "Soul of Daigotsu Kurai",
+                         "name":  "Soul of Daigotsu Kurai"
+                     },
+                     {
+                         "code":  "Soul of Daigotsu Setsuko Experienced",
+                         "name":  "Soul of Daigotsu Setsuko Experienced"
+                     },
+                     {
+                         "code":  "Soul of Daigotsu Shiraki",
+                         "name":  "Soul of Daigotsu Shiraki"
+                     },
+                     {
+                         "code":  "Soul of Doji Ayano",
+                         "name":  "Soul of Doji Ayano"
+                     },
+                     {
+                         "code":  "Soul of Doji Bukita",
+                         "name":  "Soul of Doji Bukita"
+                     },
+                     {
+                         "code":  "Soul of Doji Hitomaro",
+                         "name":  "Soul of Doji Hitomaro"
+                     },
+                     {
+                         "code":  "Soul of Doji Nenkai",
+                         "name":  "Soul of Doji Nenkai"
+                     },
+                     {
+                         "code":  "Soul of Doji Nukada",
+                         "name":  "Soul of Doji Nukada"
+                     },
+                     {
+                         "code":  "Soul of Doji Numata",
+                         "name":  "Soul of Doji Numata"
+                     },
+                     {
+                         "code":  "Soul of Doji Tadenori",
+                         "name":  "Soul of Doji Tadenori"
+                     },
+                     {
+                         "code":  "Soul of Doji Yoshiaga",
+                         "name":  "Soul of Doji Yoshiaga"
+                     },
+                     {
+                         "code":  "Soul of Goju Utsuei",
+                         "name":  "Soul of Goju Utsuei"
+                     },
+                     {
+                         "code":  "Soul of Hida Hebi",
+                         "name":  "Soul of Hida Hebi"
+                     },
+                     {
+                         "code":  "Soul of Hida Kashin",
+                         "name":  "Soul of Hida Kashin"
+                     },
+                     {
+                         "code":  "Soul of Hida Kosedo",
+                         "name":  "Soul of Hida Kosedo"
+                     },
+                     {
+                         "code":  "Soul of Hida Renga",
+                         "name":  "Soul of Hida Renga"
+                     },
+                     {
+                         "code":  "Soul of Hida Rikyu Experienced",
+                         "name":  "Soul of Hida Rikyu Experienced"
+                     },
+                     {
+                         "code":  "Soul of Hida Tobashi",
+                         "name":  "Soul of Hida Tobashi"
+                     },
+                     {
+                         "code":  "Soul of Hiruma Hidora",
+                         "name":  "Soul of Hiruma Hidora"
+                     },
+                     {
+                         "code":  "Soul of Hiruma Todori",
+                         "name":  "Soul of Hiruma Todori"
+                     },
+                     {
+                         "code":  "Soul of Hoshi Akiyama",
+                         "name":  "Soul of Hoshi Akiyama"
+                     },
+                     {
+                         "code":  "Soul of Ikoma Otemi",
+                         "name":  "Soul of Ikoma Otemi"
+                     },
+                     {
+                         "code":  "Soul of Ikoma Sido",
+                         "name":  "Soul of Ikoma Sido"
+                     },
+                     {
+                         "code":  "Soul of Ikoma Tatsunori",
+                         "name":  "Soul of Ikoma Tatsunori"
+                     },
+                     {
+                         "code":  "Soul of Isawa Furiko",
+                         "name":  "Soul of Isawa Furiko"
+                     },
+                     {
+                         "code":  "Soul of Isawa Hachiko",
+                         "name":  "Soul of Isawa Hachiko"
+                     },
+                     {
+                         "code":  "Soul of Isawa Itsuoko",
+                         "name":  "Soul of Isawa Itsuoko"
+                     },
+                     {
+                         "code":  "Soul of Isawa Kimi",
+                         "name":  "Soul of Isawa Kimi"
+                     },
+                     {
+                         "code":  "Soul of Isawa Kokuten",
+                         "name":  "Soul of Isawa Kokuten"
+                     },
+                     {
+                         "code":  "Soul of Isawa Kumai",
+                         "name":  "Soul of Isawa Kumai"
+                     },
+                     {
+                         "code":  "Soul of Isawa Mariko",
+                         "name":  "Soul of Isawa Mariko"
+                     },
+                     {
+                         "code":  "Soul of Isawa Mizuhiko",
+                         "name":  "Soul of Isawa Mizuhiko"
+                     },
+                     {
+                         "code":  "Soul of Isawa Riake",
+                         "name":  "Soul of Isawa Riake"
+                     },
+                     {
+                         "code":  "Soul of Isawa Tanaka",
+                         "name":  "Soul of Isawa Tanaka"
+                     },
+                     {
+                         "code":  "Soul of Isawa Wakasa",
+                         "name":  "Soul of Isawa Wakasa"
+                     },
+                     {
+                         "code":  "Soul of Isawa Yutako",
+                         "name":  "Soul of Isawa Yutako"
+                     },
+                     {
+                         "code":  "Soul of Iuchi Eiji",
+                         "name":  "Soul of Iuchi Eiji"
+                     },
+                     {
+                         "code":  "Soul of Iuchi Karasu Experienced 2",
+                         "name":  "Soul of Iuchi Karasu Experienced 2"
+                     },
+                     {
+                         "code":  "Soul of Kaiu Hisayuki",
+                         "name":  "Soul of Kaiu Hisayuki"
+                     },
+                     {
+                         "code":  "Soul of Kaiu Seison",
+                         "name":  "Soul of Kaiu Seison"
+                     },
+                     {
+                         "code":  "Soul of Kaiu Shoichi",
+                         "name":  "Soul of Kaiu Shoichi"
+                     },
+                     {
+                         "code":  "Soul of Kakita Ariteko",
+                         "name":  "Soul of Kakita Ariteko"
+                     },
+                     {
+                         "code":  "Soul of Kakita Funaki",
+                         "name":  "Soul of Kakita Funaki"
+                     },
+                     {
+                         "code":  "Soul of Kakita Idzuki",
+                         "name":  "Soul of Kakita Idzuki"
+                     },
+                     {
+                         "code":  "Soul of Kakita Soichi",
+                         "name":  "Soul of Kakita Soichi"
+                     },
+                     {
+                         "code":  "Soul of Kakita Yariga",
+                         "name":  "Soul of Kakita Yariga"
+                     },
+                     {
+                         "code":  "Soul of Kakita Yosuga",
+                         "name":  "Soul of Kakita Yosuga"
+                     },
+                     {
+                         "code":  "Soul of Kindari",
+                         "name":  "Soul of Kindari"
+                     },
+                     {
+                         "code":  "Soul of Kitsu Motso",
+                         "name":  "Soul of Kitsu Motso"
+                     },
+                     {
+                         "code":  "Soul of Kitsuki Berii",
+                         "name":  "Soul of Kitsuki Berii"
+                     },
+                     {
+                         "code":  "Soul of Kitsuki Nakai",
+                         "name":  "Soul of Kitsuki Nakai"
+                     },
+                     {
+                         "code":  "Soul of Kitsuki Yasu",
+                         "name":  "Soul of Kitsuki Yasu"
+                     },
+                     {
+                         "code":  "Soul of Konetsu",
+                         "name":  "Soul of Konetsu"
+                     },
+                     {
+                         "code":  "Soul of Kuni Iyedo",
+                         "name":  "Soul of Kuni Iyedo"
+                     },
+                     {
+                         "code":  "Soul of Kuni Takaniro",
+                         "name":  "Soul of Kuni Takaniro"
+                     },
+                     {
+                         "code":  "Soul of Kuni Yasashii",
+                         "name":  "Soul of Kuni Yasashii"
+                     },
+                     {
+                         "code":  "Soul of Kyogen",
+                         "name":  "Soul of Kyogen"
+                     },
+                     {
+                         "code":  "Soul of Matsu Agetoki",
+                         "name":  "Soul of Matsu Agetoki"
+                     },
+                     {
+                         "code":  "Soul of Matsu Agoro",
+                         "name":  "Soul of Matsu Agoro"
+                     },
+                     {
+                         "code":  "Soul of Matsu Aoiko",
+                         "name":  "Soul of Matsu Aoiko"
+                     },
+                     {
+                         "code":  "Soul of Matsu Fumiyo Experienced",
+                         "name":  "Soul of Matsu Fumiyo Experienced"
+                     },
+                     {
+                         "code":  "Soul of Matsu Gohei",
+                         "name":  "Soul of Matsu Gohei"
+                     },
+                     {
+                         "code":  "Soul of Matsu Mari",
+                         "name":  "Soul of Matsu Mari"
+                     },
+                     {
+                         "code":  "Soul of Matsu Nishijo",
+                         "name":  "Soul of Matsu Nishijo"
+                     },
+                     {
+                         "code":  "Soul of Matsu Ryoichi",
+                         "name":  "Soul of Matsu Ryoichi"
+                     },
+                     {
+                         "code":  "Soul of Matsu Sanraku",
+                         "name":  "Soul of Matsu Sanraku"
+                     },
+                     {
+                         "code":  "Soul of Matsu Turi",
+                         "name":  "Soul of Matsu Turi"
+                     },
+                     {
+                         "code":  "Soul of Mirumoto Daini",
+                         "name":  "Soul of Mirumoto Daini"
+                     },
+                     {
+                         "code":  "Soul of Mirumoto Ino",
+                         "name":  "Soul of Mirumoto Ino"
+                     },
+                     {
+                         "code":  "Soul of Mirumoto Kei",
+                         "name":  "Soul of Mirumoto Kei"
+                     },
+                     {
+                         "code":  "Soul of Mirumoto Kyuzo",
+                         "name":  "Soul of Mirumoto Kyuzo"
+                     },
+                     {
+                         "code":  "Soul of Mirumoto Minawa",
+                         "name":  "Soul of Mirumoto Minawa"
+                     },
+                     {
+                         "code":  "Soul of Mirumoto Rosanjin",
+                         "name":  "Soul of Mirumoto Rosanjin"
+                     },
+                     {
+                         "code":  "Soul of Mirumoto Tsubasa",
+                         "name":  "Soul of Mirumoto Tsubasa"
+                     },
+                     {
+                         "code":  "Soul of Mirumoto Tsuge",
+                         "name":  "Soul of Mirumoto Tsuge"
+                     },
+                     {
+                         "code":  "Soul of Mirumoto Washizuka",
+                         "name":  "Soul of Mirumoto Washizuka"
+                     },
+                     {
+                         "code":  "Soul of Momiji",
+                         "name":  "Soul of Momiji"
+                     },
+                     {
+                         "code":  "Soul of Moshi Kamiya",
+                         "name":  "Soul of Moshi Kamiya"
+                     },
+                     {
+                         "code":  "Soul of Moshi Yuriko",
+                         "name":  "Soul of Moshi Yuriko"
+                     },
+                     {
+                         "code":  "Soul of Moto Akikazu",
+                         "name":  "Soul of Moto Akikazu"
+                     },
+                     {
+                         "code":  "Soul of Moto Gurban",
+                         "name":  "Soul of Moto Gurban"
+                     },
+                     {
+                         "code":  "Soul of Moto Munoru",
+                         "name":  "Soul of Moto Munoru"
+                     },
+                     {
+                         "code":  "Soul of Moto Qu Yuan",
+                         "name":  "Soul of Moto Qu Yuan"
+                     },
+                     {
+                         "code":  "Soul of Moto Shanyu",
+                         "name":  "Soul of Moto Shanyu"
+                     },
+                     {
+                         "code":  "Soul of Moto Yuudai",
+                         "name":  "Soul of Moto Yuudai"
+                     },
+                     {
+                         "code":  "Soul of Moto Zhijuan",
+                         "name":  "Soul of Moto Zhijuan"
+                     },
+                     {
+                         "code":  "Soul of Mukami",
+                         "name":  "Soul of Mukami"
+                     },
+                     {
+                         "code":  "Soul of Nakadai",
+                         "name":  "Soul of Nakadai"
+                     },
+                     {
+                         "code":  "Soul of Otomo Taneji",
+                         "name":  "Soul of Otomo Taneji"
+                     },
+                     {
+                         "code":  "Soul of Seppun Matsuo",
+                         "name":  "Soul of Seppun Matsuo"
+                     },
+                     {
+                         "code":  "Soul of Seppun Ujifusa",
+                         "name":  "Soul of Seppun Ujifusa"
+                     },
+                     {
+                         "code":  "Soul of Shiba Danjuro",
+                         "name":  "Soul of Shiba Danjuro"
+                     },
+                     {
+                         "code":  "Soul of Shiba Goto",
+                         "name":  "Soul of Shiba Goto"
+                     },
+                     {
+                         "code":  "Soul of Shiba Morihiko",
+                         "name":  "Soul of Shiba Morihiko"
+                     },
+                     {
+                         "code":  "Soul of Shiba Sakishi",
+                         "name":  "Soul of Shiba Sakishi"
+                     },
+                     {
+                         "code":  "Soul of Shiba Yobei",
+                         "name":  "Soul of Shiba Yobei"
+                     },
+                     {
+                         "code":  "Soul of Shiba Yoma",
+                         "name":  "Soul of Shiba Yoma"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Aniji",
+                         "name":  "Soul of Shinjo Aniji"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Chu-Yeung",
+                         "name":  "Soul of Shinjo Chu-Yeung"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Genya",
+                         "name":  "Soul of Shinjo Genya"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Goshi",
+                         "name":  "Soul of Shinjo Goshi"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Haruko",
+                         "name":  "Soul of Shinjo Haruko"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Hee-Young",
+                         "name":  "Soul of Shinjo Hee-Young"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Huang",
+                         "name":  "Soul of Shinjo Huang"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Hwarang",
+                         "name":  "Soul of Shinjo Hwarang"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Jalair",
+                         "name":  "Soul of Shinjo Jalair"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Ji-tae",
+                         "name":  "Soul of Shinjo Ji-tae"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Tae-hyun",
+                         "name":  "Soul of Shinjo Tae-hyun"
+                     },
+                     {
+                         "code":  "Soul of Shinjo Xushen",
+                         "name":  "Soul of Shinjo Xushen"
+                     },
+                     {
+                         "code":  "Soul of Shosuro Aroru",
+                         "name":  "Soul of Shosuro Aroru"
+                     },
+                     {
+                         "code":  "Soul of Shosuro Dazai Experienced",
+                         "name":  "Soul of Shosuro Dazai Experienced"
+                     },
+                     {
+                         "code":  "Soul of Shosuro Hihiko",
+                         "name":  "Soul of Shosuro Hihiko"
+                     },
+                     {
+                         "code":  "Soul of Shosuro Osamito",
+                         "name":  "Soul of Shosuro Osamito"
+                     },
+                     {
+                         "code":  "Soul of Shosuro Takagi",
+                         "name":  "Soul of Shosuro Takagi"
+                     },
+                     {
+                         "code":  "Soul of Shosuro Takuro",
+                         "name":  "Soul of Shosuro Takuro"
+                     },
+                     {
+                         "code":  "Soul of Tamori Shaitung",
+                         "name":  "Soul of Tamori Shaitung"
+                     },
+                     {
+                         "code":  "Soul of Tamori Shosei",
+                         "name":  "Soul of Tamori Shosei"
+                     },
+                     {
+                         "code":  "Soul of Tamori Sugi",
+                         "name":  "Soul of Tamori Sugi"
+                     },
+                     {
+                         "code":  "Soul of The Dread Kar",
+                         "name":  "Soul of The Dread Kar"
+                     },
+                     {
+                         "code":  "Soul of Togashi Akagi",
+                         "name":  "Soul of Togashi Akagi"
+                     },
+                     {
+                         "code":  "Soul of Togashi Chikato",
+                         "name":  "Soul of Togashi Chikato"
+                     },
+                     {
+                         "code":  "Soul of Togashi Oki",
+                         "name":  "Soul of Togashi Oki"
+                     },
+                     {
+                         "code":  "Soul of Togashi Shintaro",
+                         "name":  "Soul of Togashi Shintaro"
+                     },
+                     {
+                         "code":  "Soul of Torao",
+                         "name":  "Soul of Torao"
+                     },
+                     {
+                         "code":  "Soul of Toritaka Okabe",
+                         "name":  "Soul of Toritaka Okabe"
+                     },
+                     {
+                         "code":  "Soul of Tsuruchi Amaya",
+                         "name":  "Soul of Tsuruchi Amaya"
+                     },
+                     {
+                         "code":  "Soul of Tsuruchi Jougo",
+                         "name":  "Soul of Tsuruchi Jougo"
+                     },
+                     {
+                         "code":  "Soul of Tsuruchi Masako",
+                         "name":  "Soul of Tsuruchi Masako"
+                     },
+                     {
+                         "code":  "Soul of Tsuruchi Mochisa Experienced",
+                         "name":  "Soul of Tsuruchi Mochisa Experienced"
+                     },
+                     {
+                         "code":  "Soul of Tsuruchi Saya",
+                         "name":  "Soul of Tsuruchi Saya"
+                     },
+                     {
+                         "code":  "Soul of Uragirimono",
+                         "name":  "Soul of Uragirimono"
+                     },
+                     {
+                         "code":  "Soul of Utaku Etsuko",
+                         "name":  "Soul of Utaku Etsuko"
+                     },
+                     {
+                         "code":  "Soul of Utaku Fusae",
+                         "name":  "Soul of Utaku Fusae"
+                     },
+                     {
+                         "code":  "Soul of Utaku Liu-Xeung",
+                         "name":  "Soul of Utaku Liu-Xeung"
+                     },
+                     {
+                         "code":  "Soul of Yodin",
+                         "name":  "Soul of Yodin"
+                     },
+                     {
+                         "code":  "Soul of Yoritomo Bussho",
+                         "name":  "Soul of Yoritomo Bussho"
+                     },
+                     {
+                         "code":  "Soul of Yoritomo Eriko",
+                         "name":  "Soul of Yoritomo Eriko"
+                     },
+                     {
+                         "code":  "Soul of Yoritomo Isoshi",
+                         "name":  "Soul of Yoritomo Isoshi"
+                     },
+                     {
+                         "code":  "Soul of Yoritomo Iwata",
+                         "name":  "Soul of Yoritomo Iwata"
+                     },
+                     {
+                         "code":  "Soul of Yoritomo Manzo",
+                         "name":  "Soul of Yoritomo Manzo"
+                     },
+                     {
+                         "code":  "Soul of Yoritomo Saburo",
+                         "name":  "Soul of Yoritomo Saburo"
+                     },
+                     {
+                         "code":  "Soul of Yotsu Seiki",
+                         "name":  "Soul of Yotsu Seiki"
+                     },
+                     {
+                         "code":  "Sparrow Clan",
+                         "name":  "Sparrow Clan"
+                     },
+                     {
+                         "code":  "Spawn of Vritra",
+                         "name":  "Spawn of Vritra"
+                     },
+                     {
+                         "code":  "Spear",
+                         "name":  "Spear"
+                     },
+                     {
+                         "code":  "Spider",
+                         "name":  "Spider"
+                     },
+                     {
+                         "code":  "Spider Clan",
+                         "name":  "Spider Clan"
+                     },
+                     {
+                         "code":  "Spirit",
+                         "name":  "Spirit"
+                     },
+                     {
+                         "code":  "Spy",
+                         "name":  "Spy"
+                     },
+                     {
+                         "code":  "Stable Master",
+                         "name":  "Stable Master"
+                     },
+                     {
+                         "code":  "Stables",
+                         "name":  "Stables"
+                     },
+                     {
+                         "code":  "Staff",
+                         "name":  "Staff"
+                     },
+                     {
+                         "code":  "Stained Paw Tribe",
+                         "name":  "Stained Paw Tribe"
+                     },
+                     {
+                         "code":  "Stalwart",
+                         "name":  "Stalwart"
+                     },
+                     {
+                         "code":  "Standard",
+                         "name":  "Standard"
+                     },
+                     {
+                         "code":  "Steel Lion",
+                         "name":  "Steel Lion"
+                     },
+                     {
+                         "code":  "Storm Rider",
+                         "name":  "Storm Rider"
+                     },
+                     {
+                         "code":  "Storyteller",
+                         "name":  "Storyteller"
+                     },
+                     {
+                         "code":  "Strength",
+                         "name":  "Strength"
+                     },
+                     {
+                         "code":  "Student",
+                         "name":  "Student"
+                     },
+                     {
+                         "code":  "Student of Kinuye",
+                         "name":  "Student of Kinuye"
+                     },
+                     {
+                         "code":  "Sumai",
+                         "name":  "Sumai"
+                     },
+                     {
+                         "code":  "Sumai Master",
+                         "name":  "Sumai Master"
+                     },
+                     {
+                         "code":  "Summoner",
+                         "name":  "Summoner"
+                     },
+                     {
+                         "code":  "Sun-Rider",
+                         "name":  "Sun-Rider"
+                     },
+                     {
+                         "code":  "Supai",
+                         "name":  "Supai"
+                     },
+                     {
+                         "code":  "Suryn",
+                         "name":  "Suryn"
+                     },
+                     {
+                         "code":  "Swamp",
+                         "name":  "Swamp"
+                     },
+                     {
+                         "code":  "Sword",
+                         "name":  "Sword"
+                     },
+                     {
+                         "code":  "Sycophant",
+                         "name":  "Sycophant"
+                     },
+                     {
+                         "code":  "Tactical",
+                         "name":  "Tactical"
+                     },
+                     {
+                         "code":  "Tactician",
+                         "name":  "Tactician"
+                     },
+                     {
+                         "code":  "Taisa",
+                         "name":  "Taisa"
+                     },
+                     {
+                         "code":  "Tamamo-no-Mae",
+                         "name":  "Tamamo-no-Mae"
+                     },
+                     {
+                         "code":  "Tasu\u0027s Sorrow",
+                         "name":  "Tasu\u0027s Sorrow"
+                     },
+                     {
+                         "code":  "Tattered Ear Tribe",
+                         "name":  "Tattered Ear Tribe"
+                     },
+                     {
+                         "code":  "Tattoo",
+                         "name":  "Tattoo"
+                     },
+                     {
+                         "code":  "Tattooed",
+                         "name":  "Tattooed"
+                     },
+                     {
+                         "code":  "Tax Collector",
+                         "name":  "Tax Collector"
+                     },
+                     {
+                         "code":  "Tejina",
+                         "name":  "Tejina"
+                     },
+                     {
+                         "code":  "Temple",
+                         "name":  "Temple"
+                     },
+                     {
+                         "code":  "Tennyo",
+                         "name":  "Tennyo"
+                     },
+                     {
+                         "code":  "Terrain",
+                         "name":  "Terrain"
+                     },
+                     {
+                         "code":  "Tessen",
+                         "name":  "Tessen"
+                     },
+                     {
+                         "code":  "The Fallen Crane",
+                         "name":  "The Fallen Crane"
+                     },
+                     {
+                         "code":  "The Growing Storm",
+                         "name":  "The Growing Storm"
+                     },
+                     {
+                         "code":  "The Khan",
+                         "name":  "The Khan"
+                     },
+                     {
+                         "code":  "The Masked Crab",
+                         "name":  "The Masked Crab"
+                     },
+                     {
+                         "code":  "The Masked Crane",
+                         "name":  "The Masked Crane"
+                     },
+                     {
+                         "code":  "The Masked Lion",
+                         "name":  "The Masked Lion"
+                     },
+                     {
+                         "code":  "The Masked Monkey",
+                         "name":  "The Masked Monkey"
+                     },
+                     {
+                         "code":  "The Masked Phoenix",
+                         "name":  "The Masked Phoenix"
+                     },
+                     {
+                         "code":  "The Masked Tortoise",
+                         "name":  "The Masked Tortoise"
+                     },
+                     {
+                         "code":  "The Masked Wasp",
+                         "name":  "The Masked Wasp"
+                     },
+                     {
+                         "code":  "Thief",
+                         "name":  "Thief"
+                     },
+                     {
+                         "code":  "Third Whisker Tribe",
+                         "name":  "Third Whisker Tribe"
+                     },
+                     {
+                         "code":  "Thunder",
+                         "name":  "Thunder"
+                     },
+                     {
+                         "code":  "Tiger\u0027s Claw",
+                         "name":  "Tiger\u0027s Claw"
+                     },
+                     {
+                         "code":  "Tomorrow Chieftain",
+                         "name":  "Tomorrow Chieftain"
+                     },
+                     {
+                         "code":  "Topaz Champion",
+                         "name":  "Topaz Champion"
+                     },
+                     {
+                         "code":  "Tortoise Clan",
+                         "name":  "Tortoise Clan"
+                     },
+                     {
+                         "code":  "Trap Expert",
+                         "name":  "Trap Expert"
+                     },
+                     {
+                         "code":  "Traveling Crab",
+                         "name":  "Traveling Crab"
+                     },
+                     {
+                         "code":  "Troll",
+                         "name":  "Troll"
+                     },
+                     {
+                         "code":  "Turquoise Champion",
+                         "name":  "Turquoise Champion"
+                     },
+                     {
+                         "code":  "Two-Handed",
+                         "name":  "Two-Handed"
+                     },
+                     {
+                         "code":  "Unaligned",
+                         "name":  "Unaligned"
+                     },
+                     {
+                         "code":  "Unbound",
+                         "name":  "Unbound"
+                     },
+                     {
+                         "code":  "Unbreakable",
+                         "name":  "Unbreakable"
+                     },
+                     {
+                         "code":  "Undead",
+                         "name":  "Undead"
+                     },
+                     {
+                         "code":  "Unicorn",
+                         "name":  "Unicorn"
+                     },
+                     {
+                         "code":  "Unicorn Clan",
+                         "name":  "Unicorn Clan"
+                     },
+                     {
+                         "code":  "Unicorn Clan Samurai",
+                         "name":  "Unicorn Clan Samurai"
+                     },
+                     {
+                         "code":  "Unique",
+                         "name":  "Unique"
+                     },
+                     {
+                         "code":  "Unmaker",
+                         "name":  "Unmaker"
+                     },
+                     {
+                         "code":  "Veteran",
+                         "name":  "Veteran"
+                     },
+                     {
+                         "code":  "Vicious",
+                         "name":  "Vicious"
+                     },
+                     {
+                         "code":  "Vigilant",
+                         "name":  "Vigilant"
+                     },
+                     {
+                         "code":  "Village",
+                         "name":  "Village"
+                     },
+                     {
+                         "code":  "Villain",
+                         "name":  "Villain"
+                     },
+                     {
+                         "code":  "Voice of the Empress",
+                         "name":  "Voice of the Empress"
+                     },
+                     {
+                         "code":  "Voice of the Masters",
+                         "name":  "Voice of the Masters"
+                     },
+                     {
+                         "code":  "Void",
+                         "name":  "Void"
+                     },
+                     {
+                         "code":  "Wanderer",
+                         "name":  "Wanderer"
+                     },
+                     {
+                         "code":  "Wandering Lion",
+                         "name":  "Wandering Lion"
+                     },
+                     {
+                         "code":  "Wani",
+                         "name":  "Wani"
+                     },
+                     {
+                         "code":  "War Leader",
+                         "name":  "War Leader"
+                     },
+                     {
+                         "code":  "Ward Master",
+                         "name":  "Ward Master"
+                     },
+                     {
+                         "code":  "Warden",
+                         "name":  "Warden"
+                     },
+                     {
+                         "code":  "Warrior of the Bright Eye",
+                         "name":  "Warrior of the Bright Eye"
+                     },
+                     {
+                         "code":  "Washed Up",
+                         "name":  "Washed Up"
+                     },
+                     {
+                         "code":  "Wasp Clan",
+                         "name":  "Wasp Clan"
+                     },
+                     {
+                         "code":  "Wasteland",
+                         "name":  "Wasteland"
+                     },
+                     {
+                         "code":  "Water",
+                         "name":  "Water"
+                     },
+                     {
+                         "code":  "Weapon",
+                         "name":  "Weapon"
+                     },
+                     {
+                         "code":  "White Guard",
+                         "name":  "White Guard"
+                     },
+                     {
+                         "code":  "Will",
+                         "name":  "Will"
+                     },
+                     {
+                         "code":  "Winter",
+                         "name":  "Winter"
+                     },
+                     {
+                         "code":  "Witch Hunter",
+                         "name":  "Witch Hunter"
+                     },
+                     {
+                         "code":  "Worker of Flesh",
+                         "name":  "Worker of Flesh"
+                     },
+                     {
+                         "code":  "Writ",
+                         "name":  "Writ"
+                     },
+                     {
+                         "code":  "Wyrm",
+                         "name":  "Wyrm"
+                     },
+                     {
+                         "code":  "Wyrm Rider",
+                         "name":  "Wyrm Rider"
+                     },
+                     {
+                         "code":  "Yodotai",
+                         "name":  "Yodotai"
+                     },
+                     {
+                         "code":  "Yojimbo",
+                         "name":  "Yojimbo"
+                     },
+                     {
+                         "code":  "Yuruginai",
+                         "name":  "Yuruginai"
+                     },
+                     {
+                         "code":  "Zealot",
+                         "name":  "Zealot"
+                     },
+                     {
+                         "code":  "Zokujin",
+                         "name":  "Zokujin"
+                     },
+                     {
+                         "code":  "Zombie",
+                         "name":  "Zombie"
+                     }
+                 ]
+}
