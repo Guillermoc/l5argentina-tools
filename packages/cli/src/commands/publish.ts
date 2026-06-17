@@ -1,9 +1,10 @@
 import { writeRegistry, writeLock, registryPut, buildAll, buildManifest, validateManifest, contentType, manifestKey, R2 } from "@l5a/core";
-import { loadContext, fmtBytes } from "../context";
+import { loadContext, fmtBytes, commitState } from "../context";
 
 interface PublishOpts {
   channel: string;
   dryRun?: boolean;
+  commit?: boolean;
 }
 
 /**
@@ -61,9 +62,8 @@ export async function publishCommand(app: string, opts: PublishOpts): Promise<vo
     process.exit(1);
   }
 
-  // armar y validar el manifest ANTES de tocar R2
-  const manifest = buildManifest(ctx.config, channelState, ctx.registry);
-  // las entradas nuevas todavía no están en registry: agregarlas en memoria para validar
+  // las entradas nuevas todavía no están en registry: agregarlas en memoria
+  // (así buildManifest puede armar el manifest completo) y validar ANTES de tocar R2
   for (const it of toUpload) {
     registryPut(ctx.registry, it.id, it.version, {
       sha256: it.sha256!,
@@ -101,5 +101,7 @@ export async function publishCommand(app: string, opts: PublishOpts): Promise<vo
   writeRegistry(ctx.paths.registry, ctx.registry);
   writeLock(ctx.paths.lock, ctx.lock);
 
-  console.log(`\n  ✓ publicado. manifest ${channel}/manifest.json + estado actualizado.\n`);
+  console.log(`\n  ✓ publicado. manifest ${channel}/manifest.json + estado actualizado.`);
+  if (opts.commit) commitState(ctx, `chore(deploy): publish ${channel}`);
+  console.log("");
 }

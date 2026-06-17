@@ -40,7 +40,8 @@ program
   .description("publica las versiones actuales de la fuente a un canal (default: debug)")
   .option("-c, --channel <channel>", "canal destino", "debug")
   .option("--dry-run", "mostrar el plan sin tocar R2")
-  .action(async function (this: Command, opts: { channel: string; dryRun?: boolean }) {
+  .option("--commit", "tras publicar, commitea y pushea el estado (config/versions/lock/registry)")
+  .action(async function (this: Command, opts: { channel: string; dryRun?: boolean; commit?: boolean }) {
     await publishCommand(app(this), opts);
   });
 
@@ -49,7 +50,8 @@ program
   .description("promueve versiones de un canal a otro (no copia bytes)")
   .option("--only <ids>", "solo estos paquetes (csv)")
   .option("--dry-run", "mostrar el diff sin tocar R2")
-  .action(async function (this: Command, from: string, to: string, opts: { only?: string; dryRun?: boolean }) {
+  .option("--commit", "tras promover, commitea y pushea el estado (config/versions/lock/registry)")
+  .action(async function (this: Command, from: string, to: string, opts: { only?: string; dryRun?: boolean; commit?: boolean }) {
     await promoteCommand(app(this), from, to, opts);
   });
 
@@ -58,7 +60,8 @@ program
   .description("migra un canal a la pool (copia server-side lo que ya existe, sube lo nuevo)")
   .option("-c, --channel <channel>", "canal a migrar", "debug")
   .option("--apply", "ejecutar de verdad (default: plan / dry-run a dist/)")
-  .action(async function (this: Command, opts: { channel: string; apply?: boolean }) {
+  .option("--commit", "tras migrar, commitea y pushea el estado (config/versions/lock/registry)")
+  .action(async function (this: Command, opts: { channel: string; apply?: boolean; commit?: boolean }) {
     await migrateCommand(app(this), opts);
   });
 

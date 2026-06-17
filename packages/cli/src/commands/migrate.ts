@@ -12,11 +12,12 @@ import {
   R2,
   type MigratePlanItem,
 } from "@l5a/core";
-import { loadContext, fmtBytes } from "../context";
+import { loadContext, fmtBytes, commitState } from "../context";
 
 interface MigrateOpts {
   channel: string;
   apply?: boolean;
+  commit?: boolean;
 }
 
 const ICON: Record<MigratePlanItem["action"], string> = {
@@ -136,5 +137,7 @@ export async function migrateCommand(app: string, opts: MigrateOpts): Promise<vo
   writeRegistry(ctx.paths.registry, ctx.registry);
   writeLock(ctx.paths.lock, ctx.lock);
 
-  console.log(`\n  ✓ canal "${channel}" migrado a la pool. manifest + registry + lock actualizados.\n`);
+  console.log(`\n  ✓ canal "${channel}" migrado a la pool. manifest + registry + lock actualizados.`);
+  if (opts.commit) commitState(ctx, `chore(deploy): migrate ${channel} → pool`);
+  console.log("");
 }

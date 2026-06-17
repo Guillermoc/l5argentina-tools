@@ -1,9 +1,10 @@
 import { writeLock, buildManifest, validateManifest, manifestKey, R2 } from "@l5a/core";
-import { loadContext } from "../context";
+import { loadContext, commitState } from "../context";
 
 interface PromoteOpts {
   only?: string;
   dryRun?: boolean;
+  commit?: boolean;
 }
 
 /**
@@ -75,5 +76,7 @@ export async function promoteCommand(
   ctx.lock.channels[to] = toState;
   writeLock(ctx.paths.lock, ctx.lock);
 
-  console.log(`\n  ✓ promovido. ${to}/manifest.json actualizado (0 bytes copiados — pool compartido).\n`);
+  console.log(`\n  ✓ promovido. ${to}/manifest.json actualizado (0 bytes copiados — pool compartido).`);
+  if (opts.commit) commitState(ctx, `chore(deploy): promote ${from} → ${to}`);
+  console.log("");
 }
