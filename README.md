@@ -35,7 +35,14 @@ apps/companion/
   dist/                artefactos generados (gitignored)
 packages/core/         motor (build, hash, pack determinista, manifest, registry, R2)
 packages/cli/          comando `l5a`
+apps/dashboard/        panel web (Cloudflare Pages) con el estado de los 3 canales
 ```
+
+## Dashboard
+
+`apps/dashboard/` es un panel **solo-lectura** (React + Cloudflare Pages, gratis) que muestra
+la matriz de versiones por canal, la salud de cada archivo y el drift respecto de git. Ver
+[apps/dashboard/README.md](apps/dashboard/README.md). Local: `cd apps/dashboard && npm install && npm run dev`.
 
 ## Uso
 

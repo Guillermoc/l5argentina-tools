@@ -1,0 +1,8 @@
+# build output
+dist/
+
+# código generado desde apps/companion (lo regenera `npm run gen`)
+src/generated/
+
+# wrangler
+.wrangler/
