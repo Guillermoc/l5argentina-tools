@@ -5,5 +5,6 @@ export * from "./pack";
 export * from "./paths";
 export * from "./build";
 export * from "./manifest";
+export * from "./migrate";
 export * from "./state";
 export { R2 } from "./r2";

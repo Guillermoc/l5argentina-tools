@@ -3,7 +3,7 @@
   "channels": {
     "debug": {
       "filters": "2.0.0",
-      "cards_db": "2.1.0",
+      "cards_db": "2.2.0",
       "rules": "2.1.1",
       "20F": "1.0",
       "celestial": "1.0",

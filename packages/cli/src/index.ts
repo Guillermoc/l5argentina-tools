@@ -5,6 +5,7 @@ import { buildCommand } from "./commands/build";
 import { statusCommand } from "./commands/status";
 import { publishCommand } from "./commands/publish";
 import { promoteCommand } from "./commands/promote";
+import { migrateCommand } from "./commands/migrate";
 import { verifyCommand } from "./commands/verify";
 import { gcCommand } from "./commands/gc";
 
@@ -50,6 +51,15 @@ program
   .option("--dry-run", "mostrar el diff sin tocar R2")
   .action(async function (this: Command, from: string, to: string, opts: { only?: string; dryRun?: boolean }) {
     await promoteCommand(app(this), from, to, opts);
+  });
+
+program
+  .command("migrate")
+  .description("migra un canal a la pool (copia server-side lo que ya existe, sube lo nuevo)")
+  .option("-c, --channel <channel>", "canal a migrar", "debug")
+  .option("--apply", "ejecutar de verdad (default: plan / dry-run a dist/)")
+  .action(async function (this: Command, opts: { channel: string; apply?: boolean }) {
+    await migrateCommand(app(this), opts);
   });
 
 program
