@@ -10,8 +10,8 @@ export interface BuildResult {
 }
 
 /** Ejecuta el build y, salvo dryRun, escribe los artefactos nuevos en dist/. */
-export function runBuild(app: string, opts: { write?: boolean } = {}): BuildResult {
-  const ctx = loadContext(app);
+export async function runBuild(app: string, opts: { write?: boolean } = {}): Promise<BuildResult> {
+  const ctx = await loadContext(app);
   const items = buildAll({
     appDir: ctx.appDir,
     config: ctx.config,
@@ -59,8 +59,8 @@ const ICON: Record<BuildItem["status"], string> = {
   drift: "✗",
 };
 
-export function buildCommand(app: string, opts: { write?: boolean }): void {
-  const { items, hasDrift } = runBuild(app, { write: opts.write !== false });
+export async function buildCommand(app: string, opts: { write?: boolean }): Promise<void> {
+  const { items, hasDrift } = await runBuild(app, { write: opts.write !== false });
 
   console.log(`\nbuild · app "${app}"\n`);
   for (const it of items) {

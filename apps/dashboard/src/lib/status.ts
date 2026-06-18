@@ -1,6 +1,7 @@
 import type {
   AppConfig,
   ChannelStatus,
+  ExpectedLock,
   Manifest,
   ManifestEntry,
   PackageHealth,
@@ -8,7 +9,19 @@ import type {
   StatusResponse,
 } from "../types";
 
-type Cfg = Pick<AppConfig, "baseUrl" | "channels">;
+type Cfg = Pick<AppConfig, "app" | "baseUrl" | "channels">;
+
+async function fetchExpectedLock(config: Cfg): Promise<ExpectedLock> {
+  try {
+    const res = await fetch(`${config.baseUrl}_state/channels.lock.json`, {
+      headers: { "cache-control": "no-cache" },
+    });
+    if (res.ok) return (await res.json()) as ExpectedLock;
+  } catch {
+    /* sin estado todavía */
+  }
+  return { app: config.app, channels: {} };
+}
 
 /**
  * Baja los manifests de todos los canales en vivo y chequea la salud de cada
@@ -16,13 +29,15 @@ type Cfg = Pick<AppConfig, "baseUrl" | "channels">;
  * y en la Pages Function de Cloudflare.
  */
 export async function fetchStatus(config: Cfg): Promise<StatusResponse> {
-  const channels = await Promise.all(
-    config.channels.map((c) => fetchChannel(config, c)),
-  );
+  const [channels, expectedLock] = await Promise.all([
+    Promise.all(config.channels.map((c) => fetchChannel(config, c))),
+    fetchExpectedLock(config),
+  ]);
   return {
     fetchedAt: new Date().toISOString(),
     baseUrl: config.baseUrl,
     channels,
+    expectedLock,
   };
 }
 

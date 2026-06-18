@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ChannelStatus, PackageStatus, StatusResponse } from "./types";
-import { appConfig, expectedLock } from "./generated/companion";
+import { appConfig } from "./generated/companion";
 import { fmtBytes, timeAgo, compareVersions } from "./lib/format";
+import type { PromoteChange } from "./lib/promote";
 
 type LiveIndex = Record<string, Record<string, PackageStatus>>;
 
@@ -55,6 +56,7 @@ export default function App() {
   const [data, setData] = useState<StatusResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [promoting, setPromoting] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -74,8 +76,47 @@ export default function App() {
     void load();
   }, [load]);
 
+  // Promueve un canal: pide el plan, confirma el diff, aplica y refresca.
+  const promote = useCallback(
+    async (from: string, to: string) => {
+      try {
+        const planRes = await fetch("/api/promote", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ from, to, apply: false }),
+        });
+        const plan = await planRes.json();
+        if (!planRes.ok) {
+          window.alert(`No se puede promover: ${plan.error ?? planRes.status}`);
+          return;
+        }
+        if (!plan.changes?.length) {
+          window.alert("Nada para promover.");
+          return;
+        }
+        const detail = plan.changes.map((c: PromoteChange) => `  • ${c.id}: ${c.from} → ${c.to}`).join("\n");
+        if (!window.confirm(`Promover ${from} → ${to}\n\n${detail}\n\n¿Confirmás?`)) return;
+        setPromoting(to);
+        const res = await fetch("/api/promote", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ from, to, apply: true }),
+        });
+        const out = await res.json();
+        if (!res.ok || out.error) window.alert(`Error al promover: ${out.error ?? res.status}`);
+        else await load();
+      } catch (e) {
+        window.alert(`Error: ${(e as Error).message}`);
+      } finally {
+        setPromoting(null);
+      }
+    },
+    [load],
+  );
+
   const channels = appConfig.channels;
   const { live, meta } = useMemo(() => indexLive(data), [data]);
+  const expectedLock = data?.expectedLock;
 
   const rows = useMemo(() => {
     const ids = appConfig.packages.map((p) => p.id);
@@ -112,7 +153,7 @@ export default function App() {
       const upstream = ci > 0 ? channels[ci - 1] : undefined;
       for (const row of rows) {
         const entry = live[ch]?.[row.id];
-        const expected = expectedLock.channels[ch]?.[row.id];
+        const expected = expectedLock?.channels[ch]?.[row.id];
         if (expected != null && entry && entry.version !== expected) driftCount++;
         if (entry?.health.level === "error") errorCount++;
         else if (entry?.health.level === "warn") warnCount++;
@@ -121,7 +162,7 @@ export default function App() {
       }
     });
     return { driftCount, errorCount, warnCount, channelErrors, promoteCount };
-  }, [channels, rows, live, meta]);
+  }, [channels, rows, live, meta, expectedLock]);
 
   const allGood =
     !error && !loading && channelErrors === 0 && driftCount === 0 && errorCount === 0 && warnCount === 0;
@@ -202,18 +243,31 @@ export default function App() {
           <thead className="bg-slate-900/80">
             <tr>
               <th className="px-4 py-3 text-left font-medium text-slate-400">Paquete</th>
-              {channels.map((ch) => (
-                <th key={ch} className="px-4 py-3 text-left font-medium text-slate-300">
-                  <span className="flex items-center gap-2">
-                    {ch}
-                    {meta[ch] && !meta[ch].ok ? (
-                      <Dot color="#fb7185" title={`manifest no disponible: ${meta[ch].error ?? ""}`} />
-                    ) : meta[ch] ? (
-                      <Dot color="#34d399" title="manifest OK" />
-                    ) : null}
-                  </span>
-                </th>
-              ))}
+              {channels.map((ch, ci) => {
+                const upstream = ci > 0 ? channels[ci - 1] : undefined;
+                const canPromote = upstream ? rows.some((r) => promotableVersion(ci, r.id)) : false;
+                return (
+                  <th key={ch} className="px-4 py-3 text-left align-top font-medium text-slate-300">
+                    <span className="flex items-center gap-2">
+                      {ch}
+                      {meta[ch] && !meta[ch].ok ? (
+                        <Dot color="#fb7185" title={`manifest no disponible: ${meta[ch].error ?? ""}`} />
+                      ) : meta[ch] ? (
+                        <Dot color="#34d399" title="manifest OK" />
+                      ) : null}
+                    </span>
+                    {canPromote && upstream && (
+                      <button
+                        onClick={() => void promote(upstream, ch)}
+                        disabled={promoting === ch}
+                        className="mt-1.5 block rounded bg-sky-500/15 px-2 py-1 text-[11px] font-medium text-sky-300 ring-1 ring-sky-400/30 transition hover:bg-sky-500/25 disabled:opacity-50"
+                      >
+                        {promoting === ch ? "Promoviendo…" : `↑ Promover desde ${upstream}`}
+                      </button>
+                    )}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
@@ -225,7 +279,7 @@ export default function App() {
                 </td>
                 {channels.map((ch, ci) => {
                   const entry = live[ch]?.[row.id];
-                  const expected = expectedLock.channels[ch]?.[row.id];
+                  const expected = expectedLock?.channels[ch]?.[row.id];
                   const chOk = meta[ch]?.ok ?? false;
 
                   if (!chOk) {

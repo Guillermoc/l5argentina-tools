@@ -24,15 +24,15 @@ program
   .command("build")
   .description("construye los artefactos desde las fuentes y los deja en dist/")
   .option("--no-write", "no escribir dist/ (solo mostrar el plan)")
-  .action(function (this: Command, opts: { write?: boolean }) {
-    buildCommand(app(this), opts);
+  .action(async function (this: Command, opts: { write?: boolean }) {
+    await buildCommand(app(this), opts);
   });
 
 program
   .command("status")
   .description("matriz de versiones por canal")
-  .action(function (this: Command) {
-    statusCommand(app(this));
+  .action(async function (this: Command) {
+    await statusCommand(app(this));
   });
 
 program
@@ -40,8 +40,7 @@ program
   .description("publica las versiones actuales de la fuente a un canal (default: debug)")
   .option("-c, --channel <channel>", "canal destino", "debug")
   .option("--dry-run", "mostrar el plan sin tocar R2")
-  .option("--commit", "tras publicar, commitea y pushea el estado (config/versions/lock/registry)")
-  .action(async function (this: Command, opts: { channel: string; dryRun?: boolean; commit?: boolean }) {
+  .action(async function (this: Command, opts: { channel: string; dryRun?: boolean }) {
     await publishCommand(app(this), opts);
   });
 
@@ -50,8 +49,7 @@ program
   .description("promueve versiones de un canal a otro (no copia bytes)")
   .option("--only <ids>", "solo estos paquetes (csv)")
   .option("--dry-run", "mostrar el diff sin tocar R2")
-  .option("--commit", "tras promover, commitea y pushea el estado (config/versions/lock/registry)")
-  .action(async function (this: Command, from: string, to: string, opts: { only?: string; dryRun?: boolean; commit?: boolean }) {
+  .action(async function (this: Command, from: string, to: string, opts: { only?: string; dryRun?: boolean }) {
     await promoteCommand(app(this), from, to, opts);
   });
 
@@ -61,8 +59,7 @@ program
   .option("-c, --channel <channel>", "canal a migrar", "debug")
   .option("--adopt", "usar las versiones que el canal tiene HOY en vivo (no versions.json)")
   .option("--apply", "ejecutar de verdad (default: plan / dry-run a dist/)")
-  .option("--commit", "tras migrar, commitea y pushea el estado (config/versions/lock/registry)")
-  .action(async function (this: Command, opts: { channel: string; adopt?: boolean; apply?: boolean; commit?: boolean }) {
+  .action(async function (this: Command, opts: { channel: string; adopt?: boolean; apply?: boolean }) {
     await migrateCommand(app(this), opts);
   });
 

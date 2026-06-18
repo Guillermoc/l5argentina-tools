@@ -6,7 +6,7 @@ import { loadContext } from "../context";
  * los que NINGÚN canal referencia (según lock + registry). Dry-run por defecto.
  */
 export async function gcCommand(app: string, opts: { apply?: boolean }): Promise<void> {
-  const ctx = loadContext(app);
+  const ctx = await loadContext(app);
 
   // claves del pool referenciadas por algún canal
   const referenced = new Set<string>();

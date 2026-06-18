@@ -1,26 +1,49 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwind from "@tailwindcss/vite";
+import dotenv from "dotenv";
 
-// Plugin de dev: sirve /api/status localmente reusando la MISMA lógica que la
-// Pages Function de producción, así `npm run dev` funciona sin wrangler.
+// En dev, carga las credenciales R2 del .env de la raíz del repo (para /api/promote).
+dotenv.config({ path: "../../.env" });
+
+function readBody(req: any): Promise<string> {
+  return new Promise((resolve) => {
+    let raw = "";
+    req.on("data", (c: any) => (raw += c));
+    req.on("end", () => resolve(raw));
+  });
+}
+
+// Plugin de dev: sirve /api/* localmente reusando la MISMA lógica que las Pages
+// Functions de producción, así `npm run dev` funciona sin wrangler.
 function devApi() {
   return {
     name: "l5a-dev-api",
     configureServer(server: any) {
       server.middlewares.use((req: any, res: any, next: any) => {
-        if (!req.url || !req.url.startsWith("/api/status")) return next();
+        const url: string = req.url ?? "";
+        if (!url.startsWith("/api/")) return next();
+        const json = (status: number, body: unknown) => {
+          res.statusCode = status;
+          res.setHeader("content-type", "application/json");
+          res.end(JSON.stringify(body));
+        };
         (async () => {
           try {
-            const { fetchStatus } = await import("./src/lib/status");
-            const { appConfig } = await import("./src/generated/companion");
-            const data = await fetchStatus(appConfig);
-            res.setHeader("content-type", "application/json");
-            res.end(JSON.stringify(data));
+            if (url.startsWith("/api/status")) {
+              const { fetchStatus } = await import("./src/lib/status");
+              const { appConfig } = await import("./src/generated/companion");
+              return json(200, await fetchStatus(appConfig));
+            }
+            if (url.startsWith("/api/promote") && req.method === "POST") {
+              const { runPromote } = await import("./src/lib/promote");
+              const input = JSON.parse((await readBody(req)) || "{}");
+              const { status, body } = await runPromote(input, process.env as never);
+              return json(status, body);
+            }
+            return json(404, { error: "not found" });
           } catch (err) {
-            res.statusCode = 502;
-            res.setHeader("content-type", "application/json");
-            res.end(JSON.stringify({ error: (err as Error).message }));
+            return json(500, { error: (err as Error).message });
           }
         })();
       });

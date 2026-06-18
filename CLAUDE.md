@@ -15,9 +15,11 @@ que sirve datos a las apps; este repo es la **fuente de verdad** y el bucket es 
 - **Canales** `debug → staging → production`. Se publica/prueba en debug y se **promueve** hacia adelante.
 - **Pool content-addressed**: cada blob vive una vez en `pool/<tipo>/<id>/<versión>/`; los manifests
   de cada canal lo apuntan. Las apps deduplican por **`version`**, no por URL.
-- **Archivos de estado** (en git, son la "receta"): `apps/<app>/app.config.json` (declara paquetes
-  + orden), `versions.json` (versión fuente de cada paquete), `channels.lock.json` (qué hay en cada
-  canal), `registry.json` (libro mayor: cada (paquete,versión) → url/size/hash).
+- **Config/inputs en git**: `apps/<app>/app.config.json` (declara paquetes + orden) y `versions.json`
+  (versión fuente de cada paquete).
+- **Estado en R2, NO en git** (`_state/` en el bucket): `registry.json` (libro mayor:
+  (paquete,versión) → url/size/hash) y `channels.lock.json` (qué versión hay en cada canal). Lectura
+  pública (r2.dev), escritura con credenciales S3. Lo escriben el CLI y el dashboard.
 - **Fuentes**: livianas en `apps/<app>/content/` (git); pesadas en `apps/<app>/assets/` (gitignored,
   solo lo que estés cambiando — el resto vive en R2).
 
@@ -43,15 +45,18 @@ npm run l5a -- <comando>          # corre el CLI vía tsx (sin build step)
 Dashboard (proyecto aparte, su propio `package.json`/`node_modules`):
 ```bash
 cd apps/dashboard && npm install
-npm run dev                       # vite + /api/status local (sin wrangler)
+npm run dev                       # vite + /api/status y /api/promote local (sin wrangler)
 npm run build                     # tsc --noEmit && vite build
 ```
 
 - **Node 22+**, TypeScript ESM, `moduleResolution: Bundler`, imports sin extensión.
 - El CLI corre con **tsx** (no se compila). El core se importa como workspace `@l5a/core`.
-- El dashboard **NO** es workspace (es standalone) y depende de `apps/companion/*.json` vía un
-  archivo generado: `apps/dashboard/scripts/gen.mjs` produce `src/generated/companion.ts`
-  (lo corren los hooks `predev`/`prebuild`). Si tocás config/lock, regenerá.
+- El dashboard **NO** es workspace (es standalone). `scripts/gen.mjs` genera
+  `src/generated/companion.ts` SOLO desde `app.config.json` (lista/orden de paquetes); el estado
+  (lock/registry) lo lee EN VIVO de `_state/` en R2. Las Pages Functions (`functions/api/*`) y el
+  dev middleware (`vite.config.ts`) comparten la lógica de `src/lib/` (status, promote, r2write).
+- **Promover desde el dashboard** escribe en R2 vía `aws4fetch` con credenciales que en producción
+  salen de las **env vars del proyecto de Pages** (`R2_*`), y en dev del `.env` de la raíz.
 
 ## Convenciones
 

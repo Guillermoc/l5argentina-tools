@@ -22,7 +22,7 @@ dry-run primero (genera `dist/` para revisar) y `--apply` para ejecutar.
    el `changelog` que faltaba; el resto se copió server-side):
    ```bash
    npm run l5a -- migrate -c debug            # dry-run: revisar dist/
-   npm run l5a -- migrate -c debug --apply --commit
+   npm run l5a -- migrate -c debug --apply
    npm run l5a -- verify -c debug
    ```
 
@@ -31,9 +31,9 @@ dry-run primero (genera `dist/` para revisar) y `--apply` para ejecutar.
    la pool (de debug), se **reusaron** (dedup); solo se copiaron las versiones propias más viejas
    (`cards_db 1.2.38`, `rules 2.1.0`, `changelog 2.1.0`):
    ```bash
-   npm run l5a -- migrate -c staging --adopt --apply --commit
+   npm run l5a -- migrate -c staging --adopt --apply
    npm run l5a -- verify -c staging
-   npm run l5a -- migrate -c production --adopt --apply --commit
+   npm run l5a -- migrate -c production --adopt --apply
    npm run l5a -- verify -c production
    ```
 

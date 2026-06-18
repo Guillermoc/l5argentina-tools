@@ -1,11 +1,9 @@
 import { join } from "node:path";
 import { existsSync } from "node:fs";
-import { execFileSync } from "node:child_process";
 import {
   loadConfig,
   readVersions,
-  readLock,
-  readRegistry,
+  readRemoteState,
   type AppConfig,
   type Lock,
   type Registry,
@@ -19,25 +17,25 @@ export interface Ctx {
   paths: {
     config: string;
     versions: string;
-    lock: string;
-    registry: string;
     dist: string;
   };
   config: AppConfig;
   versions: Versions;
+  /** Estado leído de R2 (_state/). registry + lock viven en el bucket, no en git. */
   lock: Lock;
   registry: Registry;
 }
 
-/** Carga toda la config + estado de una app. El repoRoot es el cwd. */
-export function loadContext(app: string): Ctx {
+/**
+ * Carga config + versions (locales, git) y el estado (registry + lock) desde R2
+ * (público, sin credenciales). El repoRoot es el cwd.
+ */
+export async function loadContext(app: string): Promise<Ctx> {
   const repoRoot = process.cwd();
   const appDir = join(repoRoot, "apps", app);
   const paths = {
     config: join(appDir, "app.config.json"),
     versions: join(appDir, "versions.json"),
-    lock: join(appDir, "channels.lock.json"),
-    registry: join(appDir, "registry.json"),
     dist: join(appDir, "dist"),
   };
   if (!existsSync(paths.config)) {
@@ -45,41 +43,18 @@ export function loadContext(app: string): Ctx {
       `no encuentro ${paths.config}. ¿Estás corriendo el comando desde la raíz del repo y existe la app "${app}"?`,
     );
   }
+  const config = loadConfig(paths.config);
+  const { registry, lock } = await readRemoteState(config.baseUrl, app);
   return {
     app,
     repoRoot,
     appDir,
     paths,
-    config: loadConfig(paths.config),
+    config,
     versions: readVersions(paths.versions),
-    lock: readLock(paths.lock),
-    registry: readRegistry(paths.registry),
+    lock,
+    registry,
   };
-}
-
-/**
- * Commitea y pushea SOLO los archivos de estado de la app (config, versions,
- * lock, registry). Se usa tras un --apply para mantener git y el dashboard en
- * sync. Nunca tira el comando: si git falla, avisa (el bucket ya está actualizado).
- */
-export function commitState(ctx: Ctx, message: string): void {
-  const files = [ctx.paths.config, ctx.paths.versions, ctx.paths.lock, ctx.paths.registry];
-  const git = (args: string[]) => execFileSync("git", args, { cwd: ctx.repoRoot, encoding: "utf8" });
-  try {
-    git(["add", ...files]);
-    if (!git(["diff", "--cached", "--name-only"]).trim()) {
-      console.log("  (git) sin cambios de estado para commitear");
-      return;
-    }
-    git(["commit", "-m", message]);
-    console.log("  ✓ git commit del estado");
-    git(["push"]);
-    console.log("  ✓ git push — el dashboard se redeploya solo");
-  } catch (err: unknown) {
-    const e = err as { stderr?: string; message?: string };
-    const detail = (e.stderr || e.message || String(err)).trim();
-    console.error(`  ⚠ el commit/push de git falló (el bucket YA quedó actualizado): ${detail}`);
-  }
 }
 
 export function fmtBytes(n: number): string {

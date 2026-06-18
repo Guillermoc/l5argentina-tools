@@ -7,7 +7,7 @@ import type { Manifest } from "@l5a/core";
  * tamaño coincida con el declarado.
  */
 export async function verifyCommand(app: string, opts: { channel?: string }): Promise<void> {
-  const ctx = loadContext(app);
+  const ctx = await loadContext(app);
   const channels = opts.channel ? [opts.channel] : ctx.config.channels;
   let failures = 0;
 

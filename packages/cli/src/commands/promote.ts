@@ -1,10 +1,9 @@
-import { writeLock, buildManifest, validateManifest, manifestKey, R2 } from "@l5a/core";
-import { loadContext, commitState } from "../context";
+import { writeRemoteLock, buildManifest, validateManifest, manifestKey, R2 } from "@l5a/core";
+import { loadContext } from "../context";
 
 interface PromoteOpts {
   only?: string;
   dryRun?: boolean;
-  commit?: boolean;
 }
 
 /**
@@ -18,7 +17,7 @@ export async function promoteCommand(
   to: string,
   opts: PromoteOpts,
 ): Promise<void> {
-  const ctx = loadContext(app);
+  const ctx = await loadContext(app);
   for (const c of [from, to]) {
     if (!ctx.config.channels.includes(c)) {
       throw new Error(`canal desconocido: ${c}. Válidos: ${ctx.config.channels.join(", ")}`);
@@ -74,9 +73,7 @@ export async function promoteCommand(
   const r2 = R2.fromEnv();
   await r2.putManifest(manifestKey(to), JSON.stringify(manifest, null, 2) + "\n");
   ctx.lock.channels[to] = toState;
-  writeLock(ctx.paths.lock, ctx.lock);
+  await writeRemoteLock(r2, ctx.lock);
 
-  console.log(`\n  ✓ promovido. ${to}/manifest.json actualizado (0 bytes copiados — pool compartido).`);
-  if (opts.commit) commitState(ctx, `chore(deploy): promote ${from} → ${to}`);
-  console.log("");
+  console.log(`\n  ✓ promovido. ${to}/manifest.json + estado (_state/) actualizados (0 bytes copiados).\n`);
 }

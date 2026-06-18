@@ -1,10 +1,9 @@
-import { writeRegistry, writeLock, registryPut, buildAll, buildManifest, validateManifest, contentType, manifestKey, R2 } from "@l5a/core";
-import { loadContext, fmtBytes, commitState } from "../context";
+import { writeRemoteRegistry, writeRemoteLock, registryPut, buildAll, buildManifest, validateManifest, contentType, manifestKey, R2 } from "@l5a/core";
+import { loadContext, fmtBytes } from "../context";
 
 interface PublishOpts {
   channel: string;
   dryRun?: boolean;
-  commit?: boolean;
 }
 
 /**
@@ -13,7 +12,7 @@ interface PublishOpts {
  * fija el lock del canal y sube el manifest.json regenerado.
  */
 export async function publishCommand(app: string, opts: PublishOpts): Promise<void> {
-  const ctx = loadContext(app);
+  const ctx = await loadContext(app);
   const channel = opts.channel;
   if (!ctx.config.channels.includes(channel)) {
     throw new Error(`canal desconocido: ${channel}. Válidos: ${ctx.config.channels.join(", ")}`);
@@ -98,10 +97,8 @@ export async function publishCommand(app: string, opts: PublishOpts): Promise<vo
   ctx.lock.channels[channel] = channelState;
   await r2.putManifest(manifestKey(channel), JSON.stringify(fresh, null, 2) + "\n");
 
-  writeRegistry(ctx.paths.registry, ctx.registry);
-  writeLock(ctx.paths.lock, ctx.lock);
+  await writeRemoteRegistry(r2, ctx.registry);
+  await writeRemoteLock(r2, ctx.lock);
 
-  console.log(`\n  ✓ publicado. manifest ${channel}/manifest.json + estado actualizado.`);
-  if (opts.commit) commitState(ctx, `chore(deploy): publish ${channel}`);
-  console.log("");
+  console.log(`\n  ✓ publicado. ${channel}/manifest.json + estado (_state/) actualizados en R2.\n`);
 }

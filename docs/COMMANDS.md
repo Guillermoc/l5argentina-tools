@@ -3,17 +3,16 @@
 Se invoca con `npm run l5a -- <comando> [opciones]`. Opción global **`-a, --app <app>`**
 (default `companion`) — elige la app dentro de `apps/`.
 
-El CLI lee el estado de `apps/<app>/`: `app.config.json`, `versions.json`,
-`channels.lock.json`, `registry.json`. Las credenciales R2 salen de `.env` (solo para los
-comandos que escriben/leen R2).
+El CLI lee la config local de `apps/<app>/` (`app.config.json`, `versions.json`) y el **estado**
+(`registry` + `lock`) de **R2** (`_state/`, lectura pública). Las credenciales `.env` se usan solo
+para **escribir** (publish / promote / migrate --apply / gc --apply). Tras un deploy, el estado se
+guarda en R2 automáticamente — **no hace falta `git push`** (el dashboard lo lee en vivo).
 
 Convenciones de flags:
 
 - **`--dry-run`** — planifica y muestra qué haría, sin tocar R2 (en `publish`, `promote`).
 - **`--apply`** — ejecuta de verdad (en `migrate` y `gc`, que por defecto son dry-run).
-- **`--commit`** — tras un deploy exitoso, commitea y pushea **solo** los archivos de estado
-  (`app.config.json`, `versions.json`, `channels.lock.json`, `registry.json`). El push redeploya
-  el dashboard. Si git falla, avisa pero no tira el comando (el bucket ya quedó actualizado).
+- **`--adopt`** — en `migrate`, usa las versiones que el canal tiene HOY en vivo (no `versions.json`).
 
 ---
 
@@ -40,8 +39,8 @@ Estados por paquete:
 
 ## `status`
 
-Matriz de versiones por canal, leída de `channels.lock.json` (no consulta R2). Marca con
-`◂ difiere` los paquetes cuya versión no es igual en todos los canales.
+Matriz de versiones por canal, leída del estado en R2 (`_state/channels.lock.json`, público).
+Marca con `◂ difiere` los paquetes cuya versión no es igual en todos los canales.
 
 ```bash
 npm run l5a -- status
@@ -52,13 +51,12 @@ npm run l5a -- status
 ## `publish`
 
 Publica las versiones **de `versions.json`** a un canal (normalmente `debug`): construye desde
-las fuentes locales, sube al pool los blobs nuevos, actualiza `registry.json` + `channels.lock.json`
-y sube el `manifest.json` del canal.
+las fuentes locales, sube al pool los blobs nuevos, actualiza el estado (`_state/registry.json` +
+`_state/channels.lock.json` en R2) y sube el `manifest.json` del canal.
 
 ```bash
 npm run l5a -- publish -c debug
 npm run l5a -- publish -c debug --dry-run     # ver el plan sin tocar R2
-npm run l5a -- publish -c debug --commit       # + commitea/pushea el estado
 ```
 
 - Sube **solo** los blobs que no existen ya en el pool.
@@ -79,8 +77,8 @@ Por defecto es **dry-run**: genera `dist/` (plan.json + manifest preview + artef
 para revisar. Con `--apply` ejecuta.
 
 ```bash
-npm run l5a -- migrate -c debug                      # dry-run: arma dist/ para revisar
-npm run l5a -- migrate -c debug --apply --commit     # ejecuta + commitea el estado
+npm run l5a -- migrate -c debug                # dry-run: arma dist/ para revisar
+npm run l5a -- migrate -c debug --apply        # ejecuta (escribe pool + manifest + estado en R2)
 ```
 
 **`--adopt`** — usa las versiones que el canal tiene **HOY en vivo** (no `versions.json`) y nunca
@@ -89,7 +87,7 @@ versiones actuales** (útil para staging/production, que suelen estar detrás de
 
 ```bash
 npm run l5a -- migrate -c staging --adopt              # dry-run
-npm run l5a -- migrate -c staging --adopt --apply --commit
+npm run l5a -- migrate -c staging --adopt --apply
 ```
 
 ---
@@ -104,7 +102,7 @@ versiones de `<from>`, y actualiza el lock.
 npm run l5a -- promote debug staging
 npm run l5a -- promote debug staging --only cards_db,rules    # solo algunos paquetes
 npm run l5a -- promote debug staging --dry-run                 # ver el diff
-npm run l5a -- promote staging production --commit
+npm run l5a -- promote staging production
 ```
 
 Requiere que las versiones a promover estén en el `registry.json` (es decir, ya publicadas).

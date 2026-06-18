@@ -9,6 +9,7 @@ import {
 
 const CACHE_IMMUTABLE = "public, max-age=31536000, immutable";
 const CACHE_MANIFEST = "public, max-age=60, must-revalidate";
+const CACHE_STATE = "no-store";
 
 export class R2 {
   private constructor(
@@ -72,6 +73,19 @@ export class R2 {
         Body: json,
         ContentType: "application/json; charset=utf-8",
         CacheControl: CACHE_MANIFEST,
+      }),
+    );
+  }
+
+  /** Escribe un JSON de estado (registry/lock) con cache no-store. */
+  async putJson(key: string, value: unknown): Promise<void> {
+    await this.s3.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+        Body: JSON.stringify(value, null, 2) + "\n",
+        ContentType: "application/json; charset=utf-8",
+        CacheControl: CACHE_STATE,
       }),
     );
   }

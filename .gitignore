@@ -7,6 +7,10 @@ apps/*/assets/
 # artefactos generados
 apps/*/dist/
 
+# estado de deploy — vive en R2 (_state/), NO en git
+apps/*/registry.json
+apps/*/channels.lock.json
+
 # credenciales
 .env
 .env.local

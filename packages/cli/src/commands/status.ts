@@ -1,8 +1,8 @@
 import { loadContext } from "../context";
 
-/** Matriz de versiones por canal (lee channels.lock.json). */
-export function statusCommand(app: string): void {
-  const ctx = loadContext(app);
+/** Matriz de versiones por canal (lee el estado de R2). */
+export async function statusCommand(app: string): Promise<void> {
+  const ctx = await loadContext(app);
   const channels = ctx.config.channels;
 
   console.log(`\nstatus · app "${app}"\n`);

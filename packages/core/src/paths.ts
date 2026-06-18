@@ -20,6 +20,13 @@ export function manifestKey(channel: string): string {
   return `${channel}/manifest.json`;
 }
 
+/** Claves del estado de deploy (registry + lock) dentro del bucket.
+ *  El estado vive en R2 (no en git): lectura pública, escritura con credenciales. */
+export const STATE_KEYS = {
+  registry: "_state/registry.json",
+  lock: "_state/channels.lock.json",
+} as const;
+
 const MIME: Record<string, string> = {
   json: "application/json; charset=utf-8",
   zip: "application/zip",

@@ -5,19 +5,18 @@ import {
   manifestFromPlan,
   validateManifest,
   registryPut,
-  writeRegistry,
-  writeLock,
+  writeRemoteRegistry,
+  writeRemoteLock,
   contentType,
   manifestKey,
   R2,
   type MigratePlanItem,
 } from "@l5a/core";
-import { loadContext, fmtBytes, commitState } from "../context";
+import { loadContext, fmtBytes } from "../context";
 
 interface MigrateOpts {
   channel: string;
   apply?: boolean;
-  commit?: boolean;
   adopt?: boolean;
 }
 
@@ -39,7 +38,7 @@ function stripBytes(i: MigratePlanItem) {
  * copia server-side lo que ya está en vivo, sube lo nuevo, y publica el manifest.
  */
 export async function migrateCommand(app: string, opts: MigrateOpts): Promise<void> {
-  const ctx = loadContext(app);
+  const ctx = await loadContext(app);
   const channel = opts.channel;
   if (!ctx.config.channels.includes(channel)) {
     throw new Error(`canal desconocido: ${channel}. Válidos: ${ctx.config.channels.join(", ")}`);
@@ -137,10 +136,8 @@ export async function migrateCommand(app: string, opts: MigrateOpts): Promise<vo
     }
   }
   await r2.putManifest(manifestKey(channel), JSON.stringify(manifest, null, 2) + "\n");
-  writeRegistry(ctx.paths.registry, ctx.registry);
-  writeLock(ctx.paths.lock, ctx.lock);
+  await writeRemoteRegistry(r2, ctx.registry);
+  await writeRemoteLock(r2, ctx.lock);
 
-  console.log(`\n  ✓ canal "${channel}" migrado a la pool. manifest + registry + lock actualizados.`);
-  if (opts.commit) commitState(ctx, `chore(deploy): migrate ${channel} → pool`);
-  console.log("");
+  console.log(`\n  ✓ canal "${channel}" migrado a la pool. manifest + estado (_state/) actualizados en R2.\n`);
 }

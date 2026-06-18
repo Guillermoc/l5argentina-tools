@@ -26,6 +26,25 @@ export interface Manifest {
   packages: ManifestEntry[];
 }
 
+export interface RegistryEntry {
+  sha256: string;
+  sizeBytes: number;
+  url: string;
+  type: string;
+  ext: string;
+}
+
+/** Libro mayor: cada (paquete, versión) → dónde vive. Vive en _state/registry.json. */
+export type Registry = Record<string, Record<string, RegistryEntry>>;
+
+/** Credenciales R2 (S3) que el Worker/dev usan para ESCRIBIR (promover). */
+export interface R2Env {
+  R2_ACCOUNT_ID: string;
+  R2_ACCESS_KEY_ID: string;
+  R2_SECRET_ACCESS_KEY: string;
+  R2_BUCKET: string;
+}
+
 export type HealthLevel = "ok" | "warn" | "error";
 
 export interface PackageHealth {
@@ -54,4 +73,6 @@ export interface StatusResponse {
   fetchedAt: string;
   baseUrl: string;
   channels: ChannelStatus[];
+  /** Lock leído en vivo de _state/ en R2 (no del bundle de git). Para el drift. */
+  expectedLock: ExpectedLock;
 }

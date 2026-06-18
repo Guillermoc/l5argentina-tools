@@ -16,9 +16,20 @@ Monorepo TypeScript con dos piezas:
 
 ## Idea central
 
-El bucket es **output regenerable**; la **fuente de verdad de la receta** vive en este repo
-(git). Las imágenes y zips pesados (con copyright) **nunca van a git**: viven solo en R2, y
-git guarda únicamente su referencia (versión + tamaño + hash).
+Separación al estilo "app web": **el código vive en git**; **el contenido y el estado viven
+online** (en R2). git guarda el CLI, el dashboard y la config/inputs (`app.config.json`,
+`versions.json`). El **estado de deploy** (`registry` + `lock`: qué versión hay en cada canal)
+vive en **R2** (`_state/`), no en git. Las imágenes y zips pesados (con copyright) viven solo en R2.
+
+- **Canales**: `debug` → `staging` → `production`. Se construye/prueba en debug y se
+  **promueve** hacia adelante. "Build once, promote bytes": lo que probaste es lo que sale.
+- **Pool content-addressed**: cada blob vive una sola vez en `pool/<tipo>/<id>/<versión>/` y
+  los 3 canales lo apuntan. Las imágenes (~960 MB) quedan **deduplicadas** (no triplicadas).
+- **Estado en R2** (`_state/registry.json`, `_state/channels.lock.json`): lectura pública,
+  escritura con credenciales. Lo escriben tanto el CLI como el dashboard (botones de promover).
+- **`manifest.json`** por canal = el índice que lee la app: `{ id, type, version, url, sizeBytes }`.
+  La app decide qué bajar comparando **`version`** (no la URL), así que mover archivos a la pool
+  **no dispara re-descargas**.
 
 - **Canales**: `debug` → `staging` → `production`. Se construye/prueba en debug y se
   **promueve** hacia adelante. "Build once, promote bytes": lo que probaste es lo que sale.
@@ -33,13 +44,12 @@ git guarda únicamente su referencia (versión + tamaño + hash).
 ```
 apps/
   companion/                 la app de cartas (canales debug/staging/production)
-    app.config.json          declara los paquetes (id, type, source) y el orden
-    versions.json            versión actual de la fuente de cada paquete  [vos lo editás]
-    channels.lock.json       qué versión está publicada en cada canal     [estado, en git]
-    registry.json            libro mayor: cada (paquete, versión) → url/size/hash  [en git]
+    app.config.json          declara los paquetes (id, type, source) y el orden  [git]
+    versions.json            versión actual de la fuente de cada paquete  [git, vos lo editás]
     content/                 fuentes LIVIANAS (filters.json, rules.json, changelog.md) → git
     assets/                  fuentes PESADAS (zips de imágenes/base) → NO git (gitignored)
     dist/                    artefactos generados / preview → NO git (gitignored)
+                             (el ESTADO — registry + lock — vive en R2 _state/, no acá)
   dashboard/                 panel web (React + Vite + Cloudflare Pages)
 packages/
   core/                      motor: build, hash, pack determinista, manifest, registry, R2, migrate
@@ -65,8 +75,8 @@ npm run l5a -- <comando> [-a <app>]   # -a default: companion
 
 | Comando | Qué hace |
 |---|---|
-| `build` | Construye los artefactos desde las fuentes a `dist/` (no toca R2). |
-| `status` | Matriz de versiones por canal (lee `channels.lock.json`). |
+| `build` | Construye los artefactos desde las fuentes a `dist/` (no escribe en R2). |
+| `status` | Matriz de versiones por canal (lee el estado de R2). |
 | `publish -c <canal>` | Publica las versiones de `versions.json` a un canal (sube lo nuevo al pool). |
 | `migrate -c <canal>` | Migra un canal a la pool: **copia server-side** lo que ya está en R2 y sube solo lo nuevo. |
 | `promote <from> <to>` | Apunta el manifest de `<to>` a las versiones de `<from>` (0 bytes — pool compartido). |
@@ -74,35 +84,41 @@ npm run l5a -- <comando> [-a <app>]   # -a default: companion
 | `gc` | Lista/borra blobs del pool que ningún canal referencia. |
 
 Flags transversales: `--dry-run` (planificar sin tocar R2), `--apply` (ejecutar, en `migrate`/`gc`),
-`--commit` (tras el deploy, commitea+pushea el estado y redeploya el dashboard), `--adopt` (en
-`migrate`, usa las versiones que el canal tiene HOY en vivo). **Detalle completo en
-[docs/COMMANDS.md](docs/COMMANDS.md).**
+`--adopt` (en `migrate`, usa las versiones que el canal tiene HOY en vivo). El estado (registry +
+lock) se guarda **solo en R2** automáticamente; no hace falta `git push` tras un deploy. **Detalle
+completo en [docs/COMMANDS.md](docs/COMMANDS.md).**
 
 ## Flujos típicos
 
 **Actualizar un set de imágenes (o la base):**
 1. Dejás el zip nuevo en `apps/companion/assets/images/<id>.zip` (o `assets/cards_db.zip`).
 2. Bumpeás esa versión en `versions.json` (ej. `1.0` → `1.1`).
-3. `npm run l5a -- publish -c debug --commit` → sube solo ese blob al pool, debug pasa a la versión nueva.
+3. `npm run l5a -- publish -c debug` → sube solo ese blob al pool, debug pasa a la versión nueva.
 4. Probás debug con la app.
-5. `npm run l5a -- promote debug staging --commit` → staging apunta al mismo blob (0 bytes).
-6. Cuando estés seguro: `npm run l5a -- promote staging production --commit`.
+5. Promovés desde el **dashboard** (botón ↑) o por CLI: `npm run l5a -- promote debug staging`.
+6. Cuando estés seguro: `npm run l5a -- promote staging production` (o el botón).
 
 **Editar contenido liviano (reglas, filtros, changelog):** igual, pero la fuente está en
 `content/` (y sí va a git).
 
 ## Dashboard
 
-`apps/dashboard/` es un panel **solo-lectura** (gratis en Cloudflare Pages, protegido con
-Cloudflare Access) que muestra:
+`apps/dashboard/` es el **panel de control** (gratis en Cloudflare Pages, protegido con Cloudflare
+Access). Muestra:
 
 - la **matriz de versiones** por canal en vivo;
 - la **salud** de cada archivo (existe / tamaño correcto / roto);
-- el **drift** vs. lo declarado en git;
-- el indicador **↑ para promover** (cuando un canal tiene una versión menor que su canal anterior).
+- el **drift** vs. el estado en `_state/`;
+- el indicador **↑ para promover** (cuando un canal tiene una versión menor que su canal anterior);
+
+y permite **promover entre canales** con un botón (pide confirmación mostrando el diff, y escribe el
+manifest + el estado en R2 — lo mismo que `l5a promote`).
+
+> Para que los **botones de promover** funcionen en producción, el proyecto de Pages necesita las
+> credenciales R2 como **environment variables** (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`,
+> `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`). Ver [apps/dashboard/README.md](apps/dashboard/README.md).
 
 En producción: **https://admin.l5argentina.com.ar**. Local: `cd apps/dashboard && npm install && npm run dev`.
-Ver [apps/dashboard/README.md](apps/dashboard/README.md).
 
 ## Estado actual
 
