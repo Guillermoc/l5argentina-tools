@@ -14,6 +14,14 @@ function readBody(req: any): Promise<string> {
   });
 }
 
+function readRawBody(req: any): Promise<Uint8Array> {
+  return new Promise((resolve) => {
+    const chunks: Buffer[] = [];
+    req.on("data", (c: Buffer) => chunks.push(c));
+    req.on("end", () => resolve(new Uint8Array(Buffer.concat(chunks))));
+  });
+}
+
 // Plugin de dev: sirve /api/* localmente reusando la MISMA lógica que las Pages
 // Functions de producción, así `npm run dev` funciona sin wrangler.
 function devApi() {
@@ -39,6 +47,13 @@ function devApi() {
               const { runPromote } = await import("./src/lib/promote");
               const input = JSON.parse((await readBody(req)) || "{}");
               const { status, body } = await runPromote(input, process.env as never);
+              return json(status, body);
+            }
+            if (url.startsWith("/api/upload") && req.method === "POST") {
+              const { runUploadFile } = await import("./src/lib/inbox");
+              const name = decodeURIComponent((req.headers["x-l5a-filename"] as string) ?? "");
+              const bytes = await readRawBody(req);
+              const { status, body } = await runUploadFile(name, bytes, process.env as never);
               return json(status, body);
             }
             if (url.startsWith("/api/inbox")) {

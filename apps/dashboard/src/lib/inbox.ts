@@ -20,17 +20,6 @@ const CACHE_INBOX = "no-store";
 /** Canal de entrada del buzón: siempre se envía a debug (luego se promueve). */
 const TARGET_CHANNEL = "debug";
 
-/** Paquetes de texto que se pueden cargar/editar online (los pesados van por la carpeta). */
-const EDITABLE_TYPES = new Set(["changelog", "rules", "filters"]);
-
-const EXT_BY_TYPE: Record<string, string> = {
-  changelog: "md",
-  rules: "json",
-  filters: "json",
-  database: "zip",
-  images: "zip",
-};
-
 const CONTENT_TYPE: Record<string, string> = {
   json: "application/json; charset=utf-8",
   md: "text/markdown; charset=utf-8",
@@ -40,8 +29,6 @@ const CONTENT_TYPE: Record<string, string> = {
 const typeById = new Map(appConfig.packages.map((p) => [p.id, p.type]));
 
 const contentTypeForExt = (ext: string): string => CONTENT_TYPE[ext] ?? "application/octet-stream";
-
-const isEditable = (type: string | null): boolean => type != null && EDITABLE_TYPES.has(type);
 
 /** Sugerencia de próxima versión: bumpea el último segmento numérico. */
 export function bumpVersion(v?: string): string {
@@ -99,7 +86,6 @@ function toItem(obj: R2Object, debugState: Record<string, string>): InboxItem | 
     ext,
     type,
     known: type != null,
-    editable: isEditable(type),
     sizeBytes: obj.sizeBytes,
     lastModified: obj.lastModified,
     key: obj.key,
@@ -125,13 +111,8 @@ export async function listInbox(env: Partial<R2Env> | undefined): Promise<InboxL
   return { items, hasCreds: true };
 }
 
-// --- acciones (POST /api/inbox) ---
+// --- acciones JSON (POST /api/inbox) ---
 
-export interface InboxUploadInput {
-  op: "upload";
-  pkgId: string;
-  content: string;
-}
 export interface InboxSendInput {
   op: "send";
   /** clave exacta del archivo en el buzón (permite varias versiones por paquete). */
@@ -143,7 +124,7 @@ export interface InboxDiscardInput {
   op: "discard";
   key: string;
 }
-export type InboxInput = InboxUploadInput | InboxSendInput | InboxDiscardInput;
+export type InboxInput = InboxSendInput | InboxDiscardInput;
 
 type Reply = { status: number; body: unknown };
 
@@ -151,37 +132,33 @@ const err = (status: number, message: string): Reply => ({ status, body: { error
 
 export async function runInbox(input: InboxInput, env: Partial<R2Env> | undefined): Promise<Reply> {
   switch (input?.op) {
-    case "upload":
-      return runUpload(input, env);
     case "send":
       return runSend(input, env);
     case "discard":
       return runDiscard(input, env);
     default:
-      return err(400, "operación desconocida (op: upload | send | discard)");
+      return err(400, "operación desconocida (op: send | discard)");
   }
 }
 
-async function runUpload(input: InboxUploadInput, env: Partial<R2Env> | undefined): Promise<Reply> {
-  const type = typeById.get(input.pkgId) ?? null;
-  if (!isEditable(type)) {
-    return err(400, `"${input.pkgId}" no es un paquete de texto editable online (changelog/rules/filters)`);
+/** Sube un archivo adjunto al buzón: inbox/<nombre>. El nombre define paquete+versión. */
+export async function runUploadFile(
+  rawName: string,
+  bytes: ArrayBuffer | Uint8Array,
+  env: Partial<R2Env> | undefined,
+): Promise<Reply> {
+  const name = (rawName ?? "").trim();
+  if (!name || name.includes("/") || name.includes("\\") || name.includes("..")) {
+    return err(400, "nombre de archivo inválido");
   }
-  const ext = EXT_BY_TYPE[type!]!;
-  if (typeof input.content !== "string" || input.content.trim() === "") {
-    return err(400, "el contenido está vacío");
-  }
-  if (ext === "json") {
-    try {
-      JSON.parse(input.content);
-    } catch (e) {
-      return err(400, `el JSON no es válido: ${(e as Error).message}`);
-    }
-  }
+  const dot = name.lastIndexOf(".");
+  if (dot <= 0) return err(400, "el archivo necesita una extensión (p. ej. .json, .md, .zip)");
   if (!hasR2Env(env)) return err(503, "faltan credenciales R2 en el entorno");
-  const writer = new R2Writer(env);
-  await writer.putText(`${INBOX_PREFIX}${input.pkgId}.${ext}`, input.content, contentTypeForExt(ext), CACHE_INBOX);
-  return { status: 200, body: { ok: true, pkgId: input.pkgId } };
+  const ext = name.slice(dot + 1).toLowerCase();
+  const key = `${INBOX_PREFIX}${name}`;
+  const size = bytes instanceof Uint8Array ? bytes.byteLength : bytes.byteLength;
+  await new R2Writer(env).putBytes(key, bytes, contentTypeForExt(ext), CACHE_INBOX);
+  return { status: 200, body: { ok: true, key, sizeBytes: size } };
 }
 
 async function findByKey(writer: R2Writer, key: string): Promise<R2Object | null> {

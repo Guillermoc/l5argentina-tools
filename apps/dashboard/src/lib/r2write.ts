@@ -31,6 +31,15 @@ export class R2Writer {
   }
 
   async putText(key: string, body: string, contentType: string, cacheControl: string): Promise<void> {
+    await this.put(key, body, contentType, cacheControl);
+  }
+
+  /** Sube bytes (archivo adjunto) al bucket. */
+  async putBytes(key: string, body: ArrayBuffer | Uint8Array, contentType: string, cacheControl: string): Promise<void> {
+    await this.put(key, body as BodyInit, contentType, cacheControl);
+  }
+
+  private async put(key: string, body: BodyInit, contentType: string, cacheControl: string): Promise<void> {
     const res = await this.aws.fetch(`${this.base}/${key}`, {
       method: "PUT",
       body,

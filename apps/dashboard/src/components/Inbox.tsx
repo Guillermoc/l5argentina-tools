@@ -1,13 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { appConfig } from "../generated/companion";
-import type { InboxItem, InboxListResponse, Manifest } from "../types";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { InboxItem, InboxListResponse } from "../types";
 import { fmtBytes, timeAgo } from "../lib/format";
-
-const EDITABLE = new Set(["changelog", "rules", "filters"]);
-const baseUrl = appConfig.baseUrl;
-
-/** Paquetes de texto cargables por el formulario (los pesados van por la carpeta). */
-const editablePkgs = appConfig.packages.filter((p) => EDITABLE.has(p.type));
 
 async function postInbox(body: unknown): Promise<{ ok: boolean; data: any }> {
   const res = await fetch("/api/inbox", {
@@ -92,7 +85,7 @@ export default function Inbox({ onChanged }: { onChanged?: () => void }) {
         <div>
           <h2 className="text-lg font-semibold text-slate-100">Buzón → debug</h2>
           <p className="mt-0.5 text-xs text-slate-500">
-            Archivos pendientes de publicar. Decidí la versión y enviá cada uno a debug.
+            Adjuntá un archivo, revisá la versión y envialo a debug.
           </p>
         </div>
         <button
@@ -111,14 +104,14 @@ export default function Inbox({ onChanged }: { onChanged?: () => void }) {
         </div>
       ) : (
         <>
-          <UploadForm onUploaded={reload} />
+          <FileUploader onUploaded={reload} />
           <InboxList
             items={state?.items ?? []}
             loading={loading}
             error={state?.error}
             busy={busy}
             versions={versions}
-            setVersion={(id, v) => setVersions((s) => ({ ...s, [id]: v }))}
+            setVersion={(key, v) => setVersions((s) => ({ ...s, [key]: v }))}
             onSend={send}
             onDiscard={discard}
           />
@@ -128,89 +121,58 @@ export default function Inbox({ onChanged }: { onChanged?: () => void }) {
   );
 }
 
-function UploadForm({ onUploaded }: { onUploaded: () => void | Promise<void> }) {
-  const [pkgId, setPkgId] = useState(editablePkgs[0]?.id ?? "");
-  const [content, setContent] = useState("");
+function FileUploader({ onUploaded }: { onUploaded: () => void | Promise<void> }) {
+  const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const pull = useCallback(async () => {
+  const upload = useCallback(async () => {
+    if (!file) return;
     setBusy(true);
     try {
-      const res = await fetch(`${baseUrl}debug/manifest.json`, { headers: { "cache-control": "no-cache" } });
-      const m = (await res.json()) as Manifest;
-      const entry = m.packages.find((p) => p.id === pkgId);
-      if (!entry) {
-        window.alert(`"${pkgId}" todavía no existe en debug; empezá de cero.`);
-        setContent("");
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "x-l5a-filename": encodeURIComponent(file.name) },
+        body: file,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data?.error) {
+        window.alert(`No se pudo subir: ${data.error ?? `HTTP ${res.status}`}`);
         return;
       }
-      const txt = await (await fetch(entry.url)).text();
-      setContent(txt);
+      setFile(null);
+      if (inputRef.current) inputRef.current.value = "";
+      await onUploaded();
     } catch (e) {
-      window.alert(`No se pudo traer de debug: ${(e as Error).message}`);
+      window.alert(`Error de red al subir: ${(e as Error).message}`);
     } finally {
       setBusy(false);
     }
-  }, [pkgId]);
-
-  const save = useCallback(async () => {
-    setBusy(true);
-    const res = await fetch("/api/inbox", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ op: "upload", pkgId, content }),
-    });
-    const data = await res.json().catch(() => ({}));
-    setBusy(false);
-    if (!res.ok || data?.error) {
-      window.alert(`No se pudo cargar: ${data.error ?? res.status}`);
-      return;
-    }
-    setContent("");
-    await onUploaded();
-  }, [pkgId, content, onUploaded]);
-
-  if (editablePkgs.length === 0) return null;
+  }, [file, onUploaded]);
 
   return (
     <div className="mb-4 rounded-xl border border-slate-800 bg-slate-900/40 p-4">
-      <div className="mb-2 flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium text-slate-300">Cargar texto al buzón</span>
-        <select
-          value={pkgId}
-          onChange={(e) => setPkgId(e.target.value)}
-          className="rounded-lg bg-slate-800 px-2 py-1 text-sm text-slate-200 ring-1 ring-slate-700"
-        >
-          {editablePkgs.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.id} ({p.type})
-            </option>
-          ))}
-        </select>
+      <div className="flex flex-wrap items-center gap-3">
+        <input
+          ref={inputRef}
+          type="file"
+          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          className="block text-sm text-slate-300 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-slate-200 hover:file:cursor-pointer hover:file:bg-slate-700"
+        />
         <button
-          onClick={() => void pull()}
-          disabled={busy}
-          className="rounded-lg bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-300 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
-        >
-          Traer de debug
-        </button>
-      </div>
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        spellCheck={false}
-        placeholder="Pegá o editá el contenido (JSON para rules/filters, Markdown para changelog)…"
-        className="h-40 w-full resize-y rounded-lg bg-slate-950/60 p-3 font-mono text-xs text-slate-200 ring-1 ring-slate-800 focus:outline-none focus:ring-slate-600"
-      />
-      <div className="mt-2 flex justify-end">
-        <button
-          onClick={() => void save()}
-          disabled={busy || content.trim() === ""}
+          onClick={() => void upload()}
+          disabled={!file || busy}
           className="rounded-lg bg-emerald-500/15 px-3 py-1.5 text-sm font-medium text-emerald-300 ring-1 ring-emerald-500/30 transition hover:bg-emerald-500/25 disabled:opacity-50"
         >
-          {busy ? "Guardando…" : "Guardar en buzón"}
+          {busy ? "Subiendo…" : "Subir al buzón"}
         </button>
       </div>
+      <p className="mt-2 text-xs text-slate-500">
+        El nombre define el paquete y la versión:{" "}
+        <code className="text-slate-400">&lt;paquete&gt;-&lt;X.Y.Z&gt;.&lt;ext&gt;</code> (p. ej.{" "}
+        <code className="text-slate-400">cards_db-2.3.0.zip</code>). Si omitís la versión, se sugiere
+        una. Para archivos muy grandes, usá <code className="text-slate-400">l5a inbox put</code>.
+      </p>
     </div>
   );
 }
@@ -246,11 +208,9 @@ function InboxList({
   if (!loading && sorted.length === 0) {
     return (
       <div className="rounded-xl border border-slate-800 bg-slate-900/40 px-4 py-6 text-center text-sm text-slate-500">
-        El buzón está vacío. Cargá un texto con el formulario de arriba, o dejá un archivo grande en
-        la carpeta <code className="text-slate-400">inbox/</code> del bucket nombrándolo{" "}
-        <code className="text-slate-400">&lt;paquete&gt;-&lt;X.Y.Z&gt;.&lt;ext&gt;</code> (p. ej.{" "}
-        <code className="text-slate-400">inbox/cards_db-2.3.0.zip</code>). Si omitís la versión, te
-        la sugiere.
+        El buzón está vacío. Adjuntá un archivo arriba (nombrado{" "}
+        <code className="text-slate-400">&lt;paquete&gt;-&lt;X.Y.Z&gt;.&lt;ext&gt;</code>) para
+        empezar.
       </div>
     );
   }

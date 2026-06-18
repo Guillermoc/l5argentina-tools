@@ -54,8 +54,6 @@ export interface InboxItem {
   /** tipo resuelto desde app.config.json, o null si el pkgId no es un paquete conocido. */
   type: string | null;
   known: boolean;
-  /** true si el paquete es de texto editable online (changelog/rules/filters). */
-  editable: boolean;
   sizeBytes: number;
   lastModified: string;
   key: string;

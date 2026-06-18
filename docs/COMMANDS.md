@@ -141,11 +141,11 @@ npm run l5a -- gc --apply    # los borra
 ## `inbox` — el buzón
 
 El **buzón** es la carpeta `inbox/` del bucket: un área de paso para archivos pendientes de
-publicar. Los **pesados** (imágenes, DB) se dejan ahí con `inbox put` (o desde el panel de
-Cloudflare/rclone); los **livianos** (rules/filters/changelog) se cargan desde el dashboard con
-un formulario. Después se **envían a debug**: el blob se copia server-side a la pool, se actualiza
-el estado (`registry` + `lock` de debug) y se reescribe `debug/manifest.json`. Al enviar, el
-archivo se borra del buzón (ya vive inmutable en la pool).
+publicar. Desde el **dashboard** se **adjunta un archivo** y se sube al buzón (mismo origen, sin
+CORS); los **pesados** que no convenga subir por el panel se dejan ahí con `inbox put` (o desde el
+panel de Cloudflare/rclone). Después se **envían a debug**: el blob se copia server-side a la pool,
+se actualiza el estado (`registry` + `lock` de debug) y se reescribe `debug/manifest.json`. Al
+enviar, el archivo se borra del buzón (ya vive inmutable en la pool).
 
 **Nombre del archivo = `inbox/<pkgId>-<X.Y.Z>.<ext>`** (guión + tres números). La versión se
 **parsea del nombre** (p. ej. `inbox/cards_db-2.3.0.zip` → versión `2.3.0`). Si el nombre no trae
