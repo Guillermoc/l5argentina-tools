@@ -15,5 +15,6 @@
     "useDefineForClassFields": true,
     "allowImportingTsExtensions": false
   },
-  "include": ["src", "functions", "vite.config.ts"]
+  "comment": "vite.config.ts NO se incluye: usa `process` (node) y vite ya lo ejecuta solo; tsc solo chequea app + functions (que usan APIs web, no node).",
+  "include": ["src", "functions"]
 }

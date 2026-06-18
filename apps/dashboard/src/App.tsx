@@ -76,14 +76,14 @@ export default function App() {
     void load();
   }, [load]);
 
-  // Promueve un canal: pide el plan, confirma el diff, aplica y refresca.
+  // Promueve un canal (o solo `only` paquetes): pide el plan, confirma el diff, aplica y refresca.
   const promote = useCallback(
-    async (from: string, to: string) => {
+    async (from: string, to: string, only?: string[]) => {
       try {
         const planRes = await fetch("/api/promote", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ from, to, apply: false }),
+          body: JSON.stringify({ from, to, only, apply: false }),
         });
         const plan = await planRes.json();
         if (!planRes.ok) {
@@ -100,7 +100,7 @@ export default function App() {
         const res = await fetch("/api/promote", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ from, to, apply: true }),
+          body: JSON.stringify({ from, to, only, apply: true }),
         });
         const out = await res.json();
         if (!res.ok || out.error) window.alert(`Error al promover: ${out.error ?? res.status}`);
@@ -303,6 +303,7 @@ export default function App() {
                   const drift = expected != null && entry.version !== expected;
                   const h = entry.health;
                   const promo = promotableVersion(ci, row.id);
+                  const upstreamCh = ci > 0 ? channels[ci - 1] : undefined;
                   return (
                     <td key={ch} className="px-4 py-2.5">
                       <div className="flex items-center gap-2">
@@ -323,10 +324,15 @@ export default function App() {
                           }
                         />
                         <span className="font-mono text-slate-100">{entry.version}</span>
-                        {promo && (
-                          <Chip tone="sky" title={`hay ${promo} en ${channels[ci - 1]} para promover acá`}>
+                        {promo && upstreamCh && (
+                          <button
+                            onClick={() => void promote(upstreamCh, ch, [row.id])}
+                            disabled={promoting === ch}
+                            title={`promover solo ${row.id} desde ${upstreamCh} (${promo})`}
+                            className="rounded bg-sky-400/15 px-1.5 py-0.5 text-[11px] font-medium text-sky-300 ring-1 ring-sky-400/30 transition hover:bg-sky-400/25 disabled:opacity-50"
+                          >
                             ↑ {promo}
-                          </Chip>
+                          </button>
                         )}
                         {drift && <Chip tone="amber">≠ {expected}</Chip>}
                         {h.level === "warn" && <Chip tone="amber">tamaño</Chip>}
