@@ -1,89 +1,112 @@
 # L5Argentina Tools
 
-Tooling para sincronizar y gestionar el bucket **Cloudflare R2** de **L5Argentina (L5A)**.
+Tooling para sincronizar y gestionar el bucket **Cloudflare R2** de **L5Argentina (L5A)** —
+el CDN de solo-lectura que sirve datos (cartas, imágenes, reglas, filtros, novedades) a las
+apps de L5A.
 
-El bucket es un CDN de **solo lectura** que sirve datos a las apps. Este repo es la
-**fuente de verdad de la receta** (qué versiones, qué config, qué hay en cada canal);
-el bucket es **output regenerable**. Las imágenes y zips pesados (con copyright)
-**nunca van a git**: viven solo en R2, y git guarda únicamente su referencia.
+Monorepo TypeScript con dos piezas:
 
-> ¿Primera vez acá? Leé **[docs/COMO-FUNCIONA.md](docs/COMO-FUNCIONA.md)** — explica a nivel
-> funcional qué guarda el proyecto, dónde, y cómo mueve las cosas, sin tecnicismos.
+- **CLI `l5a`** — construye, publica, promueve y verifica el contenido del bucket.
+- **Dashboard** (`apps/dashboard/`) — panel web en Cloudflare Pages con el estado de los 3 canales.
 
-## Modelo
+> **¿Primera vez acá?** Leé **[docs/COMO-FUNCIONA.md](docs/COMO-FUNCIONA.md)** (explicación
+> funcional, sin tecnicismos) y la **[referencia de comandos](docs/COMMANDS.md)**.
 
-- **Canales**: `debug` → `staging` → `production`. Se construye en debug, se prueba,
-  y se **promueve el mismo blob** (mismo `sha256`) hacia arriba ("build once, promote bytes").
-- **Pool content-addressed**: los blobs viven una sola vez en `pool/<type>/<id>/<version>/`
-  y los manifests de cada canal los apuntan. Deduplica las imágenes (hoy triplicadas).
-- **`channels.lock.json`** (en git) = estado declarado de cada canal. El `git diff` de una
-  promoción es el registro de auditoría.
-- **`registry.json`** = libro mayor de cada `(paquete, versión)` publicada y su URL/hash/size.
-- El **`manifest.json`** que consume la app mantiene su forma actual (URLs absolutas), así
-  que **no hay que tocar la app** ni los usuarios existentes.
+---
 
-## Estructura
+## Idea central
+
+El bucket es **output regenerable**; la **fuente de verdad de la receta** vive en este repo
+(git). Las imágenes y zips pesados (con copyright) **nunca van a git**: viven solo en R2, y
+git guarda únicamente su referencia (versión + tamaño + hash).
+
+- **Canales**: `debug` → `staging` → `production`. Se construye/prueba en debug y se
+  **promueve** hacia adelante. "Build once, promote bytes": lo que probaste es lo que sale.
+- **Pool content-addressed**: cada blob vive una sola vez en `pool/<tipo>/<id>/<versión>/` y
+  los 3 canales lo apuntan. Las imágenes (~960 MB) quedan **deduplicadas** (no triplicadas).
+- **`manifest.json`** por canal = el índice que lee la app: `{ id, type, version, url, sizeBytes }`.
+  La app decide qué bajar comparando **`version`** (no la URL), así que mover archivos a la pool
+  **no dispara re-descargas**.
+
+## Estructura del repo
 
 ```
-apps/companion/
-  app.config.json      declara los paquetes, tipos y canales
-  versions.json        versión actual de la fuente de cada paquete (lo bumpeás vos)
-  channels.lock.json   qué versión está en cada canal
-  registry.json        libro mayor de versiones publicadas
-  content/             fuentes LIVIANAS (json, md) → SÍ van a git
-  assets/              fuentes PESADAS (imágenes, zips) → NO van a git (gitignored)
-  dist/                artefactos generados (gitignored)
-packages/core/         motor (build, hash, pack determinista, manifest, registry, R2)
-packages/cli/          comando `l5a`
-apps/dashboard/        panel web (Cloudflare Pages) con el estado de los 3 canales
+apps/
+  companion/                 la app de cartas (canales debug/staging/production)
+    app.config.json          declara los paquetes (id, type, source) y el orden
+    versions.json            versión actual de la fuente de cada paquete  [vos lo editás]
+    channels.lock.json       qué versión está publicada en cada canal     [estado, en git]
+    registry.json            libro mayor: cada (paquete, versión) → url/size/hash  [en git]
+    content/                 fuentes LIVIANAS (filters.json, rules.json, changelog.md) → git
+    assets/                  fuentes PESADAS (zips de imágenes/base) → NO git (gitignored)
+    dist/                    artefactos generados / preview → NO git (gitignored)
+  dashboard/                 panel web (React + Vite + Cloudflare Pages)
+packages/
+  core/                      motor: build, hash, pack determinista, manifest, registry, R2, migrate
+  cli/                       el comando `l5a`
+docs/                        COMO-FUNCIONA, COMMANDS, MIGRATION
+.env                         credenciales R2 (gitignored)
 ```
 
-## Dashboard
-
-`apps/dashboard/` es un panel **solo-lectura** (React + Cloudflare Pages, gratis) que muestra
-la matriz de versiones por canal, la salud de cada archivo y el drift respecto de git. Ver
-[apps/dashboard/README.md](apps/dashboard/README.md). Local: `cd apps/dashboard && npm install && npm run dev`.
-
-## Uso
+## Setup
 
 ```bash
 npm install
-cp .env.example .env          # completar credenciales R2
-
-npm run l5a -- build          # construye artefactos a dist/
-npm run l5a -- status         # matriz de versiones por canal
-npm run l5a -- publish -c debug          # publica la fuente actual a debug
-npm run l5a -- promote debug staging     # promueve debug → staging (no copia bytes)
-npm run l5a -- verify -c production       # chequea el canal contra el bucket en vivo
-npm run l5a -- gc                         # lista huérfanos del pool (--apply para borrar)
+cp .env.example .env     # completar credenciales R2 (Account API token, Object Read & Write)
 ```
 
-Todos los comandos aceptan `-a <app>` (default `companion`).
+Requiere **Node 22+**. El CLI corre con `tsx` (sin paso de build).
 
-### Flujo típico: cambiar una imagen
+## Comandos (resumen)
 
-1. Reemplazás las imágenes en `apps/companion/assets/images/celestial/`.
-2. Bumpeás `"celestial"` en `versions.json` (p. ej. `1.0` → `1.1`).
-3. `npm run l5a -- publish -c debug` → sube `pool/.../celestial/1.1/`, debug pasa a 1.1.
-   Staging y production siguen en 1.0; sus usuarios no re-descargan nada.
-4. Probás debug. OK.
-5. `npm run l5a -- promote debug staging` → staging apunta al mismo blob 1.1 (0 bytes copiados).
+```bash
+npm run l5a -- <comando> [-a <app>]   # -a default: companion
+```
 
-## Estados de `build`
+| Comando | Qué hace |
+|---|---|
+| `build` | Construye los artefactos desde las fuentes a `dist/` (no toca R2). |
+| `status` | Matriz de versiones por canal (lee `channels.lock.json`). |
+| `publish -c <canal>` | Publica las versiones de `versions.json` a un canal (sube lo nuevo al pool). |
+| `migrate -c <canal>` | Migra un canal a la pool: **copia server-side** lo que ya está en R2 y sube solo lo nuevo. |
+| `promote <from> <to>` | Apunta el manifest de `<to>` a las versiones de `<from>` (0 bytes — pool compartido). |
+| `verify [-c <canal>]` | Chequea un canal contra el bucket en vivo (links, tamaños, same-origin). |
+| `gc` | Lista/borra blobs del pool que ningún canal referencia. |
 
-- `＋ new` — versión nueva, artefacto listo para publicar.
-- `· existing` — esa versión ya está publicada con el mismo hash; nada que subir.
-- `? missing` — falta la fuente local (típico de imágenes en `assets/` aún no presentes).
-- `✗ drift` — el contenido cambió pero la versión ya está publicada con otro hash → bumpeá la versión.
+Flags transversales: `--dry-run` (planificar sin tocar R2), `--apply` (ejecutar, en `migrate`/`gc`),
+`--commit` (tras el deploy, commitea+pushea el estado y redeploya el dashboard), `--adopt` (en
+`migrate`, usa las versiones que el canal tiene HOY en vivo). **Detalle completo en
+[docs/COMMANDS.md](docs/COMMANDS.md).**
 
-## Migración del estado actual
+## Flujos típicos
 
-El bucket hoy tiene los archivos en carpetas por canal (`debug/cardImages/...`) en vez del
-pool. La migración (no disruptiva, conserva las versiones → sin re-descargas) se documenta en
-[docs/MIGRATION.md](docs/MIGRATION.md).
+**Actualizar un set de imágenes (o la base):**
+1. Dejás el zip nuevo en `apps/companion/assets/images/<id>.zip` (o `assets/cards_db.zip`).
+2. Bumpeás esa versión en `versions.json` (ej. `1.0` → `1.1`).
+3. `npm run l5a -- publish -c debug --commit` → sube solo ese blob al pool, debug pasa a la versión nueva.
+4. Probás debug con la app.
+5. `npm run l5a -- promote debug staging --commit` → staging apunta al mismo blob (0 bytes).
+6. Cuando estés seguro: `npm run l5a -- promote staging production --commit`.
 
-## Backlog
+**Editar contenido liviano (reglas, filtros, changelog):** igual, pero la fuente está en
+`content/` (y sí va a git).
 
-- Formulario web de novedades (Cloudflare Pages + Worker).
-- Agregar `sha256` al manifest de companion (requiere confirmar/actualizar la app).
-- Sumar el launcher `sunandmoon` como segunda app.
+## Dashboard
+
+`apps/dashboard/` es un panel **solo-lectura** (gratis en Cloudflare Pages, protegido con
+Cloudflare Access) que muestra:
+
+- la **matriz de versiones** por canal en vivo;
+- la **salud** de cada archivo (existe / tamaño correcto / roto);
+- el **drift** vs. lo declarado en git;
+- el indicador **↑ para promover** (cuando un canal tiene una versión menor que su canal anterior).
+
+En producción: **https://admin.l5argentina.com.ar**. Local: `cd apps/dashboard && npm install && npm run dev`.
+Ver [apps/dashboard/README.md](apps/dashboard/README.md).
+
+## Estado actual
+
+Los 3 canales ya están migrados a la pool. Pendiente (ver [docs/MIGRATION.md](docs/MIGRATION.md)
+y el backlog): limpieza de archivos huérfanos viejos por canal, sub-features
+(news/history/tournament/rulebooks), `sha256` en el manifest, formulario web de novedades, y
+sumar el launcher `sunandmoon` como segunda app.

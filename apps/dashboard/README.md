@@ -2,7 +2,8 @@
 
 Dashboard **solo-lectura** del estado de los 3 canales del bucket (debug / staging /
 production). Muestra una matriz de versiones por canal, la **salud** de cada archivo
-(existe / tamaño correcto / roto) y el **drift** respecto de lo declarado en git.
+(existe / tamaño correcto / roto), el **drift** respecto de lo declarado en git, y el
+indicador **↑ para promover** (cuando un canal tiene una versión menor que su canal anterior).
 
 Fase 1 del panel de control (las acciones de escritura — promover, novedades — vienen después).
 
