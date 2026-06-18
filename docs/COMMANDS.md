@@ -135,3 +135,34 @@ npm run l5a -- gc --apply    # los borra
 
 > Nota: `gc` solo mira el prefijo `pool/`. Los archivos viejos por canal (`debug/cards-*.zip`,
 > `debug/cardImages/…`, etc.) anteriores a la pool **no** los toca — ver [MIGRATION.md](MIGRATION.md).
+
+---
+
+## `inbox` — el buzón
+
+El **buzón** es la carpeta `inbox/` del bucket: un área de paso para archivos pendientes de
+publicar. Los **pesados** (imágenes, DB) se dejan ahí con `inbox put` (o desde el panel de
+Cloudflare/rclone); los **livianos** (rules/filters/changelog) se cargan desde el dashboard con
+un formulario. Después se **envían a debug**: el blob se copia server-side a la pool, se actualiza
+el estado (`registry` + `lock` de debug) y se reescribe `debug/manifest.json`. Al enviar, el
+archivo se borra del buzón (ya vive inmutable en la pool).
+
+**Nombre del archivo = `inbox/<pkgId>-<X.Y.Z>.<ext>`** (guión + tres números). La versión se
+**parsea del nombre** (p. ej. `inbox/cards_db-2.3.0.zip` → versión `2.3.0`). Si el nombre no trae
+versión (`inbox/cards_db.zip`), se **sugiere** un bump de la que tiene debug y la confirmás al
+enviar. Puede haber **varias versiones del mismo paquete** a la vez (cada archivo es una fila).
+
+```bash
+npm run l5a -- inbox ls                                   # qué hay (+ versión del nombre/sugerida)
+npm run l5a -- inbox put cards_db ./cards_db-2.3.0.zip    # sube un pesado (toma la versión del nombre)
+npm run l5a -- inbox send cards_db                        # dry-run (si hay una sola versión)
+npm run l5a -- inbox send cards_db --version 2.3.0 --apply   # envía a debug
+npm run l5a -- inbox rm cards_db [--version 2.3.0]        # descarta (todas, o una)
+```
+
+- `send` es **dry-run por defecto**; agregá `--apply` para escribir.
+- La versión sale del nombre; `--version` la sobreescribe (y desambigua si hay varias).
+- Rechaza enviar a una versión que ya está en el registry (las versiones son **inmutables**).
+- Desde acá solo se entra a **debug**; para llevarlo a staging/production se usa `promote`.
+- Lo mismo se hace desde el dashboard (sección **Buzón → debug**): formulario para texto y, por
+  cada archivo, la versión ya viene precargada (del nombre o sugerida) y "Enviar a debug".

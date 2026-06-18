@@ -3,6 +3,7 @@ import type { ChannelStatus, PackageStatus, StatusResponse } from "./types";
 import { appConfig } from "./generated/companion";
 import { fmtBytes, timeAgo, compareVersions } from "./lib/format";
 import type { PromoteChange } from "./lib/promote";
+import Inbox from "./components/Inbox";
 
 type LiveIndex = Record<string, Record<string, PackageStatus>>;
 
@@ -363,6 +364,9 @@ export default function App() {
           <Chip tone="sky">↑ X</Chip> hay una versión mayor en el canal anterior (para promover)
         </span>
       </div>
+
+      {/* buzón → debug */}
+      <Inbox onChanged={load} />
     </div>
   );
 }

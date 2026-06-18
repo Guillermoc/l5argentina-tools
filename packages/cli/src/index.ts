@@ -8,6 +8,12 @@ import { promoteCommand } from "./commands/promote";
 import { migrateCommand } from "./commands/migrate";
 import { verifyCommand } from "./commands/verify";
 import { gcCommand } from "./commands/gc";
+import {
+  inboxLsCommand,
+  inboxPutCommand,
+  inboxSendCommand,
+  inboxRmCommand,
+} from "./commands/inbox";
 
 const program = new Command();
 
@@ -77,6 +83,39 @@ program
   .option("--apply", "borrar de verdad (default: dry-run)")
   .action(async function (this: Command, opts: { apply?: boolean }) {
     await gcCommand(app(this), opts);
+  });
+
+const inbox = program.command("inbox").description("buzón: archivos pendientes de enviar a debug");
+
+inbox
+  .command("ls")
+  .description("lista el buzón (versión actual en debug + sugerida)")
+  .action(async function (this: Command) {
+    await inboxLsCommand(app(this));
+  });
+
+inbox
+  .command("put <pkgId> <file>")
+  .description("sube un archivo local al buzón (inbox/<pkgId>.<ext>) — útil para los pesados")
+  .action(async function (this: Command, pkgId: string, file: string) {
+    await inboxPutCommand(app(this), pkgId, file);
+  });
+
+inbox
+  .command("send <pkgId>")
+  .description("envía un archivo del buzón a debug (copia a la pool + actualiza estado)")
+  .option("--version <v>", "versión a publicar (default: bump de la actual en debug)")
+  .option("--apply", "ejecutar de verdad (default: dry-run)")
+  .action(async function (this: Command, pkgId: string, opts: { version?: string; apply?: boolean }) {
+    await inboxSendCommand(app(this), pkgId, opts);
+  });
+
+inbox
+  .command("rm <pkgId>")
+  .description("descarta archivo(s) del buzón sin publicarlos")
+  .option("--version <v>", "solo esa versión (si hay varias en el buzón)")
+  .action(async function (this: Command, pkgId: string, opts: { version?: string }) {
+    await inboxRmCommand(app(this), pkgId, opts);
   });
 
 program.parseAsync(process.argv).catch((err: Error) => {

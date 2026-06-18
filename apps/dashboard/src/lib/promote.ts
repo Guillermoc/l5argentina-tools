@@ -36,7 +36,7 @@ async function fetchJson<T>(url: string): Promise<T | null> {
   return null;
 }
 
-function buildManifest(channelState: Record<string, string>, registry: Registry): Manifest {
+export function buildManifest(channelState: Record<string, string>, registry: Registry): Manifest {
   const packages: ManifestEntry[] = [];
   for (const pkg of appConfig.packages) {
     const v = channelState[pkg.id];

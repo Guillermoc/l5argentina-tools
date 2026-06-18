@@ -41,6 +41,16 @@ function devApi() {
               const { status, body } = await runPromote(input, process.env as never);
               return json(status, body);
             }
+            if (url.startsWith("/api/inbox")) {
+              if (req.method === "POST") {
+                const { runInbox } = await import("./src/lib/inbox");
+                const input = JSON.parse((await readBody(req)) || "{}");
+                const { status, body } = await runInbox(input, process.env as never);
+                return json(status, body);
+              }
+              const { listInbox } = await import("./src/lib/inbox");
+              return json(200, await listInbox(process.env as never));
+            }
             return json(404, { error: "not found" });
           } catch (err) {
             return json(500, { error: (err as Error).message });

@@ -53,6 +53,17 @@ export class R2 {
     }
   }
 
+  /** Tamaño en bytes de un objeto, o null si no existe. */
+  async headSize(key: string): Promise<number | null> {
+    try {
+      const res = await this.s3.send(new HeadObjectCommand({ Bucket: this.bucket, Key: key }));
+      return res.ContentLength ?? null;
+    } catch (err: any) {
+      if (err?.$metadata?.httpStatusCode === 404 || err?.name === "NotFound") return null;
+      throw err;
+    }
+  }
+
   async putBlob(key: string, body: Uint8Array, contentType: string): Promise<void> {
     await this.s3.send(
       new PutObjectCommand({

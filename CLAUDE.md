@@ -22,6 +22,12 @@ que sirve datos a las apps; este repo es la **fuente de verdad** y el bucket es 
   pública (r2.dev), escritura con credenciales S3. Lo escriben el CLI y el dashboard.
 - **Fuentes**: livianas en `apps/<app>/content/` (git); pesadas en `apps/<app>/assets/` (gitignored,
   solo lo que estés cambiando — el resto vive en R2).
+- **Buzón** (`inbox/` en el bucket): área de paso. Nombre `inbox/<pkgId>-<X.Y.Z>.<ext>`: la versión
+  se **parsea del nombre** (si no la trae, se sugiere un bump de debug). Pueden convivir varias
+  versiones del mismo paquete. Los pesados se dejan ahí (CLI `inbox put` / panel de Cloudflare); los
+  livianos se cargan por formulario en el dashboard. **Enviar a debug** = copia server-side a la pool
+  + registry + lock(debug) + `debug/manifest.json`, y se borra del buzón. CLI: `l5a inbox`; dashboard:
+  sección "Buzón → debug" y `POST /api/inbox`.
 
 ## Layout
 
@@ -53,8 +59,9 @@ npm run build                     # tsc --noEmit && vite build
 - El CLI corre con **tsx** (no se compila). El core se importa como workspace `@l5a/core`.
 - El dashboard **NO** es workspace (es standalone). `scripts/gen.mjs` genera
   `src/generated/companion.ts` SOLO desde `app.config.json` (lista/orden de paquetes); el estado
-  (lock/registry) lo lee EN VIVO de `_state/` en R2. Las Pages Functions (`functions/api/*`) y el
-  dev middleware (`vite.config.ts`) comparten la lógica de `src/lib/` (status, promote, r2write).
+  (lock/registry) lo lee EN VIVO de `_state/` en R2. Las Pages Functions (`functions/api/*`:
+  `status`, `promote`, `inbox`) y el dev middleware (`vite.config.ts`) comparten la lógica de
+  `src/lib/` (status, promote, inbox, r2write). `r2write.ts` (aws4fetch) cubre put/list/copy/delete.
 - **Promover desde el dashboard** escribe en R2 vía `aws4fetch` con credenciales que en producción
   salen de las **env vars del proyecto de Pages** (`R2_*`), y en dev del `.env` de la raíz.
 
