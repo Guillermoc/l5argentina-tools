@@ -18,6 +18,7 @@ interface MigrateOpts {
   channel: string;
   apply?: boolean;
   commit?: boolean;
+  adopt?: boolean;
 }
 
 const ICON: Record<MigratePlanItem["action"], string> = {
@@ -44,7 +45,8 @@ export async function migrateCommand(app: string, opts: MigrateOpts): Promise<vo
     throw new Error(`canal desconocido: ${channel}. Válidos: ${ctx.config.channels.join(", ")}`);
   }
 
-  console.log(`\nmigrate · app "${app}" → canal "${channel}"${opts.apply ? "" : "  (plan / dry-run)"}\n`);
+  const mode = opts.adopt ? "adopt: versiones en vivo del canal" : "versiones de versions.json";
+  console.log(`\nmigrate · app "${app}" → canal "${channel}"  (${mode})${opts.apply ? "" : "  · plan / dry-run"}\n`);
   console.log("  bajando manifest en vivo y midiendo lo que ya existe…\n");
 
   const plan = await planMigrate({
@@ -53,6 +55,7 @@ export async function migrateCommand(app: string, opts: MigrateOpts): Promise<vo
     versions: ctx.versions,
     registry: ctx.registry,
     channel,
+    adopt: opts.adopt,
   });
   const manifest = manifestFromPlan(ctx.config, plan);
 
@@ -107,7 +110,7 @@ export async function migrateCommand(app: string, opts: MigrateOpts): Promise<vo
   }
 
   if (!opts.apply) {
-    console.log(`\n  (dry-run) revisá el dist/. Para ejecutar: l5a migrate -c ${channel} --apply\n`);
+    console.log(`\n  (dry-run) revisá el dist/. Para ejecutar: l5a migrate -c ${channel}${opts.adopt ? " --adopt" : ""} --apply\n`);
     return;
   }
 

@@ -80,17 +80,26 @@ export async function planMigrate(opts: {
   versions: Versions;
   registry: Registry;
   channel: string;
+  /** Si true, la versión objetivo de cada paquete es la que el canal tiene HOY
+   *  en vivo (no versions.json), y nunca se sube desde local: solo copia/skip.
+   *  Sirve para "acomodar" un canal a la pool conservando sus versiones. */
+  adopt?: boolean;
 }): Promise<MigratePlan> {
-  const { appDir, config, versions, registry, channel } = opts;
+  const { appDir, config, versions, registry, channel, adopt } = opts;
   const baseUrl = config.baseUrl;
   const live = await fetchLiveManifest(baseUrl, channel);
   const liveById = new Map((live?.packages ?? []).map((p) => [p.id, p]));
   const items: MigratePlanItem[] = [];
 
   for (const pkg of config.packages) {
-    const version = versions[pkg.id];
+    const liveEntry = liveById.get(pkg.id);
+    // versión objetivo: en modo adopt es la que está HOY en vivo; si no, versions.json.
+    const version = adopt ? liveEntry?.version : versions[pkg.id];
     if (!version) {
-      items.push({ id: pkg.id, type: pkg.type, version: "?", action: "blocked", message: "sin versión en versions.json" });
+      items.push({
+        id: pkg.id, type: pkg.type, version: "?", action: "blocked",
+        message: adopt ? "no está en el canal en vivo" : "sin versión en versions.json",
+      });
       continue;
     }
 
@@ -106,7 +115,6 @@ export async function planMigrate(opts: {
     }
 
     // ¿existe en vivo a esta misma versión? → copia server-side
-    const liveEntry = liveById.get(pkg.id);
     if (liveEntry && liveEntry.version === version && liveEntry.url.startsWith(baseUrl)) {
       const size = await headSize(liveEntry.url);
       if (size !== undefined) {
@@ -119,6 +127,12 @@ export async function planMigrate(opts: {
         });
         continue;
       }
+    }
+
+    // en modo adopt no se sube desde local: si no se pudo copiar, queda bloqueado
+    if (adopt) {
+      items.push({ id: pkg.id, type: pkg.type, version, action: "blocked", message: "no se pudo adoptar el objeto en vivo (¿404?)" });
+      continue;
     }
 
     // si no, subir desde la fuente local

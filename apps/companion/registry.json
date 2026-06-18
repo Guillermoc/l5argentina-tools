@@ -6,6 +6,13 @@
       "url": "https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/pool/changelog/changelog/3.1.0/changelog.md",
       "type": "changelog",
       "ext": "md"
+    },
+    "2.1.0": {
+      "sha256": "",
+      "sizeBytes": 1288,
+      "url": "https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/pool/changelog/changelog/2.1.0/changelog.md",
+      "type": "changelog",
+      "ext": "md"
     }
   },
   "cards_db": {
@@ -15,6 +22,13 @@
       "url": "https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/pool/database/cards_db/2.2.0/cards_db.zip",
       "type": "database",
       "ext": "zip"
+    },
+    "1.2.38": {
+      "sha256": "",
+      "sizeBytes": 965744,
+      "url": "https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/pool/database/cards_db/1.2.38/cards_db.zip",
+      "type": "database",
+      "ext": "zip"
     }
   },
   "rules": {
@@ -22,6 +36,13 @@
       "sha256": "",
       "sizeBytes": 69538,
       "url": "https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/pool/rules/rules/2.1.1/rules.json",
+      "type": "rules",
+      "ext": "json"
+    },
+    "2.1.0": {
+      "sha256": "",
+      "sizeBytes": 64260,
+      "url": "https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/pool/rules/rules/2.1.0/rules.json",
       "type": "rules",
       "ext": "json"
     }

@@ -59,9 +59,10 @@ program
   .command("migrate")
   .description("migra un canal a la pool (copia server-side lo que ya existe, sube lo nuevo)")
   .option("-c, --channel <channel>", "canal a migrar", "debug")
+  .option("--adopt", "usar las versiones que el canal tiene HOY en vivo (no versions.json)")
   .option("--apply", "ejecutar de verdad (default: plan / dry-run a dist/)")
   .option("--commit", "tras migrar, commitea y pushea el estado (config/versions/lock/registry)")
-  .action(async function (this: Command, opts: { channel: string; apply?: boolean; commit?: boolean }) {
+  .action(async function (this: Command, opts: { channel: string; adopt?: boolean; apply?: boolean; commit?: boolean }) {
     await migrateCommand(app(this), opts);
   });
 
