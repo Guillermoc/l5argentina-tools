@@ -54,7 +54,7 @@ apps/
 packages/
   core/                      motor: build, hash, pack determinista, manifest, registry, R2, migrate
   cli/                       el comando `l5a`
-docs/                        COMO-FUNCIONA, COMMANDS, MIGRATION
+docs/                        COMO-FUNCIONA, COMMANDS, BUCKET, MIGRATION
 .env                         credenciales R2 (gitignored)
 ```
 
@@ -82,6 +82,7 @@ npm run l5a -- <comando> [-a <app>]   # -a default: companion
 | `promote <from> <to>` | Apunta el manifest de `<to>` a las versiones de `<from>` (0 bytes — pool compartido). |
 | `verify [-c <canal>]` | Chequea un canal contra el bucket en vivo (links, tamaños, same-origin). |
 | `gc` | Lista/borra blobs del pool que ningún canal referencia. |
+| `inbox <ls\|put\|send\|rm>` | Buzón: subir/listar archivos pendientes y enviarlos a debug. |
 
 Flags transversales: `--dry-run` (planificar sin tocar R2), `--apply` (ejecutar, en `migrate`/`gc`),
 `--adopt` (en `migrate`, usa las versiones que el canal tiene HOY en vivo). El estado (registry +
@@ -112,7 +113,8 @@ Access). Muestra:
 - el indicador **↑ para promover** (cuando un canal tiene una versión menor que su canal anterior);
 
 y permite **promover entre canales** con un botón (pide confirmación mostrando el diff, y escribe el
-manifest + el estado en R2 — lo mismo que `l5a promote`).
+manifest + el estado en R2 — lo mismo que `l5a promote`). También tiene el **buzón → debug**:
+adjuntás un archivo (nombrado `<paquete>-<X.Y.Z>.<ext>`) y lo enviás a debug desde el panel.
 
 > Para que los **botones de promover** funcionen en producción, el proyecto de Pages necesita las
 > credenciales R2 como **environment variables** (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`,

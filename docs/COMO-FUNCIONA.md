@@ -56,35 +56,39 @@ Hay **tres lugares** donde vive la información, y cada uno guarda algo distinto
 ```
 ┌─────────────────────┐     ┌──────────────────────┐     ┌────────────────────────┐
 │   Tu repo (git)     │     │  Tu compu (assets/)  │     │  Bucket R2 (la nube)   │
-│  "la receta"        │     │  "los ingredientes   │     │  "el plato servido"    │
+│  "la receta"        │     │  "los ingredientes   │     │ "el plato + la pizarra"│
 │                     │     │   pesados"           │     │                        │
-│ · filters.json      │     │ · imágenes sueltas   │     │ · pool/ (los archivos) │
-│ · rules.json        │     │ · base de cartas     │     │ · debug/manifest.json  │
-│ · changelog.md      │     │                      │     │ · staging/manifest.json│
-│ · qué versión hay   │     │  NO va a git         │     │ · production/manifest…  │
-│   en cada canal     │     │  (pesado + copyright)│     │                        │
+│ · app.config.json   │     │ · imágenes sueltas   │     │ · pool/ (los archivos) │
+│ · versions.json     │     │ · base de cartas     │     │ · <canal>/manifest.json│
+│ · filters / rules / │     │                      │     │ · _state/ (registry +  │
+│   changelog         │     │  NO va a git         │     │   lock = el ESTADO)    │
+│                     │     │  (pesado + copyright)│     │ · inbox/ (el buzón)    │
 └─────────────────────┘     └──────────────────────┘     └────────────────────────┘
 ```
 
 ### a) El repo de git — "la receta"
-Guarda lo **liviano y de texto**: los filtros, las reglas, el changelog, y sobre todo el
-**estado declarado** (qué versión de cada cosa está en cada canal). Esto se beneficia de tener
-historial: podés ver quién cambió qué y cuándo. **Las imágenes nunca van acá** (son pesadas y
-tienen copyright).
+Guarda lo **liviano y de texto**: la config (`app.config.json`), las versiones que tenés vos
+(`versions.json`), los filtros, las reglas y el changelog. **Las imágenes nunca van acá** (son
+pesadas y tienen copyright), y **el estado tampoco** (a propósito: ver más abajo).
 
 ### b) `assets/` en tu compu — "los ingredientes pesados"
 Las imágenes de las cartas y la base, en crudo. Viven solo en tu máquina (y en el bucket),
 nunca en git. La herramienta las lee de acá para empaquetarlas y subirlas.
 
-### c) El bucket R2 — "el plato servido"
+### c) El bucket R2 — "el plato servido" **y la pizarra**
 Lo que la app efectivamente consume: los archivos ya empaquetados (en una carpeta `pool/`,
-que ya vamos a ver) y los tres índices `manifest.json`, uno por canal.
+que ya vamos a ver) y los tres índices `manifest.json`, uno por canal. **Además guarda el
+estado** en `_state/`: qué versión hay en cada canal (`channels.lock.json`) y el libro mayor de
+todo lo publicado (`registry.json`). El estado vive **online** (no en git) para que el dashboard
+pueda promover desde el navegador y verlo al instante, sin pasar por un `git push`. Y un buzón
+(`inbox/`) para los archivos que están por publicarse.
 
 ---
 
 ## 4. Los cuatro archivos de control
 
-La herramienta se apoya en cuatro archivos (los tres primeros viven en git, son "la receta"):
+La herramienta se apoya en cuatro archivos. Los **dos primeros viven en git** (son "la receta", los
+editás vos); los **dos últimos viven en R2** (`_state/`, son "la pizarra", los escribe la herramienta):
 
 | Archivo | Qué guarda | Analogía |
 |---|---|---|
@@ -230,8 +234,8 @@ Querés actualizar las imágenes del set **celestial**. Así se ve de punta a pu
    Todos en 1.1. Los usuarios reales bajan la imagen nueva.
 ```
 
-Cada uno de esos pasos queda registrado en git (en la pizarra), así que siempre podés ver
-**qué se promovió y cuándo** — es tu registro de auditoría, sin esfuerzo.
+Cada uno de esos pasos actualiza la pizarra (`_state/` en R2), y el **dashboard** te muestra en
+vivo qué versión hay en cada canal y qué quedó listo para promover.
 
 ---
 

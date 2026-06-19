@@ -36,7 +36,7 @@ packages/core   motor TS: config, hash, pack (zip determinista), manifest, regis
 packages/cli    comando `l5a` (commander) — comandos en src/commands/
 apps/companion  datos/estado de la app de cartas (no tiene código)
 apps/dashboard  panel web React+Vite+Tailwind v4, deploy a Cloudflare Pages (proyecto standalone)
-docs/           COMO-FUNCIONA (funcional), COMMANDS (referencia), MIGRATION
+docs/           COMO-FUNCIONA (funcional), COMMANDS (referencia), BUCKET (estructura del bucket), MIGRATION
 ```
 
 ## Cómo correr / verificar

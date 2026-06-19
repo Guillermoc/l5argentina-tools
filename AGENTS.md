@@ -2,13 +2,14 @@
 
 Contexto para agentes de IA. **El detalle completo está en [CLAUDE.md](CLAUDE.md)** — leelo primero.
 Para humanos: [README.md](README.md), [docs/COMO-FUNCIONA.md](docs/COMO-FUNCIONA.md),
-[docs/COMMANDS.md](docs/COMMANDS.md).
+[docs/COMMANDS.md](docs/COMMANDS.md), [docs/BUCKET.md](docs/BUCKET.md).
 
 ## Esencial
 
 Tooling (CLI `l5a` + dashboard) para gestionar el bucket Cloudflare R2 de L5Argentina. Monorepo
 TypeScript: `packages/core` (motor) + `packages/cli` (CLI vía tsx, sin build) + `apps/dashboard`
-(React/Vite/Pages, standalone). El estado vive en `apps/<app>/*.json`.
+(React/Vite/Pages, standalone). La **config/inputs** viven en `apps/<app>/*.json` (git); el
+**estado** (registry + lock) vive en **R2** (`_state/`), no en git.
 
 Verificar cambios:
 ```bash
