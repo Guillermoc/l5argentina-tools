@@ -45,6 +45,54 @@ export interface R2Env {
   R2_BUCKET: string;
 }
 
+/** Credenciales para hablar con D1 vía su HTTP API (mismo patrón que R2: creds en
+ *  env, fetch idéntico en dev y prod). El account reusa R2_ACCOUNT_ID si no se
+ *  setea uno propio. */
+export interface D1Env {
+  D1_DATABASE_ID: string;
+  D1_API_TOKEN: string;
+  /** id de cuenta Cloudflare; si falta, se usa R2_ACCOUNT_ID. */
+  D1_ACCOUNT_ID?: string;
+  R2_ACCOUNT_ID?: string;
+}
+
+// --- Reglas (editor online; backend D1) ---
+
+/** Una regla = una carta y sus modificadores. `title` matchea el `name` de la
+ *  carta en la DB. Forma usada por la API y la UI (camelCase); en D1 las columnas
+ *  son snake_case. Al emitir el JSON se omiten los campos vacíos. */
+export interface Rule {
+  title: string;
+  /** override del límite de copia; 0 = prohibida, 999 = sin límite. null = sin override. */
+  maxCopies?: number | null;
+  banned?: boolean;
+  /** código de edición cuya imagen usar. */
+  preferredPrinting?: string | null;
+  note?: string | null;
+  /** texto corto dibujado sobre la imagen. */
+  label?: { text: string; color: string } | null;
+  /** color del borde en el carrusel. */
+  highlight?: { color: string } | null;
+  updatedAt?: string;
+}
+
+export interface RulesListResponse {
+  rules: Rule[];
+  hasCreds: boolean;
+  /** true si el título ya no existe en card-titles (la app deja editar igual, con aviso). */
+  error?: string;
+}
+
+/** Plan/resultado de emitir una versión al buzón (snapshot del D1 → JSON). */
+export interface RulesEmitResult {
+  version: string;
+  count: number;
+  key: string;
+  sizeBytes: number;
+  applied: boolean;
+  error?: string;
+}
+
 // --- Buzón (inbox): archivos pendientes de enviar a debug ---
 
 export interface InboxItem {
@@ -79,6 +127,8 @@ export interface InboxSendResult {
   sizeBytes: number;
   applied: boolean;
   error?: string;
+  /** si era cards_db, error al regenerar card-titles.json (best-effort, no bloquea). */
+  titlesError?: string;
 }
 
 export type HealthLevel = "ok" | "warn" | "error";

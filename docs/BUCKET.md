@@ -12,6 +12,7 @@ la que maneja este tooling) y el *launcher* (`sunandmoon/`, otra app, todavía n
 pool/<tipo>/<id>/<versión>/<id>.<ext>   blobs content-addressed, compartidos por los 3 canales
 _state/registry.json                    libro mayor: (paquete,versión) → url/size/sha256/type/ext
 _state/channels.lock.json               qué versión hay en cada canal
+_state/card-titles.json                 índice de nombres de carta (valida el editor de reglas)
 inbox/<pkgId>-<X.Y.Z>.<ext>             buzón: archivos pendientes de enviar a debug
 debug/      staging/      production/    un manifest.json por canal (lo que lee la app)
 sunandmoon/                             launcher (OTRA app — no tocar)
@@ -22,6 +23,8 @@ sunandmoon/                             launcher (OTRA app — no tocar)
   imágenes (antes ~960 MB triplicados por canal). Cache: `immutable`.
 - **`_state/`** — el **estado** del deploy, vive en R2 (no en git): lectura pública vía r2.dev,
   escritura con credenciales S3, cache `no-store`. Lo escriben el CLI y el dashboard.
+  `card-titles.json` es un derivado regenerable del `cards_db` en debug (lo reescribe el buzón al
+  enviar una base nueva, o el botón "Refrescar índice"); lo consume el editor de reglas del dashboard.
 - **`inbox/`** — área de paso (ver [COMMANDS.md](COMMANDS.md#inbox--el-buzón)). El nombre define
   paquete + versión: `inbox/cards_db-2.3.0.zip` → `cards_db` v`2.3.0`.
 - **`<canal>/manifest.json`** — el índice que consume la app. Cache `max-age=60`.

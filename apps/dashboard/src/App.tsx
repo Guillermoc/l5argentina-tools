@@ -4,6 +4,7 @@ import { appConfig } from "./generated/companion";
 import { fmtBytes, timeAgo, compareVersions } from "./lib/format";
 import type { PromoteChange } from "./lib/promote";
 import Inbox from "./components/Inbox";
+import Rules from "./components/Rules";
 
 type LiveIndex = Record<string, Record<string, PackageStatus>>;
 
@@ -58,6 +59,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [promoting, setPromoting] = useState<string | null>(null);
+  const [tab, setTab] = useState<"canales" | "reglas">("canales");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -191,6 +193,27 @@ export default function App() {
         </div>
       </header>
 
+      {/* tabs */}
+      <nav className="mb-5 flex gap-1 border-b border-slate-800">
+        {(["canales", "reglas"] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`-mb-px border-b-2 px-3 py-2 text-sm font-medium transition ${
+              tab === t
+                ? "border-sky-400 text-slate-100"
+                : "border-transparent text-slate-500 hover:text-slate-300"
+            }`}
+          >
+            {t === "canales" ? "Canales" : "Reglas"}
+          </button>
+        ))}
+      </nav>
+
+      {tab === "reglas" && <Rules />}
+
+      {tab === "canales" && (
+        <>
       {/* resumen */}
       <div className="mb-5 flex flex-wrap gap-2">
         {error ? (
@@ -367,6 +390,8 @@ export default function App() {
 
       {/* buzón → debug */}
       <Inbox onChanged={load} />
+        </>
+      )}
     </div>
   );
 }

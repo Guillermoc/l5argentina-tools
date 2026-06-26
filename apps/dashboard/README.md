@@ -15,6 +15,10 @@ Navegador → Cloudflare Pages (esta SPA)
    GET  /api/inbox   ─────────────►  Pages Function: lista el buzón (inbox/) vía S3
    POST /api/inbox   ─────────────►  Pages Function: enviar a debug / descartar
    POST /api/upload  ─────────────►  Pages Function: sube el archivo adjunto al buzón
+   GET  /api/rules   ─────────────►  Pages Function: lista las reglas (D1, HTTP API)
+   POST /api/rules   ─────────────►  Pages Function: alta/edición/borrado de una regla (D1)
+   POST /api/rules/emit ──────────►  Pages Function: snapshot D1 → rules-X.Y.Z.json al buzón
+   POST /api/rules/refresh-titles ►  Pages Function: regenera _state/card-titles.json
                                      (lee R2 público; escribe/lista vía S3 con credenciales)
 ```
 
@@ -36,6 +40,37 @@ Navegador → Cloudflare Pages (esta SPA)
 
 Salud en 3 niveles: 🟢 existe y el tamaño coincide · 🟡 existe pero el tamaño declarado no
 coincide · 🔴 roto (404 / fuera de origen).
+
+## Editor de reglas (tab "Reglas", backend D1)
+
+Pantalla para construir el paquete `rules` online en vez de editar el JSON a mano. Cada regla es
+**una fila en una base D1** (Cloudflare SQLite, capa free); la PK por `title` evita cargar dos veces
+la misma carta. Cuando querés sacar una versión, **"Emitir versión → buzón"** hace una *foto* del D1,
+arma `{ rules: [...] }` y lo sube como `inbox/rules-X.Y.Z.json`: de ahí sigue el flujo normal
+(enviar a debug → promover). El editor no toca canales: solo genera el archivo en el buzón.
+
+- **Validación de cartas:** el campo `title` se autocompleta y valida contra
+  `_state/card-titles.json` (índice liviano de los ~6,4k nombres). Ese índice se **regenera solo**
+  cuando se envía un `cards_db` nuevo a debug (paso best-effort en el buzón), o a mano con
+  **"Refrescar índice"**. Si el índice no está, la validación es blanda (deja escribir, avisa).
+- **D1 vía HTTP API** (no binding): mismo código en dev y prod, igual que R2. Necesita
+  `D1_DATABASE_ID` + `D1_API_TOKEN` (account = `R2_ACCOUNT_ID`).
+
+### Provisionar D1 (una vez)
+
+```bash
+# 1) crear la base (anotá el database_id que imprime)
+npx wrangler d1 create l5a-rules
+# 2) crear la tabla
+npx wrangler d1 execute l5a-rules --remote --file=migrations/0001_rules.sql
+# 3) crear un API token en Cloudflare con permiso "D1 → Edit" (Account scope)
+#    y completar en .env (dev) y en las env vars de Pages (prod):
+#       D1_DATABASE_ID=<id del paso 1>
+#       D1_API_TOKEN=<token del paso 3>
+```
+
+Después, en la pantalla de Reglas: **"Refrescar índice"** (genera `card-titles.json` la primera
+vez, desde el `cards_db` que ya esté en debug) y a cargar reglas.
 
 ## Desarrollo local
 
@@ -72,6 +107,9 @@ npm run pages:dev    # build + wrangler pages dev dist  (runtime real de Pages)
      - `R2_ACCESS_KEY_ID`
      - `R2_SECRET_ACCESS_KEY` 🔒
      - `R2_BUCKET`
+   - **Para el editor de reglas** (tab "Reglas", D1):
+     - `D1_DATABASE_ID`
+     - `D1_API_TOKEN` 🔒
 
    Sin estas variables, la **matriz de estado** funciona igual (lectura pública), pero **promover**
    y el **buzón** devuelven "faltan credenciales R2". Ojo: el buzón las necesita **incluso para
