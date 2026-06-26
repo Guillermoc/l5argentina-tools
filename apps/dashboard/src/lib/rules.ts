@@ -144,7 +144,8 @@ async function importRules(db: D1Client, input: Rule[]): Promise<Reply> {
   if (unique.length === 0) return err(400, "no hay reglas válidas para importar");
 
   const now = new Date().toISOString();
-  const CHUNK = 50; // 50 filas × 9 columnas = 450 parámetros (bajo el límite de SQLite)
+  // D1 limita a 100 los parámetros por query → 11 filas × 9 columnas = 99 (bajo el tope)
+  const CHUNK = 11;
   for (let i = 0; i < unique.length; i += CHUNK) {
     const chunk = unique.slice(i, i + CHUNK);
     const placeholders = chunk.map(() => "(?, ?, ?, ?, ?, ?, ?, ?, ?)").join(", ");
