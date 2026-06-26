@@ -2,7 +2,51 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Rule, RulesEmitResult, RulesListResponse } from "../types";
 import { appConfig } from "../generated/companion";
 
-type Filter = "all" | "banned" | "note" | "label";
+type Filter =
+  | "all"
+  | "pending"
+  | "banned"
+  | "notBanned"
+  | "maxCopies"
+  | "noMaxCopies"
+  | "note"
+  | "label"
+  | "highlight";
+
+const FILTERS: { value: Filter; label: string }[] = [
+  { value: "all", label: "Todas" },
+  { value: "pending", label: "Sin emitir" },
+  { value: "banned", label: "Baneadas" },
+  { value: "notBanned", label: "No baneadas" },
+  { value: "maxCopies", label: "Con maxCopies" },
+  { value: "noMaxCopies", label: "Sin maxCopies" },
+  { value: "note", label: "Con nota" },
+  { value: "label", label: "Con label" },
+  { value: "highlight", label: "Con highlight" },
+];
+
+function passesFilter(r: Rule, filter: Filter): boolean {
+  switch (filter) {
+    case "pending":
+      return Boolean(r.pending);
+    case "banned":
+      return Boolean(r.banned);
+    case "notBanned":
+      return !r.banned;
+    case "maxCopies":
+      return r.maxCopies != null;
+    case "noMaxCopies":
+      return r.maxCopies == null;
+    case "note":
+      return Boolean(r.note);
+    case "label":
+      return Boolean(r.label?.text);
+    case "highlight":
+      return Boolean(r.highlight?.color);
+    default:
+      return true;
+  }
+}
 
 const EMPTY: Rule = {
   title: "",
@@ -72,12 +116,11 @@ export default function Rules() {
     const q = search.trim().toLowerCase();
     return rules.filter((r) => {
       if (q && !r.title.toLowerCase().includes(q)) return false;
-      if (filter === "banned") return r.banned;
-      if (filter === "note") return Boolean(r.note);
-      if (filter === "label") return Boolean(r.label?.text);
-      return true;
+      return passesFilter(r, filter);
     });
   }, [rules, search, filter]);
+
+  const pendingCount = useMemo(() => rules.filter((r) => r.pending).length, [rules]);
 
   const titleKnown = titles == null ? null : draft.title.trim() === "" ? null : titles.has(draft.title.trim());
   const isEditing = editingTitle != null;
@@ -160,7 +203,7 @@ export default function Rules() {
   const importFromDebug = useCallback(async () => {
     if (
       !window.confirm(
-        "Importar las reglas publicadas en debug a tu editor?\n\nLas cartas que ya tengas cargadas se sobrescriben con lo de debug (upsert por título).",
+        "⚠ RESET: esto VACÍA tu editor y lo reemplaza por las reglas publicadas en debug.\n\nSe pierde cualquier cambio sin emitir que tengas cargado. ¿Seguir?",
       )
     )
       return;
@@ -232,17 +275,12 @@ export default function Rules() {
         <div>
           <h2 className="text-lg font-semibold text-slate-100">Reglas</h2>
           <p className="mt-0.5 text-xs text-slate-500">
-            {rules.length} regla(s){titles ? ` · ${titles.size} cartas en el índice` : " · índice de cartas no disponible"}
+            {rules.length} regla(s)
+            {pendingCount > 0 && <span className="text-amber-400"> · {pendingCount} sin emitir</span>}
+            {titles ? ` · ${titles.size} cartas en el índice` : " · índice de cartas no disponible"}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => void load()}
-            disabled={loading}
-            className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-200 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
-          >
-            {loading ? "Actualizando…" : "Actualizar"}
-          </button>
           <input
             ref={fileRef}
             type="file"
@@ -255,29 +293,20 @@ export default function Rules() {
             }}
           />
           <button
-            onClick={() => void importFromDebug()}
-            disabled={busy}
-            title="importar el rules-*.json publicado en debug"
-            className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-300 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
+            onClick={() => void load()}
+            disabled={loading}
+            className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-200 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
           >
-            Importar de debug
+            {loading ? "Actualizando…" : "Actualizar"}
           </button>
-          <button
-            onClick={() => fileRef.current?.click()}
+          <ActionsMenu
             disabled={busy}
-            title="importar reglas desde un archivo rules-*.json"
-            className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-300 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
-          >
-            Importar JSON
-          </button>
-          <button
-            onClick={() => void refreshTitles()}
-            disabled={busy}
-            title="regenera _state/card-titles.json desde el cards_db en debug"
-            className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-300 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
-          >
-            Refrescar índice
-          </button>
+            actions={[
+              { label: "Importar de debug (reset)", title: "vacía el editor y carga lo publicado en debug", onClick: importFromDebug, danger: true },
+              { label: "Importar JSON (agregar)", title: "agrega/actualiza reglas desde un archivo rules-*.json", onClick: () => fileRef.current?.click() },
+              { label: "Refrescar índice de cartas", title: "regenera card-titles.json desde el cards_db en debug", onClick: refreshTitles },
+            ]}
+          />
           <button
             onClick={() => void emit()}
             disabled={busy || rules.length === 0}
@@ -309,19 +338,28 @@ export default function Rules() {
           placeholder="Buscar por carta…"
           className="w-56 rounded-lg bg-slate-800 px-3 py-1.5 text-sm text-slate-100 ring-1 ring-slate-700 focus:outline-none focus:ring-slate-500"
         />
-        {(["all", "banned", "note", "label"] as Filter[]).map((f) => (
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value as Filter)}
+          className="rounded-lg bg-slate-800 px-2.5 py-1.5 text-sm text-slate-200 ring-1 ring-slate-700 focus:outline-none focus:ring-slate-500"
+        >
+          {FILTERS.map((f) => (
+            <option key={f.value} value={f.value}>
+              {f.label}
+            </option>
+          ))}
+        </select>
+        {(search || filter !== "all") && (
           <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ring-1 transition ${
-              filter === f
-                ? "bg-sky-500/20 text-sky-200 ring-sky-400/40"
-                : "bg-slate-800 text-slate-400 ring-slate-700 hover:bg-slate-700"
-            }`}
+            onClick={() => {
+              setSearch("");
+              setFilter("all");
+            }}
+            className="rounded-lg bg-slate-800 px-2.5 py-1.5 text-xs font-medium text-slate-400 ring-1 ring-slate-700 transition hover:bg-slate-700"
           >
-            {f === "all" ? "Todas" : f === "banned" ? "Baneadas" : f === "note" ? "Con nota" : "Con label"}
+            Limpiar
           </button>
-        ))}
+        )}
         <span className="ml-auto text-xs text-slate-500">{filtered.length} mostradas</span>
       </div>
 
@@ -342,12 +380,22 @@ export default function Rules() {
             </thead>
             <tbody>
               {filtered.map((r) => (
-                <tr key={r.title} className="border-t border-slate-800/70 hover:bg-slate-800/20">
-                  <td className="px-4 py-2.5">
+                <tr
+                  key={r.title}
+                  className={`border-t border-slate-800/70 hover:bg-slate-800/20 ${
+                    r.pending ? "bg-amber-400/[0.04]" : ""
+                  }`}
+                >
+                  <td className={`px-4 py-2.5 ${r.pending ? "border-l-2 border-l-amber-400/70" : "border-l-2 border-l-transparent"}`}>
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-slate-200">{r.title}</span>
+                      {r.pending && (
+                        <span title="cambió desde la última emisión (todavía no publicada)" className="rounded bg-amber-400/15 px-1.5 py-0.5 text-[11px] font-medium text-amber-300 ring-1 ring-amber-400/30">
+                          sin emitir
+                        </span>
+                      )}
                       {titles && !titles.has(r.title) && (
-                        <span title="no está en el índice de cartas" className="rounded bg-amber-400/15 px-1.5 py-0.5 text-[11px] font-medium text-amber-300 ring-1 ring-amber-400/30">
+                        <span title="no está en el índice de cartas" className="rounded bg-rose-500/15 px-1.5 py-0.5 text-[11px] font-medium text-rose-300 ring-1 ring-rose-500/30">
                           ⚠ no encontrada
                         </span>
                       )}
@@ -403,6 +451,51 @@ export default function Rules() {
             </tbody>
           </table>
         </div>
+      )}
+    </div>
+  );
+}
+
+interface MenuAction {
+  label: string;
+  title?: string;
+  onClick: () => void;
+  danger?: boolean;
+}
+
+function ActionsMenu({ actions, disabled }: { actions: MenuAction[]; disabled?: boolean }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        disabled={disabled}
+        className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-300 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
+      >
+        Acciones ▾
+      </button>
+      {open && (
+        <>
+          {/* backdrop para cerrar al click afuera */}
+          <button className="fixed inset-0 z-10 cursor-default" tabIndex={-1} aria-hidden onClick={() => setOpen(false)} />
+          <div className="absolute right-0 z-20 mt-1 w-60 overflow-hidden rounded-lg border border-slate-700 bg-slate-900 shadow-xl">
+            {actions.map((a) => (
+              <button
+                key={a.label}
+                title={a.title}
+                onClick={() => {
+                  setOpen(false);
+                  a.onClick();
+                }}
+                className={`block w-full px-3 py-2 text-left text-sm transition hover:bg-slate-800 ${
+                  a.danger ? "text-rose-300" : "text-slate-200"
+                }`}
+              >
+                {a.label}
+              </button>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

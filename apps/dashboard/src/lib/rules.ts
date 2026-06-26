@@ -21,11 +21,19 @@ CREATE TABLE IF NOT EXISTS rules (
   label_text         TEXT,
   label_color        TEXT,
   highlight_color    TEXT,
-  updated_at         TEXT NOT NULL
+  updated_at         TEXT NOT NULL,
+  pending            INTEGER NOT NULL DEFAULT 1
 )`;
 
 async function ensureSchema(db: D1Client): Promise<void> {
   await db.query(CREATE_TABLE);
+  // `pending` (1 = cambió desde la última emisión) se agregó después; en tablas
+  // ya creadas, sumamos la columna. Si ya existe, D1 tira y lo ignoramos.
+  try {
+    await db.query("ALTER TABLE rules ADD COLUMN pending INTEGER NOT NULL DEFAULT 1");
+  } catch {
+    /* la columna ya existe */
+  }
 }
 
 // --- mapeo D1 <-> Rule ---
@@ -40,6 +48,7 @@ interface Row {
   label_color: string | null;
   highlight_color: string | null;
   updated_at: string;
+  pending: number;
 }
 
 function rowToRule(r: Row): Rule {
@@ -52,6 +61,7 @@ function rowToRule(r: Row): Rule {
     label: r.label_text ? { text: r.label_text, color: r.label_color ?? "#000000" } : null,
     highlight: r.highlight_color ? { color: r.highlight_color } : null,
     updatedAt: r.updated_at,
+    pending: Boolean(r.pending),
   };
 }
 
@@ -99,7 +109,7 @@ export interface RuleImportInput {
 export type RulesInput = RuleUpsertInput | RuleDeleteInput | RuleImportInput;
 
 /** Columnas de una fila en orden, para los INSERT (incluido el multi-row). */
-function ruleParams(rule: Rule, now: string): unknown[] {
+function ruleParams(rule: Rule, now: string, pending: number): unknown[] {
   return [
     rule.title,
     rule.maxCopies,
@@ -110,6 +120,7 @@ function ruleParams(rule: Rule, now: string): unknown[] {
     rule.label?.color ?? null,
     rule.highlight?.color ?? null,
     now,
+    pending,
   ];
 }
 
@@ -122,14 +133,22 @@ ON CONFLICT(title) DO UPDATE SET
   label_text = excluded.label_text,
   label_color = excluded.label_color,
   highlight_color = excluded.highlight_color,
-  updated_at = excluded.updated_at`;
+  updated_at = excluded.updated_at,
+  pending = excluded.pending`;
 
-const COLS = "title, max_copies, banned, preferred_printing, note, label_text, label_color, highlight_color, updated_at";
+const COLS = "title, max_copies, banned, preferred_printing, note, label_text, label_color, highlight_color, updated_at, pending";
+const ROW_PLACEHOLDER = "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; // 10 columnas
 
 /** Importa un lote: normaliza, dedupe por título (gana el último — SQLite no deja
  *  que un mismo título aparezca dos veces en un INSERT con ON CONFLICT), y hace
- *  upsert en chunks (multi-row) para no pasarse del límite de parámetros. */
-async function importRules(db: D1Client, input: Rule[]): Promise<Reply> {
+ *  upsert en chunks (multi-row) para no pasarse del límite de parámetros.
+ *  `pending`: 1 = quedan como cambios sin emitir (import desde archivo); 0 = ya
+ *  publicadas (import desde un canal). `reset`: vacía la tabla antes (reemplazo total). */
+async function importRules(
+  db: D1Client,
+  input: Rule[],
+  { pending, reset = false }: { pending: number; reset?: boolean },
+): Promise<Reply> {
   const byTitle = new Map<string, Rule>();
   let invalid = 0;
   for (const raw of input ?? []) {
@@ -143,13 +162,15 @@ async function importRules(db: D1Client, input: Rule[]): Promise<Reply> {
   const unique = [...byTitle.values()];
   if (unique.length === 0) return err(400, "no hay reglas válidas para importar");
 
+  if (reset) await db.query("DELETE FROM rules");
+
   const now = new Date().toISOString();
-  // D1 limita a 100 los parámetros por query → 11 filas × 9 columnas = 99 (bajo el tope)
-  const CHUNK = 11;
+  // D1 limita a 100 los parámetros por query → 9 filas × 10 columnas = 90 (bajo el tope)
+  const CHUNK = 9;
   for (let i = 0; i < unique.length; i += CHUNK) {
     const chunk = unique.slice(i, i + CHUNK);
-    const placeholders = chunk.map(() => "(?, ?, ?, ?, ?, ?, ?, ?, ?)").join(", ");
-    const params = chunk.flatMap((r) => ruleParams(r, now));
+    const placeholders = chunk.map(() => ROW_PLACEHOLDER).join(", ");
+    const params = chunk.flatMap((r) => ruleParams(r, now, pending));
     await db.query(`INSERT INTO rules (${COLS}) VALUES ${placeholders}${UPSERT_TAIL}`, params);
   }
   return { status: 200, body: { ok: true, imported: unique.length, deduped: input.length - unique.length, invalid } };
@@ -194,13 +215,13 @@ export async function runRules(input: RulesInput, env: Partial<D1Env> | undefine
         }
       }
       await db.query(
-        `INSERT INTO rules (${COLS}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)${UPSERT_TAIL}`,
-        ruleParams(rule, new Date().toISOString()),
+        `INSERT INTO rules (${COLS}) VALUES ${ROW_PLACEHOLDER}${UPSERT_TAIL}`,
+        ruleParams(rule, new Date().toISOString(), 1),
       );
       return { status: 200, body: { ok: true, rule } };
     }
     case "import":
-      return importRules(db, input.rules);
+      return importRules(db, input.rules, { pending: 1 });
     case "delete": {
       const title = (input.title ?? "").trim();
       if (!title) return err(400, "falta el título a borrar");
@@ -245,7 +266,8 @@ export async function importRulesFromChannel(
 
   const db = new D1Client(env);
   await ensureSchema(db);
-  const reply = await importRules(db, doc.rules);
+  // reset: el editor pasa a ser EXACTAMENTE lo de ese canal; ya está publicado → pending 0
+  const reply = await importRules(db, doc.rules, { pending: 0, reset: true });
   if (reply.status === 200 && reply.body && typeof reply.body === "object") {
     (reply.body as Record<string, unknown>).source = `${channel}@${version}`;
   }
@@ -286,6 +308,8 @@ export async function emitRules(
   // sube el snapshot al buzón reusando el flujo existente (de ahí → debug → promover)
   const up = await runUploadFile(key, bytes, env);
   if (up.status >= 400) return up;
+  // el snapshot incluye TODAS las filas → ya no hay nada pendiente de emitir
+  await db.query("UPDATE rules SET pending = 0 WHERE pending = 1");
   result.applied = true;
   return { status: 200, body: result };
 }

@@ -74,6 +74,8 @@ export interface Rule {
   /** color del borde en el carrusel. */
   highlight?: { color: string } | null;
   updatedAt?: string;
+  /** true si la regla cambió desde la última emisión (todavía no publicada). */
+  pending?: boolean;
 }
 
 export interface RulesListResponse {

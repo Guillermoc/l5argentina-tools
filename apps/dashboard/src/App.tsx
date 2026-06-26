@@ -179,18 +179,6 @@ export default function App() {
           </h1>
           <p className="mt-1 font-mono text-xs text-slate-500">{appConfig.baseUrl}</p>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-slate-500">
-            {data ? `actualizado ${timeAgo(data.fetchedAt)}` : loading ? "cargando…" : ""}
-          </span>
-          <button
-            onClick={() => void load()}
-            disabled={loading}
-            className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-200 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
-          >
-            {loading ? "Actualizando…" : "Actualizar"}
-          </button>
-        </div>
       </header>
 
       {/* tabs */}
@@ -214,6 +202,20 @@ export default function App() {
 
       {tab === "canales" && (
         <>
+      {/* barra: estado + actualizar */}
+      <div className="mb-4 flex items-center justify-end gap-3">
+        <span className="text-xs text-slate-500">
+          {data ? `actualizado ${timeAgo(data.fetchedAt)}` : loading ? "cargando…" : ""}
+        </span>
+        <button
+          onClick={() => void load()}
+          disabled={loading}
+          className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-200 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
+        >
+          {loading ? "Actualizando…" : "Actualizar"}
+        </button>
+      </div>
+
       {/* resumen */}
       <div className="mb-5 flex flex-wrap gap-2">
         {error ? (
