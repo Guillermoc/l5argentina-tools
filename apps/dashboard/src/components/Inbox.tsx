@@ -253,14 +253,6 @@ function InboxList({
                     disabled={!it.known}
                     className="w-24 rounded-lg bg-slate-800 px-2 py-1 font-mono text-sm text-slate-100 ring-1 ring-slate-700 focus:outline-none focus:ring-slate-500 disabled:opacity-50"
                   />
-                  {it.versionFromName && (
-                    <span
-                      title="versión tomada del nombre del archivo"
-                      className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[11px] font-medium text-emerald-300 ring-1 ring-emerald-500/30"
-                    >
-                      del nombre
-                    </span>
-                  )}
                 </div>
               </td>
               <td className="px-4 py-2.5">
