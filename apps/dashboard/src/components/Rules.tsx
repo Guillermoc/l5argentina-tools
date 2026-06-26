@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Rule, RulesEmitResult, RulesListResponse } from "../types";
 import { appConfig } from "../generated/companion";
 
@@ -33,6 +33,7 @@ export default function Rules() {
   const [draft, setDraft] = useState<Rule>(EMPTY);
   const [editingTitle, setEditingTitle] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -124,6 +125,57 @@ export default function Rules() {
     [editingTitle, load],
   );
 
+  const importFile = useCallback(
+    async (file: File) => {
+      let parsed: { rules?: unknown };
+      try {
+        let text = await file.text();
+        if (text.charCodeAt(0) === 0xfeff) text = text.slice(1); // BOM
+        parsed = JSON.parse(text);
+      } catch {
+        window.alert("El archivo no es un JSON válido.");
+        return;
+      }
+      const incoming = Array.isArray(parsed.rules) ? (parsed.rules as Rule[]) : null;
+      if (!incoming) {
+        window.alert('El JSON tiene que tener la forma { "rules": [ … ] }.');
+        return;
+      }
+      if (!window.confirm(`Importar ${incoming.length} reglas de "${file.name}"?\n\nLas cartas que ya existan se sobrescriben (upsert por título).`))
+        return;
+      setBusy(true);
+      const out = await postRules("/api/rules", { op: "import", rules: incoming });
+      setBusy(false);
+      if (!out.ok) {
+        window.alert(`No se pudo importar: ${out.data.error ?? "error"}`);
+        return;
+      }
+      const d = out.data;
+      window.alert(`Importadas ${d.imported} reglas (dedupe: ${d.deduped}, inválidas: ${d.invalid}).`);
+      await load();
+    },
+    [load],
+  );
+
+  const importFromDebug = useCallback(async () => {
+    if (
+      !window.confirm(
+        "Importar las reglas publicadas en debug a tu editor?\n\nLas cartas que ya tengas cargadas se sobrescriben con lo de debug (upsert por título).",
+      )
+    )
+      return;
+    setBusy(true);
+    const out = await postRules("/api/rules/import-channel", { channel: "debug" });
+    setBusy(false);
+    if (!out.ok) {
+      window.alert(`No se pudo importar: ${out.data.error ?? "error"}`);
+      return;
+    }
+    const d = out.data;
+    window.alert(`Importadas ${d.imported} reglas de ${d.source ?? "debug"} (dedupe: ${d.deduped}, inválidas: ${d.invalid}).`);
+    await load();
+  }, [load]);
+
   const refreshTitles = useCallback(async () => {
     if (!window.confirm("Regenerar el índice de nombres desde el cards_db que hay en debug?")) return;
     setBusy(true);
@@ -190,6 +242,33 @@ export default function Rules() {
             className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-200 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
           >
             {loading ? "Actualizando…" : "Actualizar"}
+          </button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void importFile(f);
+              if (fileRef.current) fileRef.current.value = "";
+            }}
+          />
+          <button
+            onClick={() => void importFromDebug()}
+            disabled={busy}
+            title="importar el rules-*.json publicado en debug"
+            className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-300 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
+          >
+            Importar de debug
+          </button>
+          <button
+            onClick={() => fileRef.current?.click()}
+            disabled={busy}
+            title="importar reglas desde un archivo rules-*.json"
+            className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-300 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
+          >
+            Importar JSON
           </button>
           <button
             onClick={() => void refreshTitles()}

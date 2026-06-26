@@ -1,4 +1,5 @@
-import type { D1Env, R2Env, Rule, RulesEmitResult, RulesListResponse } from "../types";
+import type { D1Env, ExpectedLock, R2Env, Registry, Rule, RulesEmitResult, RulesListResponse } from "../types";
+import { appConfig } from "../generated/companion";
 import { D1Client, hasD1Env } from "./d1";
 import { runUploadFile } from "./inbox";
 
@@ -81,19 +82,6 @@ export async function listRules(env: Partial<D1Env> | undefined): Promise<RulesL
 
 // --- escritura ---
 
-const UPSERT = `
-INSERT INTO rules (title, max_copies, banned, preferred_printing, note, label_text, label_color, highlight_color, updated_at)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-ON CONFLICT(title) DO UPDATE SET
-  max_copies = excluded.max_copies,
-  banned = excluded.banned,
-  preferred_printing = excluded.preferred_printing,
-  note = excluded.note,
-  label_text = excluded.label_text,
-  label_color = excluded.label_color,
-  highlight_color = excluded.highlight_color,
-  updated_at = excluded.updated_at`;
-
 export interface RuleUpsertInput {
   op: "upsert";
   rule: Rule;
@@ -104,7 +92,67 @@ export interface RuleDeleteInput {
   op: "delete";
   title: string;
 }
-export type RulesInput = RuleUpsertInput | RuleDeleteInput;
+export interface RuleImportInput {
+  op: "import";
+  rules: Rule[];
+}
+export type RulesInput = RuleUpsertInput | RuleDeleteInput | RuleImportInput;
+
+/** Columnas de una fila en orden, para los INSERT (incluido el multi-row). */
+function ruleParams(rule: Rule, now: string): unknown[] {
+  return [
+    rule.title,
+    rule.maxCopies,
+    rule.banned ? 1 : 0,
+    rule.preferredPrinting,
+    rule.note,
+    rule.label?.text ?? null,
+    rule.label?.color ?? null,
+    rule.highlight?.color ?? null,
+    now,
+  ];
+}
+
+const UPSERT_TAIL = `
+ON CONFLICT(title) DO UPDATE SET
+  max_copies = excluded.max_copies,
+  banned = excluded.banned,
+  preferred_printing = excluded.preferred_printing,
+  note = excluded.note,
+  label_text = excluded.label_text,
+  label_color = excluded.label_color,
+  highlight_color = excluded.highlight_color,
+  updated_at = excluded.updated_at`;
+
+const COLS = "title, max_copies, banned, preferred_printing, note, label_text, label_color, highlight_color, updated_at";
+
+/** Importa un lote: normaliza, dedupe por título (gana el último — SQLite no deja
+ *  que un mismo título aparezca dos veces en un INSERT con ON CONFLICT), y hace
+ *  upsert en chunks (multi-row) para no pasarse del límite de parámetros. */
+async function importRules(db: D1Client, input: Rule[]): Promise<Reply> {
+  const byTitle = new Map<string, Rule>();
+  let invalid = 0;
+  for (const raw of input ?? []) {
+    const rule = normalizeRule(raw);
+    if (!rule) {
+      invalid++;
+      continue;
+    }
+    byTitle.set(rule.title, rule);
+  }
+  const unique = [...byTitle.values()];
+  if (unique.length === 0) return err(400, "no hay reglas válidas para importar");
+
+  const now = new Date().toISOString();
+  const CHUNK = 50; // 50 filas × 9 columnas = 450 parámetros (bajo el límite de SQLite)
+  for (let i = 0; i < unique.length; i += CHUNK) {
+    const chunk = unique.slice(i, i + CHUNK);
+    const placeholders = chunk.map(() => "(?, ?, ?, ?, ?, ?, ?, ?, ?)").join(", ");
+    const params = chunk.flatMap((r) => ruleParams(r, now));
+    await db.query(`INSERT INTO rules (${COLS}) VALUES ${placeholders}${UPSERT_TAIL}`, params);
+  }
+  return { status: 200, body: { ok: true, imported: unique.length, deduped: input.length - unique.length, invalid } };
+}
 
 function normalizeRule(input: Rule | undefined): Rule | null {
   const title = (input?.title ?? "").trim();
@@ -144,19 +192,14 @@ export async function runRules(input: RulesInput, env: Partial<D1Env> | undefine
           return err(409, `ya existe una regla para "${rule.title}" — editala en vez de duplicarla`);
         }
       }
-      await db.query(UPSERT, [
-        rule.title,
-        rule.maxCopies,
-        rule.banned ? 1 : 0,
-        rule.preferredPrinting,
-        rule.note,
-        rule.label?.text ?? null,
-        rule.label?.color ?? null,
-        rule.highlight?.color ?? null,
-        new Date().toISOString(),
-      ]);
+      await db.query(
+        `INSERT INTO rules (${COLS}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)${UPSERT_TAIL}`,
+        ruleParams(rule, new Date().toISOString()),
+      );
       return { status: 200, body: { ok: true, rule } };
     }
+    case "import":
+      return importRules(db, input.rules);
     case "delete": {
       const title = (input.title ?? "").trim();
       if (!title) return err(400, "falta el título a borrar");
@@ -164,8 +207,48 @@ export async function runRules(input: RulesInput, env: Partial<D1Env> | undefine
       return { status: 200, body: { ok: true, title } };
     }
     default:
-      return err(400, "operación desconocida (op: upsert | delete)");
+      return err(400, "operación desconocida (op: upsert | delete | import)");
   }
+}
+
+// --- importar desde un canal (lo publicado en debug/staging/production) ---
+
+async function fetchJson<T>(url: string): Promise<T | null> {
+  try {
+    const res = await fetch(url, { headers: { "cache-control": "no-cache" } });
+    if (res.ok) return (await res.json()) as T;
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
+/** Importa a D1 el `rules-*.json` que hay publicado en un canal (default debug).
+ *  Resuelve versión (lock) → URL (registry) → baja el JSON → upsert en lote. */
+export async function importRulesFromChannel(
+  channel: string,
+  env: Partial<D1Env> | undefined,
+): Promise<Reply> {
+  if (!hasD1Env(env)) return err(503, "faltan credenciales D1 en el entorno");
+  const base = appConfig.baseUrl;
+  const [lock, registry] = await Promise.all([
+    fetchJson<ExpectedLock>(base + "_state/channels.lock.json"),
+    fetchJson<Registry>(base + "_state/registry.json"),
+  ]);
+  const version = lock?.channels?.[channel]?.[RULES_PKG];
+  if (!version) return err(404, `no hay ${RULES_PKG} publicado en ${channel}`);
+  const url = registry?.[RULES_PKG]?.[version]?.url;
+  if (!url) return err(404, `no encuentro la URL de ${RULES_PKG}@${version} en el registry`);
+  const doc = await fetchJson<{ rules: Rule[] }>(url);
+  if (!doc?.rules) return err(502, `no pude leer ${url}`);
+
+  const db = new D1Client(env);
+  await ensureSchema(db);
+  const reply = await importRules(db, doc.rules);
+  if (reply.status === 200 && reply.body && typeof reply.body === "object") {
+    (reply.body as Record<string, unknown>).source = `${channel}@${version}`;
+  }
+  return reply;
 }
 
 // --- emitir: snapshot del D1 → JSON → buzón (inbox/rules-X.Y.Z.json) ---

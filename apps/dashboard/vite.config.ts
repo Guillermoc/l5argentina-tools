@@ -62,6 +62,12 @@ function devApi() {
               const { status, body } = await emitRules(version, Boolean(apply), process.env as never);
               return json(status, body);
             }
+            if (url.startsWith("/api/rules/import-channel") && req.method === "POST") {
+              const { importRulesFromChannel } = await import("./src/lib/rules");
+              const { channel } = JSON.parse((await readBody(req)) || "{}");
+              const { status, body } = await importRulesFromChannel(channel || "debug", process.env as never);
+              return json(status, body);
+            }
             if (url.startsWith("/api/rules/refresh-titles") && req.method === "POST") {
               const { refreshCardTitlesFromDebug } = await import("./src/lib/cardTitles");
               const count = await refreshCardTitlesFromDebug(process.env as never);
