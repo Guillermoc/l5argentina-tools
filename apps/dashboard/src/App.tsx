@@ -5,6 +5,7 @@ import { fmtBytes, timeAgo, compareVersions } from "./lib/format";
 import type { PromoteChange } from "./lib/promote";
 import Inbox from "./components/Inbox";
 import Rules from "./components/Rules";
+import Launcher from "./components/Launcher";
 
 type LiveIndex = Record<string, Record<string, PackageStatus>>;
 
@@ -59,7 +60,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [promoting, setPromoting] = useState<string | null>(null);
-  const [tab, setTab] = useState<"canales" | "reglas">("canales");
+  const [tab, setTab] = useState<"canales" | "reglas" | "launcher">("canales");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -183,7 +184,7 @@ export default function App() {
 
       {/* tabs */}
       <nav className="mb-5 flex gap-1 border-b border-slate-800">
-        {(["canales", "reglas"] as const).map((t) => (
+        {(["canales", "reglas", "launcher"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -193,12 +194,14 @@ export default function App() {
                 : "border-transparent text-slate-500 hover:text-slate-300"
             }`}
           >
-            {t === "canales" ? "Canales" : "Reglas"}
+            {t === "canales" ? "Canales" : t === "reglas" ? "Reglas" : "Launcher"}
           </button>
         ))}
       </nav>
 
       {tab === "reglas" && <Rules />}
+
+      {tab === "launcher" && <Launcher />}
 
       {tab === "canales" && (
         <>

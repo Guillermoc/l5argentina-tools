@@ -50,11 +50,27 @@ function devApi() {
               return json(status, body);
             }
             if (url.startsWith("/api/upload") && req.method === "POST") {
-              const { runUploadFile } = await import("./src/lib/inbox");
               const name = decodeURIComponent((req.headers["x-l5a-filename"] as string) ?? "");
+              const target = (req.headers["x-l5a-target"] as string) ?? "";
               const bytes = await readRawBody(req);
+              if (target === "launcher") {
+                const { runUploadLauncherFile } = await import("./src/lib/launcher");
+                const { status, body } = await runUploadLauncherFile(name, bytes, process.env as never);
+                return json(status, body);
+              }
+              const { runUploadFile } = await import("./src/lib/inbox");
               const { status, body } = await runUploadFile(name, bytes, process.env as never);
               return json(status, body);
+            }
+            if (url.startsWith("/api/launcher")) {
+              if (req.method === "POST") {
+                const { runLauncher } = await import("./src/lib/launcher");
+                const input = JSON.parse((await readBody(req)) || "{}");
+                const { status, body } = await runLauncher(input, process.env as never);
+                return json(status, body);
+              }
+              const { listLauncher } = await import("./src/lib/launcher");
+              return json(200, await listLauncher(process.env as never));
             }
             if (url.startsWith("/api/rules/emit") && req.method === "POST") {
               const { emitRules } = await import("./src/lib/rules");

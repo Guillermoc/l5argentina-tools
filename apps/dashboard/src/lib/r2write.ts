@@ -50,6 +50,18 @@ export class R2Writer {
     }
   }
 
+  /** Baja los bytes de un objeto (GET autenticado, sin caché). Lo usa el launcher
+   *  para hashear el blob del buzón y para el read-modify-write del manifest. */
+  async getBytes(key: string): Promise<ArrayBuffer> {
+    const res = await this.aws.fetch(`${this.base}/${key}`, {
+      headers: { "cache-control": "no-cache" },
+    });
+    if (!res.ok) {
+      throw new Error(`R2 GET ${key} → HTTP ${res.status} ${await res.text().catch(() => "")}`.trim());
+    }
+    return res.arrayBuffer();
+  }
+
   /** Lista todos los objetos bajo un prefijo (sigue la paginación de S3). */
   async list(prefix: string): Promise<R2Object[]> {
     const out: R2Object[] = [];

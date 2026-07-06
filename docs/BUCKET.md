@@ -3,8 +3,9 @@
 Referencia de cómo está organizado el bucket **`l5r-cards`** (Cloudflare R2) que sirve este
 tooling. Base pública (solo lectura): `https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/`.
 
-El bucket aloja **dos apps con esquemas de manifest distintos**: la app de cartas (*companion*,
-la que maneja este tooling) y el *launcher* (`sunandmoon/`, otra app, todavía no manejada acá).
+El bucket aloja **dos apps con esquemas de manifest distintos**: la app de cartas (*companion*)
+y el *launcher* (`sunandmoon/`, otra app). El dashboard maneja **ambas** (pestañas *Canales* y
+*Launcher*).
 
 ## Prefijos top-level
 
@@ -15,7 +16,8 @@ _state/channels.lock.json               qué versión hay en cada canal
 _state/card-titles.json                 índice de nombres de carta (valida el editor de reglas)
 inbox/<pkgId>-<X.Y.Z>.<ext>             buzón: archivos pendientes de enviar a debug
 debug/      staging/      production/    un manifest.json por canal (lo que lee la app)
-sunandmoon/                             launcher (OTRA app — no tocar)
+sunandmoon/                             launcher (OTRA app, otro esquema — ver abajo)
+sunandmoon/inbox/<stem>-<X.Y.Z>.<ext>   buzón del launcher (pestaña Launcher del dashboard)
 ```
 
 - **`pool/`** — cada blob vive una sola vez, identificado por tipo/id/versión, e **inmutable**
@@ -49,12 +51,18 @@ Carpetas `debug/`, `staging/`, `production/`, cada una con su `manifest.json`:
 
 ## Launcher (`sunandmoon/`)
 
-Otra app, **otro esquema** — el tooling todavía **no** lo maneja (backlog):
+Otra app, **otro esquema**. Lo maneja la pestaña **Launcher** del dashboard:
 
-- Manifest: `{ schema, launcher{ latest_version, notes }, databases[], images{} }`.
-- Usa **`file`** (ruta **relativa** same-origin) + **`sha256`** + size. **Rechaza URLs externas**
+- Manifest (`sunandmoon/manifest.json`): `{ schema, launcher{ latest_version, notes }, databases[],
+  images{} }`. Carpeta **plana**: sin pool, canales, registry ni lock.
+- Usa **`file`** (ruta **relativa** same-origin) + **`sha256`** + `size`. **Rechaza URLs externas**
   (todo same-origin del propio manifest).
-- El `.exe` se publica por **GitHub Releases**, no en el bucket.
+- Tres partes versionadas: `launcher` (el `.exe`: solo versión + notas), `database` (una sola base,
+  `databases[0]`) e `images` (objeto único). El `.exe` se publica por **GitHub Releases**, no en el
+  bucket; en la pestaña solo se declara su versión.
+- **Buzón** en `sunandmoon/inbox/`. Al **publicar** un zip, el dashboard recalcula `sha256` + `size`,
+  copia server-side a `sunandmoon/<stem>-<X.Y.Z>.<ext>` y reescribe el manifest (solo el slot tocado).
+  La versión anterior queda **huérfana** (limpieza manual, igual que companion).
 
 ## Reglas de oro (qué NO romper)
 

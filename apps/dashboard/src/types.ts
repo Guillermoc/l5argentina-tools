@@ -133,6 +133,94 @@ export interface InboxSendResult {
   titlesError?: string;
 }
 
+// --- Launcher (Sun and Moon): otra app del mismo bucket, schema propio ---
+
+/** Entrada de base en el manifest del launcher (databases[]). */
+export interface LauncherDatabase {
+  id: string;
+  label: string;
+  version: string;
+  /** ruta RELATIVA same-origin dentro de sunandmoon/ (a diferencia de companion, que usa url absoluta). */
+  file: string;
+  sha256: string;
+  size: number;
+}
+
+/** Bloque de imágenes del launcher (objeto único, sin id/label). */
+export interface LauncherImages {
+  version: string;
+  file: string;
+  sha256: string;
+  size: number;
+}
+
+/** Manifest del launcher (sunandmoon/manifest.json). Carpeta plana, sin pool/canales/registry. */
+export interface LauncherManifest {
+  schema: number;
+  launcher: { latest_version: string; notes: string };
+  databases: LauncherDatabase[];
+  images: LauncherImages;
+}
+
+/** Slots versionados que maneja la UI: la base (databases[0]) y las imágenes. */
+export type LauncherSlot = "database" | "images";
+
+/** Un slot resuelto para mostrar en la pestaña (versión viva + salud del archivo). */
+export interface LauncherSlotStatus {
+  slot: LauncherSlot;
+  label: string;
+  version: string;
+  file: string;
+  sha256: string;
+  size: number;
+  health: PackageHealth;
+}
+
+/** Archivo pendiente en el buzón del launcher (sunandmoon/inbox/). */
+export interface LauncherInboxItem {
+  key: string;
+  /** nombre del archivo en el buzón. */
+  file: string;
+  ext: string;
+  /** slot inferido del nombre (stem "database" → database, "samuraiEx" → images); null si no matchea. */
+  slot: LauncherSlot | null;
+  known: boolean;
+  /** versión parseada del nombre, si la trae. */
+  version?: string;
+  /** versión sugerida al publicar (la del nombre, o un bump de la actual del slot). */
+  suggestedVersion: string;
+  sizeBytes: number;
+  lastModified: string;
+}
+
+export interface LauncherStatusResponse {
+  fetchedAt: string;
+  baseUrl: string;
+  hasCreds: boolean;
+  /** false si no se pudo leer sunandmoon/manifest.json. */
+  ok: boolean;
+  error?: string;
+  launcher: { latest_version: string; notes: string };
+  slots: LauncherSlotStatus[];
+  inbox: LauncherInboxItem[];
+}
+
+/** Plan/resultado de publicar un archivo del buzón a un slot del launcher. */
+export interface LauncherPublishResult {
+  slot: LauncherSlot;
+  from?: string;
+  to: string;
+  /** nombre final del archivo en sunandmoon/ (<stem>-<version>.<ext>). */
+  file: string;
+  sizeBytes: number;
+  /** sha256 recomputado (solo al aplicar). */
+  sha256?: string;
+  /** archivo de la versión anterior que queda huérfano (si cambió el nombre). */
+  orphan?: string;
+  applied: boolean;
+  error?: string;
+}
+
 export type HealthLevel = "ok" | "warn" | "error";
 
 export interface PackageHealth {

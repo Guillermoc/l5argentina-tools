@@ -60,10 +60,14 @@ npm run build                     # tsc --noEmit && vite build
 - El dashboard **NO** es workspace (es standalone). `scripts/gen.mjs` genera
   `src/generated/companion.ts` SOLO desde `app.config.json` (lista/orden de paquetes); el estado
   (lock/registry) lo lee EN VIVO de `_state/` en R2. Las Pages Functions (`functions/api/*`:
-  `status`, `promote`, `inbox`, `upload`) y el dev middleware (`vite.config.ts`) comparten la
-  lógica de `src/lib/` (status, promote, inbox, r2write). `r2write.ts` (aws4fetch) cubre
-  put/putBytes/list/copy/delete. `/api/upload` recibe el archivo adjunto (mismo origen) y lo
-  escribe al buzón; el envío a debug copia server-side (no re-sube bytes).
+  `status`, `promote`, `inbox`, `upload`, `launcher`) y el dev middleware (`vite.config.ts`)
+  comparten la lógica de `src/lib/` (status, promote, inbox, launcher, r2write). `r2write.ts`
+  (aws4fetch) cubre getBytes/put/putBytes/list/copy/delete. `/api/upload` recibe el archivo adjunto
+  (mismo origen) y lo escribe al buzón (companion, o el del launcher con header `x-l5a-target:
+  launcher`); el envío a debug copia server-side (no re-sube bytes).
+- **Pestaña Launcher** (`launcher.ts` + `Launcher.tsx`): gestiona la OTRA app del bucket
+  (`sunandmoon/`, esquema propio con `file` relativo + `sha256` + `size`, sin pool/canales). Buzón en
+  `sunandmoon/inbox/`; al publicar recalcula sha256+size y reescribe `sunandmoon/manifest.json`.
 - **Promover desde el dashboard** escribe en R2 vía `aws4fetch` con credenciales que en producción
   salen de las **env vars del proyecto de Pages** (`R2_*`), y en dev del `.env` de la raíz.
 
@@ -89,7 +93,9 @@ npm run build                     # tsc --noEmit && vite build
 ## NO hacer
 
 - ❌ Commitear `assets/`, `dist/`, `.env`, ni `apps/dashboard/src/generated/` (todos gitignored).
-- ❌ Tocar `sunandmoon/` en el bucket (es de otra app, el launcher).
+- ❌ Editar `sunandmoon/` a mano: lo gestiona la pestaña **Launcher** del dashboard (buzón en
+  `sunandmoon/inbox/`, arma el manifest con sha256+size). El `.exe` va por GitHub Releases, no al
+  bucket. Tampoco borrar la carpeta.
 - ❌ Borrar en el bucket las sub-features `*/history/`, `*/news/`, `*/tournament/`, `*/rulebooks/`
   (tienen contenido real con su propio sub-manifest; el tooling todavía no las maneja).
 - ❌ Cambiar el Public Dev URL del bucket ni pasar las URLs del manifest a relativas (la app vive
