@@ -43,6 +43,17 @@ function extFromUrl(url: string): string {
   return m ? m[1]!.toLowerCase() : "bin";
 }
 
+/** Baja un blob público y devuelve sus bytes + tamaño (para poder hashearlo). */
+async function fetchBytes(url: string): Promise<Uint8Array | undefined> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return undefined;
+    return new Uint8Array(await res.arrayBuffer());
+  } catch {
+    return undefined;
+  }
+}
+
 async function fetchLiveManifest(baseUrl: string, channel: string): Promise<Manifest | null> {
   try {
     const res = await fetch(`${baseUrl}${channel}/manifest.json`, {
@@ -55,16 +66,6 @@ async function fetchLiveManifest(baseUrl: string, channel: string): Promise<Mani
   }
 }
 
-async function headSize(url: string): Promise<number | undefined> {
-  try {
-    const h = await fetch(url, { method: "HEAD" });
-    if (!h.ok) return undefined;
-    const n = Number(h.headers.get("content-length"));
-    return Number.isFinite(n) ? n : undefined;
-  } catch {
-    return undefined;
-  }
-}
 
 /**
  * Planifica la migración de un canal a la pool. Solo usa fetch público (no
@@ -108,22 +109,23 @@ export async function planMigrate(opts: {
     if (reg) {
       items.push({
         id: pkg.id, type: pkg.type, version, action: "skip",
-        sizeBytes: reg.sizeBytes, ext: reg.ext, url: reg.url,
+        sizeBytes: reg.sizeBytes, ext: reg.ext, url: reg.url, sha256: reg.sha256,
         poolKey: reg.url.startsWith(baseUrl) ? reg.url.slice(baseUrl.length) : undefined,
       });
       continue;
     }
 
-    // ¿existe en vivo a esta misma versión? → copia server-side
+    // ¿existe en vivo a esta misma versión? → copia server-side (bajamos el blob
+    // una vez para calcular su sha256 real; la copia en sí sigue siendo server-side)
     if (liveEntry && liveEntry.version === version && liveEntry.url.startsWith(baseUrl)) {
-      const size = await headSize(liveEntry.url);
-      if (size !== undefined) {
+      const bytes = await fetchBytes(liveEntry.url);
+      if (bytes !== undefined) {
         const ext = extFromUrl(liveEntry.url);
         const key = mkPoolKey(config, pkg, version, ext);
         items.push({
           id: pkg.id, type: pkg.type, version, action: "copy",
-          sizeBytes: size, ext, poolKey: key, url: poolUrl(config, key),
-          fromKey: liveEntry.url.slice(baseUrl.length),
+          sizeBytes: bytes.length, ext, poolKey: key, url: poolUrl(config, key),
+          fromKey: liveEntry.url.slice(baseUrl.length), sha256: sha256(bytes),
         });
         continue;
       }
@@ -158,7 +160,7 @@ export function manifestFromPlan(config: AppConfig, plan: MigratePlan): Manifest
   const order = new Map(config.packages.map((p, i) => [p.id, i]));
   const entries: ManifestEntry[] = plan.items
     .filter((i) => i.action !== "blocked" && i.url && i.sizeBytes !== undefined)
-    .map((i) => ({ id: i.id, type: i.type, version: i.version, url: i.url!, sizeBytes: i.sizeBytes! }))
+    .map((i) => ({ id: i.id, type: i.type, version: i.version, url: i.url!, sizeBytes: i.sizeBytes!, sha256: i.sha256 ?? "" }))
     .sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
   return { packages: entries };
 }

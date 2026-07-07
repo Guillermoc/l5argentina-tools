@@ -40,8 +40,8 @@ sunandmoon/inbox/<stem>-<X.Y.Z>.<ext>   buzón del launcher (pestaña Launcher d
 
 Carpetas `debug/`, `staging/`, `production/`, cada una con su `manifest.json`:
 
-- **Forma del manifest:** array plano `packages[]` de `{ id, type, version, url (absoluta), sizeBytes }`.
-  **Sin `sha256`** (a diferencia del launcher). La app deduplica por **`version`**, no por URL.
+- **Forma del manifest:** array plano `packages[]` de `{ id, type, version, url (absoluta), sizeBytes,
+  sha256 }`. La app deduplica por **`version`**, no por URL ni por `sha256`.
 - **Tipos de paquete:** `filters`, `database` (cards_db), `rules`, `changelog`, e `images`
   (8 sets: promo, lotus, samurai, celestial, emperor, ivory, 20F, samuraiEx).
 - **Sub-features** `news/`, `history/`, `tournament/`, `rulebooks/`: features con su **propio
@@ -70,6 +70,6 @@ Otra app, **otro esquema**. Lo maneja la pestaña **Launcher** del dashboard:
   (la app vive de URLs absolutas; romperías a los ~25 usuarios).
 - **No** borrar `pool/`, las sub-features (`*/history|news|tournament|rulebooks/`) ni `sunandmoon/`.
 - Solo campos **aditivos** en el manifest de companion (la app debe ignorar lo desconocido antes
-  de sumar, p. ej., `sha256`).
+  de sumar campos nuevos).
 
 Ver también [COMO-FUNCIONA.md](COMO-FUNCIONA.md) (modelo funcional) y [../CLAUDE.md](../CLAUDE.md).

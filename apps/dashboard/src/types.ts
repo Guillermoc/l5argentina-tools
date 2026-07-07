@@ -20,6 +20,7 @@ export interface ManifestEntry {
   version: string;
   url: string;
   sizeBytes: number;
+  sha256: string;
 }
 
 export interface Manifest {

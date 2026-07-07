@@ -1,6 +1,7 @@
 import {
   S3Client,
   PutObjectCommand,
+  GetObjectCommand,
   HeadObjectCommand,
   CopyObjectCommand,
   ListObjectsV2Command,
@@ -62,6 +63,12 @@ export class R2 {
       if (err?.$metadata?.httpStatusCode === 404 || err?.name === "NotFound") return null;
       throw err;
     }
+  }
+
+  /** Baja los bytes de un objeto (p. ej. para recalcular su sha256). */
+  async getBytes(key: string): Promise<Uint8Array> {
+    const res = await this.s3.send(new GetObjectCommand({ Bucket: this.bucket, Key: key }));
+    return res.Body!.transformToByteArray();
   }
 
   async putBlob(key: string, body: Uint8Array, contentType: string): Promise<void> {

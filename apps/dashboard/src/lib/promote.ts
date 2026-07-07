@@ -43,7 +43,7 @@ export function buildManifest(channelState: Record<string, string>, registry: Re
     if (!v) continue;
     const entry = registry[pkg.id]?.[v];
     if (!entry) continue;
-    packages.push({ id: pkg.id, type: pkg.type, version: v, url: entry.url, sizeBytes: entry.sizeBytes });
+    packages.push({ id: pkg.id, type: pkg.type, version: v, url: entry.url, sizeBytes: entry.sizeBytes, sha256: entry.sha256 });
   }
   return { packages };
 }

@@ -43,13 +43,14 @@ export interface RegistryEntry {
   ext: string;
 }
 
-/** Entrada del manifest.json que consume la app. Forma intacta respecto del actual. */
+/** Entrada del manifest.json que consume la app. */
 export interface ManifestEntry {
   id: string;
   type: PackageType;
   version: string;
   url: string;
   sizeBytes: number;
+  sha256: string;
 }
 
 export interface Manifest {

@@ -11,6 +11,7 @@ import type {
 } from "../types";
 import { R2Writer, hasR2Env, type R2Object } from "./r2write";
 import { bumpVersion } from "./inbox";
+import { sha256hex } from "./hash";
 
 // El launcher (Sun and Moon) vive en el MISMO bucket que companion pero con otro
 // schema: carpeta plana `sunandmoon/`, manifest con `file` relativo + sha256 + size,
@@ -74,14 +75,6 @@ async function readManifestPublic(): Promise<LauncherManifest | null> {
 async function readManifestAuthed(writer: R2Writer): Promise<LauncherManifest> {
   const bytes = await writer.getBytes(MANIFEST_KEY);
   return JSON.parse(new TextDecoder().decode(bytes)) as LauncherManifest;
-}
-
-/** sha256 en hex de un blob. `crypto.subtle` existe en Node 22 y en Workers. */
-async function sha256hex(bytes: ArrayBuffer): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
-  return Array.from(new Uint8Array(digest))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
 }
 
 /** Salud de un archivo del manifest: HEAD + comparación de tamaño (patrón de status.ts). */

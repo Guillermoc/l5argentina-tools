@@ -8,6 +8,7 @@ import { promoteCommand } from "./commands/promote";
 import { migrateCommand } from "./commands/migrate";
 import { verifyCommand } from "./commands/verify";
 import { gcCommand } from "./commands/gc";
+import { regenCommand } from "./commands/regen";
 import {
   inboxLsCommand,
   inboxPutCommand,
@@ -83,6 +84,14 @@ program
   .option("--apply", "borrar de verdad (default: dry-run)")
   .action(async function (this: Command, opts: { apply?: boolean }) {
     await gcCommand(app(this), opts);
+  });
+
+program
+  .command("regen")
+  .description("recalcula sha256 faltantes en el registry y regenera el manifest.json de cada canal")
+  .option("--apply", "ejecutar de verdad (default: dry-run)")
+  .action(async function (this: Command, opts: { apply?: boolean }) {
+    await regenCommand(app(this), opts);
   });
 
 const inbox = program.command("inbox").description("buzón: archivos pendientes de enviar a debug");

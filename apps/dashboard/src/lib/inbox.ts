@@ -10,6 +10,7 @@ import type {
 import { R2Writer, hasR2Env, type R2Object } from "./r2write";
 import { buildManifest } from "./promote";
 import { refreshCardTitlesFromUrl } from "./cardTitles";
+import { sha256hex } from "./hash";
 
 export const INBOX_PREFIX = "inbox/";
 
@@ -211,14 +212,17 @@ async function runSend(input: InboxSendInput, env: Partial<R2Env> | undefined): 
   // 1) copia server-side inbox → pool (los bytes no pasan por el Worker)
   await writer.copy(obj.key, poolKey, contentTypeForExt(ext), CACHE_IMMUTABLE);
 
-  // 2) registry: agrega la nueva (versión); sha256 vacío (no se hashea el blob acá)
-  (registry[pkgId] ??= {})[input.version] = { sha256: "", sizeBytes: obj.sizeBytes, url, type, ext };
+  // 2) registry: agrega la nueva versión con su sha256 real (bajamos el blob recién copiado para hashearlo)
+  const hash = await sha256hex(await writer.getBytes(poolKey));
+  (registry[pkgId] ??= {})[input.version] = { sha256: hash, sizeBytes: obj.sizeBytes, url, type, ext };
 
   // 3) lock: debug pasa a la nueva versión. manifest validado ANTES de tocar R2.
   debugState[pkgId] = input.version;
   lock.channels[TARGET_CHANNEL] = debugState;
   const manifest = buildManifest(debugState, registry);
-  const bad = manifest.packages.filter((p) => !p.url.startsWith(appConfig.baseUrl) || !(p.sizeBytes > 0));
+  const bad = manifest.packages.filter(
+    (p) => !p.url.startsWith(appConfig.baseUrl) || !(p.sizeBytes > 0) || !/^[0-9a-f]{64}$/.test(p.sha256),
+  );
   if (bad.length) {
     return err(500, `manifest inválido tras enviar: ${bad.map((p) => p.id).join(", ")}`);
   }

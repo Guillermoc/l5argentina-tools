@@ -16,6 +16,7 @@ import {
   registryPut,
   writeRemoteRegistry,
   writeRemoteLock,
+  sha256,
 } from "@l5a/core";
 import { loadContext, fmtBytes } from "../context";
 
@@ -146,8 +147,11 @@ export async function inboxSendCommand(app: string, pkgId: string, opts: SendOpt
     console.log(`    ✓ copiado a la pool`);
   }
 
+  // el sha256 se calcula bajando el blob ya copiado (una sola vez, para el registry)
+  const hash = sha256(await r2.getBytes(key));
+
   // registry + lock(debug) en memoria, y manifest validado ANTES de tocar R2
-  registryPut(ctx.registry, pkgId, version, { sha256: "", sizeBytes, url, type: pkg.type, ext: chosen.ext });
+  registryPut(ctx.registry, pkgId, version, { sha256: hash, sizeBytes, url, type: pkg.type, ext: chosen.ext });
   debugState[pkgId] = version;
   ctx.lock.channels[TARGET] = debugState;
   const manifest = buildManifest(ctx.config, debugState, ctx.registry);

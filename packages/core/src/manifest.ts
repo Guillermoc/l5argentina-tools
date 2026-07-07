@@ -26,6 +26,7 @@ export function buildManifest(
       version,
       url: entry.url,
       sizeBytes: entry.sizeBytes,
+      sha256: entry.sha256,
     });
   }
   return { packages };
@@ -40,6 +41,9 @@ export function validateManifest(manifest: Manifest, baseUrl: string): string[] 
     }
     if (!Number.isFinite(p.sizeBytes) || p.sizeBytes <= 0) {
       errors.push(`${p.id}@${p.version}: sizeBytes inválido (${p.sizeBytes})`);
+    }
+    if (!/^[0-9a-f]{64}$/.test(p.sha256)) {
+      errors.push(`${p.id}@${p.version}: sha256 inválido (${p.sha256 || "vacío"})`);
     }
   }
   return errors;

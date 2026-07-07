@@ -27,7 +27,7 @@ vive en **R2** (`_state/`), no en git. Las imágenes y zips pesados (con copyrig
   los 3 canales lo apuntan. Las imágenes (~960 MB) quedan **deduplicadas** (no triplicadas).
 - **Estado en R2** (`_state/registry.json`, `_state/channels.lock.json`): lectura pública,
   escritura con credenciales. Lo escriben tanto el CLI como el dashboard (botones de promover).
-- **`manifest.json`** por canal = el índice que lee la app: `{ id, type, version, url, sizeBytes }`.
+- **`manifest.json`** por canal = el índice que lee la app: `{ id, type, version, url, sizeBytes, sha256 }`.
   La app decide qué bajar comparando **`version`** (no la URL), así que mover archivos a la pool
   **no dispara re-descargas**.
 
@@ -35,7 +35,7 @@ vive en **R2** (`_state/`), no en git. Las imágenes y zips pesados (con copyrig
   **promueve** hacia adelante. "Build once, promote bytes": lo que probaste es lo que sale.
 - **Pool content-addressed**: cada blob vive una sola vez en `pool/<tipo>/<id>/<versión>/` y
   los 3 canales lo apuntan. Las imágenes (~960 MB) quedan **deduplicadas** (no triplicadas).
-- **`manifest.json`** por canal = el índice que lee la app: `{ id, type, version, url, sizeBytes }`.
+- **`manifest.json`** por canal = el índice que lee la app: `{ id, type, version, url, sizeBytes, sha256 }`.
   La app decide qué bajar comparando **`version`** (no la URL), así que mover archivos a la pool
   **no dispara re-descargas**.
 
@@ -126,5 +126,5 @@ En producción: **https://admin.l5argentina.com.ar**. Local: `cd apps/dashboard 
 
 Los 3 canales ya están migrados a la pool. Pendiente (ver [docs/MIGRATION.md](docs/MIGRATION.md)
 y el backlog): limpieza de archivos huérfanos viejos por canal, sub-features
-(news/history/tournament/rulebooks), `sha256` en el manifest, formulario web de novedades, y
-sumar el launcher `sunandmoon` como segunda app.
+(news/history/tournament/rulebooks), formulario web de novedades, y sumar el launcher
+`sunandmoon` como segunda app.

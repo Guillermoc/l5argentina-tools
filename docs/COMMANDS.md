@@ -138,6 +138,23 @@ npm run l5a -- gc --apply    # los borra
 
 ---
 
+## `regen`
+
+Recalcula el `sha256` de las versiones del `registry.json` que no lo tienen (bajando el blob del
+pool y hasheándolo) y regenera el `manifest.json` de cada canal para que incluya el `sha256` de
+cada paquete. **Dry-run por defecto.**
+
+```bash
+npm run l5a -- regen            # ve qué falta y qué manifests se reescribirían
+npm run l5a -- regen --apply    # calcula los sha256 faltantes y sube los manifest.json
+```
+
+> Solo hace falta correrlo una vez para poner al día versiones publicadas antes de que el
+> tooling calculara el sha256 (buzón/`migrate`). De ahí en adelante, `publish`/`promote`/`inbox
+> send`/`migrate` ya escriben el `sha256` real en cada manifest nuevo.
+
+---
+
 ## `inbox` — el buzón
 
 El **buzón** es la carpeta `inbox/` del bucket: un área de paso para archivos pendientes de
