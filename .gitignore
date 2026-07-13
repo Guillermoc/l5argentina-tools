@@ -19,3 +19,6 @@ apps/*/channels.lock.json
 .DS_Store
 Thumbs.db
 *.log
+
+# paquete de trabajo local para la revisión de WoH (no es parte del repo)
+woh-review-package/

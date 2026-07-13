@@ -1,0 +1,47 @@
+type ReviewLink = {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+};
+
+const REVIEWS: ReviewLink[] = [
+  {
+    id: "woh",
+    title: "WoH — Revisión de Current",
+    description: "Revisión carta por carta de qué printing debería ser el \"current\" entre todas las versiones de una carta con printing en War of Honor.",
+    href: "/reviews/woh-review.html",
+  },
+];
+
+export default function Reviews() {
+  return (
+    <div>
+      <p className="mb-4 text-sm text-slate-400">
+        Herramientas standalone de revisión. Cada una abre en una pestaña aparte; el progreso y el
+        JSON de salida se manejan dentro de esa herramienta, no acá.
+      </p>
+      <ul className="flex flex-col gap-2">
+        {REVIEWS.map((r) => (
+          <li
+            key={r.id}
+            className="flex items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-900/40 px-4 py-3"
+          >
+            <div>
+              <div className="font-medium text-slate-200">{r.title}</div>
+              <div className="mt-0.5 text-xs text-slate-500">{r.description}</div>
+            </div>
+            <a
+              href={r.href}
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 rounded-lg bg-sky-500/15 px-3 py-1.5 text-sm font-medium text-sky-300 ring-1 ring-sky-400/30 transition hover:bg-sky-500/25"
+            >
+              Abrir →
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
