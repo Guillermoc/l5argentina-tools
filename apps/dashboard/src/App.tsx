@@ -20,6 +20,15 @@ function indexLive(data: StatusResponse | null) {
   return { live, meta };
 }
 
+/** Nombre con el que se ofrece la descarga: `<pkgId>-<versión>.<ext>`, tomando
+ *  la extensión del último segmento de la URL del bucket. */
+function downloadName(id: string, version: string, url: string): string {
+  const seg = url.split(/[?#]/)[0]?.split("/").pop() ?? "";
+  const dot = seg.lastIndexOf(".");
+  const ext = dot > 0 ? seg.slice(dot) : "";
+  return `${id}-${version}${ext}`;
+}
+
 function Dot({ color, title }: { color: string; title: string }) {
   return (
     <span
@@ -352,7 +361,13 @@ export default function App() {
                                     : `HTTP ${h.httpStatus ?? "?"}`
                           }
                         />
-                        <span className="font-mono text-slate-100">{entry.version}</span>
+                        <a
+                          href={`/api/download?url=${encodeURIComponent(entry.url)}&name=${encodeURIComponent(downloadName(row.id, entry.version, entry.url))}`}
+                          title={`descargar ${row.id} ${entry.version} desde el bucket`}
+                          className="font-mono text-slate-100 underline decoration-slate-600 decoration-dotted underline-offset-2 transition hover:text-sky-300 hover:decoration-sky-400"
+                        >
+                          {entry.version}
+                        </a>
                         {promo && upstreamCh && (
                           <button
                             onClick={() => void promote(upstreamCh, ch, [row.id])}

@@ -43,6 +43,22 @@ function devApi() {
               const { appConfig } = await import("./src/generated/companion");
               return json(200, await fetchStatus(appConfig));
             }
+            if (url.startsWith("/api/download")) {
+              const { fetchDownload, contentDisposition } = await import("./src/lib/download");
+              const { appConfig } = await import("./src/generated/companion");
+              const q = new URL(url, "http://localhost").searchParams;
+              const out = await fetchDownload(q.get("url") ?? "", q.get("name") ?? "", appConfig.baseUrl);
+              if (out.error) return json(out.status, { error: out.error });
+              res.statusCode = 200;
+              res.setHeader("content-type", out.contentType);
+              res.setHeader("content-disposition", contentDisposition(out.filename));
+              res.setHeader("cache-control", "no-store");
+              if (out.contentLength) res.setHeader("content-length", out.contentLength);
+              if (!out.body) return res.end();
+              // Piping del stream web → respuesta de Node (sin bufferear).
+              const { Readable } = await import("node:stream");
+              return Readable.fromWeb(out.body as any).pipe(res);
+            }
             if (url.startsWith("/api/promote") && req.method === "POST") {
               const { runPromote } = await import("./src/lib/promote");
               const input = JSON.parse((await readBody(req)) || "{}");
