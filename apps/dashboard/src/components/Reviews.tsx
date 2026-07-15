@@ -7,6 +7,12 @@ type ReviewLink = {
 
 const REVIEWS: ReviewLink[] = [
   {
+    id: "index",
+    title: "Selector de reportes",
+    description: "Lista los reportes de auditoría de imágenes subidos al bucket (tools/reports/) y abre la revisión que corresponda. Pensado para usar desde el celular, sin cargar el JSON a mano.",
+    href: "/reviews/index.html",
+  },
+  {
     id: "woh",
     title: "WoH — Revisión de Current",
     description: "Revisión carta por carta de qué printing debería ser el \"current\" entre todas las versiones de una carta con printing en War of Honor.",

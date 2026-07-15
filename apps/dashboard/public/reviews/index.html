@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revisiones — selector de reportes</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --border: #2a2e38; --text: #e6e8ec;
+    --muted: #9aa1ac; --ok: #3ecf8e; --warn: #f0a63a; --bad: #e05b5b; --accent: #5b8def; --corrected: #a48af5;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f6f8; --panel: #ffffff; --border: #dde1e7; --text: #1b1e24;
+      --muted: #5b6270; --ok: #1a9c63; --warn: #b5720a; --bad: #c23f3f; --accent: #2f5fd6; --corrected: #6a3fd6;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 16px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 16px;
+    position: sticky; top: 0; z-index: 10; }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+  button { font: inherit; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 6px;
+    border: 1px solid var(--border); background: rgba(127,127,127,0.08); color: var(--text); cursor: pointer; }
+  button:hover { background: rgba(127,127,127,0.18); }
+  button.active { outline: 2px solid var(--accent); }
+  select { font: inherit; font-size: 13px; font-weight: 600; padding: 8px 10px; border-radius: 6px;
+    border: 1px solid var(--border); background: rgba(127,127,127,0.08); color: var(--text); margin-left: auto; }
+
+  .set-heading { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--muted); margin: 20px 0 8px; }
+  .set-heading:first-of-type { margin-top: 0; }
+
+  a.card { display: flex; flex-direction: column; gap: 8px; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; margin-bottom: 12px; text-decoration: none; color: inherit; }
+  a.card:hover { border-color: var(--accent); }
+  .card-top { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+  .tipo { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 10px;
+    background: rgba(91,141,239,0.15); color: var(--accent); }
+  .fecha { font-size: 12px; color: var(--muted); }
+  .card-summary { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .pill { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 10px; }
+  .pill.clean { background: rgba(62,207,142,.15); color: var(--ok); }
+  .pill.pending { background: rgba(240,166,58,.15); color: var(--warn); }
+  .breakdown { font-size: 12px; color: var(--muted); }
+
+  .empty { color: var(--muted); text-align: center; padding: 60px 0; }
+  .updated { color: var(--muted); font-size: 11px; text-align: center; margin-top: 20px; }
+
+  @media (max-width: 500px) {
+    body { padding: 12px; }
+    .toolbar { position: static; }
+    select { margin-left: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<h1>Revisiones</h1>
+<div class="subtitle">Reportes de auditoría de imágenes disponibles. Tocá uno para revisar las cartas marcadas.</div>
+
+<div class="toolbar">
+  <span class="filters" id="tipoFilters">
+    <button data-t="all" class="active">Todos</button>
+    <button data-t="audit">Títulos</button>
+    <button data-t="keywords">Keywords</button>
+  </span>
+  <select id="setFilter"><option value="all">Todos los sets</option></select>
+</div>
+
+<div id="list"><div class="empty">Cargando índice…</div></div>
+<div class="updated" id="updated"></div>
+
+<script>
+const BASE = 'https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/reports/';
+const TARGET = { audit: 'title-review.html', keywords: 'keyword-review.html' };
+const LABEL = { audit: 'Títulos', keywords: 'Keywords' };
+
+let reports = [];
+let tipoFilter = 'all';
+let setFilter = 'all';
+
+const $ = s => document.querySelector(s);
+
+function tipoOf(r) {
+  return (r.analisis || r.file || '').startsWith('keywords') ? 'keywords' : 'audit';
+}
+
+document.querySelectorAll('#tipoFilters button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#tipoFilters button').forEach(x => x.classList.remove('active'));
+  b.classList.add('active'); tipoFilter = b.dataset.t; render();
+});
+$('#setFilter').onchange = e => { setFilter = e.target.value; render(); };
+
+fetch(BASE + 'index.json').then(r => r.json()).then(j => {
+  reports = j.reports || [];
+  const sets = [...new Set(reports.map(r => r.set))].sort();
+  for (const s of sets) {
+    const opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    $('#setFilter').appendChild(opt);
+  }
+  if ($('#updated')) $('#updated').textContent = j.actualizado ? `Índice actualizado: ${j.actualizado}` : '';
+  render();
+}).catch(e => {
+  $('#list').innerHTML = `<div class="empty">No pude cargar el índice de reportes: ${e.message}</div>`;
+});
+
+function render() {
+  const list = $('#list'); list.innerHTML = '';
+  let visible = reports.filter(r => (tipoFilter === 'all' || tipoOf(r) === tipoFilter) && (setFilter === 'all' || r.set === setFilter));
+  visible.sort((a, b) => (a.set || '').localeCompare(b.set) || (b.fecha || '').localeCompare(a.fecha));
+
+  if (!visible.length) {
+    list.innerHTML = '<div class="empty">No hay reportes con este filtro.</div>';
+    return;
+  }
+
+  let lastSet = null;
+  for (const r of visible) {
+    if (r.set !== lastSet) {
+      const h = document.createElement('div');
+      h.className = 'set-heading'; h.textContent = r.set;
+      list.appendChild(h);
+      lastSet = r.set;
+    }
+    const tipo = tipoOf(r);
+    const pending = (r.casi || 0) + (r.diff || 0) + (r.error || 0);
+    const clean = pending === 0;
+    const a = document.createElement('a');
+    a.className = 'card';
+    a.href = `${TARGET[tipo]}?report=${encodeURIComponent(BASE + r.file)}`;
+    a.innerHTML = `
+      <div class="card-top">
+        <span class="tipo">${LABEL[tipo]}</span>
+        <span class="fecha">${r.fecha || ''}</span>
+      </div>
+      <div class="card-summary">
+        <span class="pill ${clean ? 'clean' : 'pending'}">${clean ? `${r.ok ?? 0} ok` : `${pending} a revisar`}</span>
+        <span class="breakdown">${r.ok ?? 0} ok · ${r.casi ?? 0} casi · ${r.diff ?? 0} diff${r.error ? ` · ${r.error} error` : ''} · ${r.total ?? ''} total</span>
+      </div>`;
+    list.appendChild(a);
+  }
+}
+</script>
+</body>
+</html>
