@@ -121,7 +121,7 @@ $('#file').onchange = async e => {
 
 // también se puede cargar por URL: ?report=https://.../reporte.json
 const reportUrl = new URLSearchParams(location.search).get('report');
-if (reportUrl) fetch(reportUrl).then(r => r.json()).then(j => {
+if (reportUrl) fetch(`/api/download?url=${encodeURIComponent(reportUrl)}&name=report.json`).then(r => r.json()).then(j => {
   report = j;
   decisions = JSON.parse(localStorage.getItem(storeKey()) || '{}');
   render();

@@ -95,7 +95,7 @@ document.querySelectorAll('#tipoFilters button').forEach(b => b.onclick = () => 
 });
 $('#setFilter').onchange = e => { setFilter = e.target.value; render(); };
 
-fetch(BASE + 'index.json').then(r => r.json()).then(j => {
+fetch(`/api/download?url=${encodeURIComponent(BASE + 'index.json')}&name=index.json`).then(r => r.json()).then(j => {
   reports = j.reports || [];
   const sets = [...new Set(reports.map(r => r.set))].sort();
   for (const s of sets) {
