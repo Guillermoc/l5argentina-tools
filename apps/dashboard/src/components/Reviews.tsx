@@ -12,6 +12,18 @@ const REVIEWS: ReviewLink[] = [
     description: "Revisión carta por carta de qué printing debería ser el \"current\" entre todas las versiones de una carta con printing en War of Honor.",
     href: "/reviews/woh-review.html",
   },
+  {
+    id: "title",
+    title: "Títulos — Revisión de auditoría de imágenes",
+    description: "Cargá un reporte de image-audit/reports/. Para cada carta marcada: mirá la imagen, elegí la verdad (DB, lo leído por el modelo, o texto editado) y exportá las decisiones.",
+    href: "/reviews/title-review.html",
+  },
+  {
+    id: "keyword",
+    title: "Keywords — Revisión de auditoría de imágenes",
+    description: "Cargá un reporte keywords-*.json de image-audit/reports/. Para cada carta marcada: mirá la línea de keywords en la imagen y elegí la verdad. Las decisiones se exportan como JSON para apply-keyword-review.mjs.",
+    href: "/reviews/keyword-review.html",
+  },
 ];
 
 export default function Reviews() {

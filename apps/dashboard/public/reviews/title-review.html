@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Títulos — Revisión de auditoría de imágenes</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --border: #2a2e38; --text: #e6e8ec;
+    --muted: #9aa1ac; --ok: #3ecf8e; --warn: #f0a63a; --accent: #5b8def; --corrected: #a48af5;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f6f8; --panel: #ffffff; --border: #dde1e7; --text: #1b1e24;
+      --muted: #5b6270; --ok: #1a9c63; --warn: #b5720a; --accent: #2f5fd6; --corrected: #6a3fd6;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 24px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 16px; position: sticky; top: 0; z-index: 10; }
+  button, .file-btn { font: inherit; font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 6px;
+    border: 1px solid var(--border); background: rgba(127,127,127,0.08); color: var(--text); cursor: pointer; }
+  button:hover, .file-btn:hover { background: rgba(127,127,127,0.18); }
+  button.primary { background: var(--accent); color: #06133a; border-color: var(--accent); }
+  .toolbar .status-line { font-size: 12px; color: var(--muted); margin-left: auto; display: flex; gap: 12px; align-items: center; }
+  .progress-bar { width: 160px; height: 6px; background: rgba(127,127,127,0.2); border-radius: 3px; overflow: hidden; }
+  .progress-bar > div { height: 100%; background: var(--ok); }
+  .filters { display: flex; gap: 6px; }
+  .filters button.active { outline: 2px solid var(--accent); }
+  .row { display: flex; gap: 16px; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px; margin-bottom: 12px; align-items: flex-start; }
+  .row.decided { border-color: var(--ok); }
+  .row img { width: 220px; border-radius: 6px; flex-shrink: 0; cursor: zoom-in; }
+  .row img.zoom { width: 440px; cursor: zoom-out; }
+  .fields { flex: 1; min-width: 0; }
+  .cardid { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .verdict { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+  .verdict.CASI { background: rgba(240,166,58,.15); color: var(--warn); }
+  .verdict.DIFF { background: rgba(240,80,80,.15); color: #e05b5b; }
+  .verdict.ERROR { background: rgba(240,80,80,.3); color: #e05b5b; }
+  .verdict.OK { background: rgba(62,207,142,.15); color: var(--ok); }
+  .opt { display: flex; gap: 8px; align-items: center; margin: 6px 0; font-size: 14px; }
+  .opt .label { width: 60px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; flex-shrink: 0; }
+  .opt .value { font-weight: 600; }
+  .opt button { flex-shrink: 0; padding: 3px 10px; font-size: 11px; }
+  .opt input { font: inherit; font-size: 14px; flex: 1; min-width: 0; padding: 6px 8px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+  .chosen { margin-top: 10px; font-size: 13px; }
+  .chosen b { color: var(--ok); }
+  .chosen.pending b { color: var(--warn); }
+  .empty { color: var(--muted); text-align: center; padding: 60px 0; }
+</style>
+</head>
+<body>
+<h1>Títulos — Revisión de auditoría de imágenes</h1>
+<div class="subtitle">Cargá un reporte de <code>image-audit/reports/</code>. Para cada carta marcada: mirá la imagen,
+elegí la verdad (DB, lo leído por el modelo, o texto editado) y exportá las decisiones.</div>
+
+<div class="toolbar">
+  <label class="file-btn">Cargar reporte <input id="file" type="file" accept=".json" hidden></label>
+  <span class="filters">
+    <button data-f="flag" class="active">Marcadas</button>
+    <button data-f="all">Todas</button>
+    <button data-f="pending">Sin decidir</button>
+  </span>
+  <button class="primary" id="export">Exportar decisiones</button>
+  <span class="status-line">
+    <span id="stat">sin reporte</span>
+    <span class="progress-bar"><div id="prog" style="width:0"></div></span>
+  </span>
+</div>
+
+<div id="list"><div class="empty">Cargá un reporte JSON para empezar.</div></div>
+
+<script>
+const IMG_BASE = 'https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/';
+let report = null;
+let decisions = {}; // cardId -> {printing_id, db_name, model_name, chosen_name, source}
+let filter = 'flag';
+
+const $ = s => document.querySelector(s);
+const storeKey = () => 'title-review:' + (report?.analisis || '') + ':' + (report?.fecha || '');
+
+document.querySelectorAll('.filters button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.filters button').forEach(x => x.classList.remove('active'));
+  b.classList.add('active'); filter = b.dataset.f; render();
+});
+
+$('#file').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  report = JSON.parse(await f.text());
+  decisions = JSON.parse(localStorage.getItem(storeKey()) || '{}');
+  render();
+};
+
+function rows() {
+  const all = report?.resultados || [];
+  if (filter === 'all') return all;
+  if (filter === 'pending') return all.filter(r => r.veredicto !== 'OK' && !decisions[r.cardId]);
+  return all.filter(r => r.veredicto !== 'OK');
+}
+
+function decide(r, name, source) {
+  decisions[r.cardId] = { printing_id: r.id, db_name: r.name, model_name: r.leido, chosen_name: name, source };
+  localStorage.setItem(storeKey(), JSON.stringify(decisions));
+  render();
+}
+
+function render() {
+  if (!report) return;
+  const flagged = (report.resultados || []).filter(r => r.veredicto !== 'OK');
+  const done = flagged.filter(r => decisions[r.cardId]).length;
+  $('#stat').textContent = `${report.analisis} · ${report.fecha} · ${done}/${flagged.length} decididas`;
+  $('#prog').style.width = flagged.length ? (100 * done / flagged.length) + '%' : '100%';
+  const list = $('#list'); list.innerHTML = '';
+  for (const r of rows()) {
+    const d = decisions[r.cardId];
+    const row = document.createElement('div');
+    row.className = 'row' + (d ? ' decided' : '');
+    row.innerHTML = `
+      <img src="${IMG_BASE}${r.image}" loading="lazy" onclick="this.classList.toggle('zoom')">
+      <div class="fields">
+        <div class="cardid">${r.id}<span class="verdict ${r.veredicto}">${r.veredicto}</span>${r.dist < 99 ? ` <span style="color:var(--muted)">dist ${r.dist}</span>` : ''}</div>
+        <div class="opt"><span class="label">DB</span><span class="value">${r.name}</span><button data-a="db">Elegir DB</button></div>
+        <div class="opt"><span class="label">Modelo</span><span class="value">${r.leido ?? '<i>error de lectura</i>'}</span><button data-a="model">Elegir modelo</button></div>
+        <div class="opt"><span class="label">Editar</span><input value="${(d?.chosen_name ?? r.leido ?? r.name).replace(/"/g, '&quot;')}"><button data-a="custom">Usar este</button></div>
+        <div class="chosen ${d ? '' : 'pending'}">${d ? `Decidido: <b>${d.chosen_name}</b> <span style="color:var(--muted)">(${d.source})</span>` : 'Decidido: <b>pendiente</b>'}</div>
+      </div>`;
+    row.querySelector('[data-a=db]').onclick = () => decide(r, r.name, 'db');
+    row.querySelector('[data-a=model]').onclick = () => decide(r, r.leido, 'modelo');
+    row.querySelector('[data-a=custom]').onclick = () => decide(r, row.querySelector('input').value.trim(), 'editado');
+    list.appendChild(row);
+  }
+  if (!list.children.length) list.innerHTML = '<div class="empty">Nada que mostrar con este filtro.</div>';
+}
+
+$('#export').onclick = () => {
+  if (!report) return alert('Cargá un reporte primero.');
+  const out = {
+    analysis: report.analisis, fecha_reporte: report.fecha, db: report.db,
+    exportado: new Date().toISOString(), decisions,
+  };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' }));
+  a.download = `${report.analisis}-review.json`;
+  a.click();
+};
+</script>
+</body>
+</html>
