@@ -4,5 +4,8 @@ dist/
 # código generado desde apps/companion (lo regenera `npm run gen`)
 src/generated/
 
+# manifest de public/reviews/versions-*.html (lo regenera `npm run gen`)
+public/reviews/versions-manifest.json
+
 # wrangler
 .wrangler/

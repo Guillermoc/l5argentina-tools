@@ -1,0 +1,469 @@
+<title>HaT — Revisión de Current</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --border: #2a2e38;
+    --text: #e6e8ec;
+    --muted: #9aa1ac;
+    --ok: #3ecf8e;
+    --warn: #f0a63a;
+    --accent: #5b8def;
+    --corrected: #a48af5;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f6f8;
+      --panel: #ffffff;
+      --border: #dde1e7;
+      --text: #1b1e24;
+      --muted: #5b6270;
+      --ok: #1a9c63;
+      --warn: #b5720a;
+      --accent: #2f5fd6;
+      --corrected: #6a3fd6;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  button, .file-btn {
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: rgba(127,127,127,0.08);
+    color: var(--text);
+    cursor: pointer;
+  }
+  button:hover, .file-btn:hover { background: rgba(127,127,127,0.18); }
+  button.primary { background: var(--accent); color: #06133a; border-color: var(--accent); }
+  button.small { padding: 3px 8px; font-size: 11px; }
+  .toolbar .sep { width: 1px; align-self: stretch; background: var(--border); margin: 0 4px; }
+  .toolbar .status-line { font-size: 12px; color: var(--muted); margin-left: auto; display: flex; gap: 12px; align-items: center; }
+  .toolbar .filecap { font-size: 11px; color: var(--muted); }
+  #linkedFileName { font-weight: 700; color: var(--ok); }
+  .progress-bar {
+    width: 160px;
+    height: 6px;
+    background: rgba(127,127,127,0.2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-bar > div { height: 100%; background: var(--ok); }
+
+  .filters { display: flex; gap: 6px; }
+  .filters button.active { outline: 2px solid var(--accent); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  thead th {
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 58px;
+    background: var(--panel);
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr.hidden-row { display: none; }
+  td { padding: 12px; }
+  .col-name { width: 230px; }
+  .card-name { font-weight: 600; font-size: 14px; }
+  .card-id { color: var(--muted); font-size: 11px; margin-bottom: 6px; }
+
+  .status-pill {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 2px 7px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+  .status-pill.pending { background: rgba(127,127,127,0.2); color: var(--muted); }
+  .status-pill.approved { background: rgba(62,207,142,0.2); color: var(--ok); }
+  .status-pill.corrected { background: rgba(164,138,245,0.2); color: var(--corrected); }
+
+  .row-actions { display: flex; gap: 6px; margin-top: 6px; }
+
+  .others-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .printing-box {
+    width: 130px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    padding: 6px;
+    background: rgba(127,127,127,0.05);
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .printing-box:hover { border-color: var(--accent); }
+  .printing-box.is-selected {
+    border-color: var(--ok);
+    box-shadow: 0 0 0 2px rgba(62,207,142,0.3);
+  }
+  .printing-box img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+    background: rgba(127,127,127,0.1);
+    min-height: 60px;
+    pointer-events: none;
+  }
+  .printing-meta { margin-top: 4px; }
+  .printing-id { font-size: 11px; font-weight: 600; }
+  .printing-edition { font-size: 10px; color: var(--muted); }
+  .badges { margin-top: 4px; display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+  .badge {
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .badge.dbcurrent { background: rgba(127,127,127,0.25); color: var(--muted); }
+  .badge.hat { background: var(--accent); color: #06133a; }
+  .badge.selected { background: var(--ok); color: #06301f; }
+
+  tr.row-pending-warn { background: rgba(240,166,58,0.05); }
+  tr.row-approved { background: rgba(62,207,142,0.05); }
+  tr.row-corrected { background: rgba(164,138,245,0.06); }
+
+  #toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    display: none;
+  }
+</style>
+
+<h1>Cartas con printing en HaT — Revisión de Current</h1>
+<div class="subtitle">Base: cards-2.3.2.json · Cartas en orden alfabético. Los printings de cada carta van en orden cronológico por set (orden de filters-2.3.0.json), el de HaT aparece en su posición cronológica (badge azul). Click en una print para marcarla como la que debería ser current. El estado (aprobado/corregido) se calcula solo según tu selección.</div>
+
+<div class="toolbar">
+  <button class="primary" id="btnLinkFile">🔗 Vincular / crear archivo JSON</button>
+  <span id="linkedFileName"></span>
+  <div class="sep"></div>
+  <button id="btnExport">⬇ Exportar JSON</button>
+  <label class="file-btn" style="margin:0">
+    ⬆ Importar JSON
+    <input type="file" id="importInput" accept="application/json" style="display:none">
+  </label>
+  <button id="btnReset">🗑 Borrar progreso local</button>
+  <div class="sep"></div>
+  <div class="filters">
+    <button data-filter="all" class="active">Todas</button>
+    <button data-filter="pending">Pendientes</button>
+    <button data-filter="approved">Aprobadas</button>
+    <button data-filter="corrected">Corregidas</button>
+  </div>
+  <div class="status-line">
+    <span id="progressText">0/0 revisadas</span>
+    <div class="progress-bar"><div id="progressFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Carta</th>
+      <th>Printings (orden cronológico)</th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+
+<div id="toast"></div>
+
+<script>
+const CARDS = [{"id":"HaT032","name":"Akodo Regulars","printings":[{"id":"WoH066","edition":"WoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH066.jpg","current":false},{"id":"HaT032","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT032.jpg","current":true}]},{"id":"HaT015","name":"Akodo Shihiro","printings":[{"id":"HaT015","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT015.jpg","current":true}]},{"id":"TCW041","name":"Back to the Front","printings":[{"id":"IG2045","edition":"IG2","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/IG2/IG2045.jpg","current":false},{"id":"Emperor273","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor273.jpg","current":false},{"id":"HaT048","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT048.jpg","current":false},{"id":"AMoH040","edition":"AMoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/AMoH/AMoH040.jpg","current":false},{"id":"Ivory290","edition":"Ivory","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory290.jpg","current":false},{"id":"TCW041","edition":"TCW","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TCW/TCW041.jpg","current":true},{"id":"Promo582","edition":"Promo","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Promo/Promo582.jpg","current":false}]},{"id":"HaT001","name":"Bamboo Harvesters","printings":[{"id":"Celestial021","edition":"Celestial","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial021.jpg","current":false},{"id":"WoH010","edition":"WoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH010.jpg","current":false},{"id":"Emperor027","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor027.jpg","current":false},{"id":"HaT001","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT001.jpg","current":true}]},{"id":"HaT023","name":"Bayushi Irezu","printings":[{"id":"Emperor148","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor148.jpg","current":false},{"id":"HaT023","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT023.jpg","current":true}]},{"id":"HaT024","name":"Bayushi Kasumi","printings":[{"id":"HaT024","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT024.jpg","current":true}]},{"id":"HaT025","name":"Bayushi Manami","printings":[{"id":"Emperor150","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor150.jpg","current":false},{"id":"HaT025","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT025.jpg","current":true}]},{"id":"HaT026","name":"Bayushi Nitoshi - inexp","printings":[{"id":"HaT026","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT026.jpg","current":true}]},{"id":"HaT027","name":"Bayushi Utoro","printings":[{"id":"HaT027","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT027.jpg","current":true}]},{"id":"TCW042","name":"Block Supply Lines","printings":[{"id":"Samurai206","edition":"Samurai","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Samurai/Samurai206.jpg","current":false},{"id":"Emperor279","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor279.jpg","current":false},{"id":"HaT049","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT049.jpg","current":false},{"id":"AMoH041","edition":"AMoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/AMoH/AMoH041.jpg","current":false},{"id":"Ivory294","edition":"Ivory","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory294.jpg","current":false},{"id":"TCW042","edition":"TCW","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TCW/TCW042.jpg","current":true},{"id":"Promo583","edition":"Promo","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Promo/Promo583.jpg","current":false}]},{"id":"HaT002","name":"Border Keep - inexp","printings":[{"id":"HaT002","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT002.jpg","current":true}]},{"id":"HaT003","name":"Bushi Dojo","printings":[{"id":"HaT003","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT003.jpg","current":true}]},{"id":"HaT041","name":"Cleansing the Path","printings":[{"id":"PotD157","edition":"PotD","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/PotD/PotD157.jpg","current":false},{"id":"Emperor248","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor248.jpg","current":false},{"id":"HaT041","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT041.jpg","current":true}]},{"id":"HaT033","name":"Clearing Crew","printings":[{"id":"TSE079","edition":"TSE","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TSE/TSE079.jpg","current":false},{"id":"HaT033","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT033.jpg","current":true}]},{"id":"HaT042","name":"Communion with Earth","printings":[{"id":"HaT042","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT042.jpg","current":true}]},{"id":"TwentyFestivals240","name":"Conflagration","printings":[{"id":"Emperor249","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor249.jpg","current":false},{"id":"HaT043","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT043.jpg","current":false},{"id":"TwentyFestivals240","edition":"TwentyFestivals","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TwentyFestivals/TwentyFestivals240.jpg","current":true}]},{"id":"Emperor251","name":"Contemplate the Void","printings":[{"id":"Emperor251","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor251.jpg","current":true},{"id":"HaT044","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT044.jpg","current":false}]},{"id":"HaT050","name":"Crushing Strength","printings":[{"id":"PotD091","edition":"PotD","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/PotD/PotD091.jpg","current":false},{"id":"HaT050","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT050.jpg","current":true}]},{"id":"HaT013","name":"Daidoji Kenshi","printings":[{"id":"Emperor076","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor076.jpg","current":false},{"id":"HaT013","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT013.jpg","current":true}]},{"id":"HaT034","name":"Devoted Yojimbo","printings":[{"id":"TTT128","edition":"TTT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TTT/TTT128.jpg","current":false},{"id":"HaT034","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT034.jpg","current":true}]},{"id":"HaT004","name":"Diamond Mine","printings":[{"id":"Celestial029","edition":"Celestial","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial029.jpg","current":false},{"id":"WoH014","edition":"WoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH014.jpg","current":false},{"id":"HaT004","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT004.jpg","current":true}]},{"id":"TwentyFestivals242","name":"Earth's Embrace","printings":[{"id":"PotD159","edition":"PotD","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/PotD/PotD159.jpg","current":false},{"id":"HaT045","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT045.jpg","current":false},{"id":"TwentyFestivals242","edition":"TwentyFestivals","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TwentyFestivals/TwentyFestivals242.jpg","current":true}]},{"id":"HaT051","name":"Elite Training","printings":[{"id":"HaT051","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT051.jpg","current":true}]},{"id":"Ivory308","name":"Fall Back!","printings":[{"id":"IG2047","edition":"IG2","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/IG2/IG2047.jpg","current":false},{"id":"Emperor293","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor293.jpg","current":false},{"id":"HaT052","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT052.jpg","current":false},{"id":"AMoH044","edition":"AMoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/AMoH/AMoH044.jpg","current":false},{"id":"Ivory308","edition":"Ivory","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory308.jpg","current":true},{"id":"TCW047","edition":"TCW","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TCW/TCW047.jpg","current":false}]},{"id":"Ivory022","name":"Geisha House","printings":[{"id":"Samurai028","edition":"Samurai","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Samurai/Samurai028.jpg","current":false},{"id":"Celestial049","edition":"Celestial","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial049.jpg","current":false},{"id":"WoH018","edition":"WoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH018.jpg","current":false},{"id":"Emperor035","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor035.jpg","current":false},{"id":"HaT005","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT005.jpg","current":false},{"id":"Ivory022","edition":"Ivory","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory022.jpg","current":true}]},{"id":"HaT012","name":"Hida Bushotsu","printings":[{"id":"Emperor057","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor057.jpg","current":false},{"id":"HaT012","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT012.jpg","current":true}]},{"id":"HaT035","name":"Hired Legion","printings":[{"id":"HaT035","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT035.jpg","current":true},{"id":"Promo248","edition":"Promo","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Promo/Promo248.jpg","current":false}]},{"id":"TCW048","name":"Incapacitated","printings":[{"id":"IG2051","edition":"IG2","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/IG2/IG2051.jpg","current":false},{"id":"Emperor312","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor312.jpg","current":false},{"id":"HaT053","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT053.jpg","current":false},{"id":"AMoH045","edition":"AMoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/AMoH/AMoH045.jpg","current":false},{"id":"Ivory319","edition":"Ivory","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory319.jpg","current":false},{"id":"TCW048","edition":"TCW","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TCW/TCW048.jpg","current":true},{"id":"Promo586","edition":"Promo","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Promo/Promo586.jpg","current":false}]},{"id":"HaT054","name":"Inspirational Address","printings":[{"id":"WaD108","edition":"WaD","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WaD/WaD108.jpg","current":false},{"id":"HaT054","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT054.jpg","current":true}]},{"id":"TwentyFestivals123","name":"Isawa Nairuko","printings":[{"id":"HaT016","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT016.jpg","current":false},{"id":"TwentyFestivals123","edition":"TwentyFestivals","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TwentyFestivals/TwentyFestivals123.jpg","current":true}]},{"id":"HaT017","name":"Isawa Taiken","printings":[{"id":"HaT017","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT017.jpg","current":true}]},{"id":"HaT018","name":"Isawa Tamaki","printings":[{"id":"Emperor142","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor142.jpg","current":false},{"id":"HaT018","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT018.jpg","current":true}]},{"id":"HaT006","name":"Large Farm","printings":[{"id":"Celestial034","edition":"Celestial","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial034.jpg","current":false},{"id":"WoH020","edition":"WoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH020.jpg","current":false},{"id":"Emperor040","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor040.jpg","current":false},{"id":"HaT006","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT006.jpg","current":true}]},{"id":"HaT036","name":"Native Guide","printings":[{"id":"TSE083","edition":"TSE","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TSE/TSE083.jpg","current":false},{"id":"HaT036","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT036.jpg","current":true}]},{"id":"HaT019","name":"Natsumi","printings":[{"id":"TSE051","edition":"TSE","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TSE/TSE051.jpg","current":false},{"id":"HaT019","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT019.jpg","current":true}]},{"id":"HaT055","name":"Never Afraid","printings":[{"id":"TSE128","edition":"TSE","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TSE/TSE128.jpg","current":false},{"id":"HaT055","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT055.jpg","current":true}]},{"id":"HaT056","name":"One Shout","printings":[{"id":"TSE129","edition":"TSE","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TSE/TSE129.jpg","current":false},{"id":"HaT056","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT056.jpg","current":true}]},{"id":"HaT057","name":"Prepared for Death","printings":[{"id":"IG2056","edition":"IG2","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/IG2/IG2056.jpg","current":false},{"id":"Emperor331","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor331.jpg","current":false},{"id":"HaT057","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT057.jpg","current":true}]},{"id":"HaT037","name":"Rank & File","printings":[{"id":"HaT037","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT037.jpg","current":true}]},{"id":"HaT007","name":"Remote Village","printings":[{"id":"SC010","edition":"SC","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/SC/SC010.jpg","current":false},{"id":"HaT007","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT007.jpg","current":true}]},{"id":"Ivory040","name":"Rice Paddy","printings":[{"id":"HaT008","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT008.jpg","current":false},{"id":"AMoH010","edition":"AMoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/AMoH/AMoH010.jpg","current":false},{"id":"Ivory040","edition":"Ivory","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory040.jpg","current":true}]},{"id":"HaT046","name":"Scouring Flood","printings":[{"id":"GotE159","edition":"GotE","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/GotE/GotE159.jpg","current":false},{"id":"Emperor255","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor255.jpg","current":false},{"id":"HaT046","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT046.jpg","current":true}]},{"id":"HaT038","name":"Seppun Heavy Elite","printings":[{"id":"HaT038","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT038.jpg","current":true},{"id":"Promo349","edition":"Promo","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Promo/Promo349.jpg","current":false}]},{"id":"Ivory271","name":"Servitors of Stone","printings":[{"id":"GotE161","edition":"GotE","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/GotE/GotE161.jpg","current":false},{"id":"HaT047","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT047.jpg","current":false},{"id":"Ivory271","edition":"Ivory","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory271.jpg","current":true}]},{"id":"HaT020","name":"Shiba Jikaro","printings":[{"id":"HaT020","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT020.jpg","current":true}]},{"id":"HaT021","name":"Shiba Mitsushen","printings":[{"id":"HaT021","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT021.jpg","current":true}]},{"id":"HaT022","name":"Shiba Tsukimi - exp3.5","printings":[{"id":"HaT022","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT022.jpg","current":true}]},{"id":"HaT028","name":"Shosuro Chikata","printings":[{"id":"HaT028","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT028.jpg","current":true}]},{"id":"HaT029","name":"Shosuro Konishi","printings":[{"id":"Emperor157","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor157.jpg","current":false},{"id":"HaT029","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT029.jpg","current":true}]},{"id":"HaT009","name":"Silk Works","printings":[{"id":"Emperor049","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor049.jpg","current":false},{"id":"HaT009","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT009.jpg","current":true}]},{"id":"Ivory047","name":"Silver Mine","printings":[{"id":"Samurai047","edition":"Samurai","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Samurai/Samurai047.jpg","current":false},{"id":"Celestial048","edition":"Celestial","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial048.jpg","current":false},{"id":"WoH025","edition":"WoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH025.jpg","current":false},{"id":"Emperor050","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor050.jpg","current":false},{"id":"HaT010","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT010.jpg","current":false},{"id":"Ivory047","edition":"Ivory","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory047.jpg","current":true}]},{"id":"HaT011","name":"Small Farm","printings":[{"id":"Emperor051","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor051.jpg","current":false},{"id":"HaT011","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT011.jpg","current":true},{"id":"Promo618","edition":"Promo","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Promo/Promo618.jpg","current":false}]},{"id":"HaT014","name":"Tamori Kusugi","printings":[{"id":"Emperor095","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor095.jpg","current":false},{"id":"HaT014","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT014.jpg","current":true}]},{"id":"HaT059","name":"The Sacred Temple of the Phoenix - inexp","printings":[{"id":"HaT059","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT059.jpg","current":true}]},{"id":"HaT060","name":"The Towers of the Yogo","printings":[{"id":"HaT060","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT060.jpg","current":true}]},{"id":"Ivory353","name":"Treachery and Deceit","printings":[{"id":"Emperor380","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor380.jpg","current":false},{"id":"HaT058","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT058.jpg","current":false},{"id":"AMoH052","edition":"AMoH","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/AMoH/AMoH052.jpg","current":false},{"id":"Ivory353","edition":"Ivory","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory353.jpg","current":true}]},{"id":"HaT031","name":"Tsubo - exp","printings":[{"id":"HaT031","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT031.jpg","current":true}]},{"id":"HaT039","name":"Veteran Skirmishers","printings":[{"id":"Emperor227","edition":"Emperor","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor227.jpg","current":false},{"id":"HaT039","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT039.jpg","current":true}]},{"id":"HaT040","name":"Wave Man","printings":[{"id":"KD133","edition":"KD","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/KD/KD133.jpg","current":false},{"id":"HaT040","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT040.jpg","current":true}]},{"id":"HaT030","name":"Yogo Haruto","printings":[{"id":"HaT030","edition":"HaT","image":"https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT030.jpg","current":true}]}];
+const DB_VERSION = "3.3.0";
+const STORAGE_KEY = 'hat_review_v1';
+
+let decisions = {};
+let fileHandle = null;
+let currentFilter = 'all';
+
+function loadLocal() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) decisions = JSON.parse(raw).decisions || {};
+  } catch (e) { console.warn('no local storage state', e); }
+}
+
+function buildExportObject() {
+  const out = { meta: { source_db_version: DB_VERSION, exported_at: new Date().toISOString(), total_cards: CARDS.length }, decisions: {} };
+  for (const c of CARDS) {
+    const d = decisions[c.id];
+    const originalCurrent = (c.printings.find(p => p.current) || {}).id || null;
+    out.decisions[c.id] = {
+      card_name: c.name,
+      original_current_printing_id: originalCurrent,
+      selected_current_printing_id: d ? d.selected : originalCurrent,
+      status: d ? d.status : 'pending',
+      reviewed_at: d ? d.reviewed_at : null,
+    };
+  }
+  return out;
+}
+
+function saveLocal() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ decisions }));
+}
+
+async function saveToFile() {
+  if (!fileHandle) return;
+  try {
+    const writable = await fileHandle.createWritable();
+    await writable.write(JSON.stringify(buildExportObject(), null, 2));
+    await writable.close();
+    showToast('Guardado en archivo ✓');
+  } catch (e) {
+    console.error(e);
+    showToast('Error al guardar en archivo: ' + e.message);
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => { t.style.display = 'none'; }, 2200);
+}
+
+function esc(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function getDecision(cardId) {
+  const c = CARDS.find(x => x.id === cardId);
+  const originalCurrent = (c.printings.find(p => p.current) || {}).id || null;
+  const d = decisions[cardId];
+  if (!d) return { selected: originalCurrent, status: 'pending', reviewed_at: null, originalCurrent };
+  return { selected: d.selected, status: d.status, reviewed_at: d.reviewed_at, originalCurrent };
+}
+
+function setDecision(cardId, selectedPrintingId) {
+  const c = CARDS.find(x => x.id === cardId);
+  const originalCurrent = (c.printings.find(p => p.current) || {}).id || null;
+  const status = selectedPrintingId === originalCurrent ? 'approved' : 'corrected';
+  decisions[cardId] = { selected: selectedPrintingId, status, reviewed_at: new Date().toISOString() };
+  persist();
+  renderRow(cardId);
+  updateProgress();
+}
+
+function resetDecision(cardId) {
+  delete decisions[cardId];
+  persist();
+  renderRow(cardId);
+  updateProgress();
+}
+
+function persist() {
+  saveLocal();
+  saveToFile();
+}
+
+function printingBoxHtml(cardId, p, isWoh, decision) {
+  const isSelected = decision.selected === p.id;
+  const cls = ['printing-box'];
+  if (isSelected) cls.push('is-selected');
+  const dbCurrentBadge = p.current ? '<span class="badge dbcurrent">DB current</span>' : '';
+  const hatBadge = isWoh ? '<span class="badge hat">HaT</span>' : '';
+  const selectedBadge = isSelected ? '<span class="badge selected">✓ Elegido current</span>' : '';
+  return `
+    <div class="${cls.join(' ')}" data-card="${esc(cardId)}" data-printing="${esc(p.id)}">
+      <img src="${esc(p.image)}" alt="${esc(p.id)}" loading="lazy" onerror="this.style.opacity=0.3">
+      <div class="printing-meta">
+        <div class="printing-id">${esc(p.id)}</div>
+        <div class="printing-edition">${esc(p.edition)}</div>
+        <div class="badges">${hatBadge}${dbCurrentBadge}${selectedBadge}</div>
+      </div>
+    </div>`;
+}
+
+function rowHtml(c) {
+  const hatPrinting = c.printings.find(p => p.edition === 'HaT');
+  const decision = getDecision(c.id);
+
+  const pillClass = decision.status;
+  const pillLabel = decision.status === 'approved' ? 'APROBADO' : decision.status === 'corrected' ? 'CORREGIDO' : 'PENDIENTE';
+
+  let rowClass = '';
+  if (decision.status === 'approved') rowClass = 'row-approved';
+  else if (decision.status === 'corrected') rowClass = 'row-corrected';
+  else if (decision.originalCurrent !== hatPrinting.id) rowClass = 'row-pending-warn';
+
+  return `
+  <tr class="${rowClass}" data-card-row="${esc(c.id)}" data-status="${decision.status}">
+    <td class="col-name">
+      <div class="status-pill ${pillClass}">${pillLabel}</div>
+      <div class="card-name">${esc(c.name)}</div>
+      <div class="card-id">${esc(c.id)}</div>
+      <div class="row-actions">
+        <button class="small" onclick="resetDecision('${esc(c.id)}')">↺ Pendiente</button>
+      </div>
+    </td>
+    <td class="col-printings">
+      <div class="others-wrap">
+        ${c.printings.map(p => printingBoxHtml(c.id, p, p === hatPrinting, decision)).join('')}
+      </div>
+    </td>
+  </tr>`;
+}
+
+function renderAll() {
+  document.getElementById('tbody').innerHTML = CARDS.map(rowHtml).join('');
+  applyFilter();
+  updateProgress();
+}
+
+function renderRow(cardId) {
+  const c = CARDS.find(x => x.id === cardId);
+  const tr = document.querySelector(`tr[data-card-row="${cardId}"]`);
+  if (tr) tr.outerHTML = rowHtml(c);
+  applyFilter();
+}
+
+function updateProgress() {
+  const total = CARDS.length;
+  const reviewed = CARDS.filter(c => decisions[c.id]).length;
+  document.getElementById('progressText').textContent = `${reviewed}/${total} revisadas`;
+  document.getElementById('progressFill').style.width = (reviewed / total * 100) + '%';
+}
+
+function applyFilter() {
+  document.querySelectorAll('tr[data-card-row]').forEach(tr => {
+    const status = tr.getAttribute('data-status');
+    const show = currentFilter === 'all' || status === currentFilter;
+    tr.classList.toggle('hidden-row', !show);
+  });
+}
+
+document.getElementById('tbody').addEventListener('click', (e) => {
+  const box = e.target.closest('.printing-box');
+  if (!box) return;
+  setDecision(box.dataset.card, box.dataset.printing);
+});
+
+document.querySelectorAll('.filters button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    applyFilter();
+  });
+});
+
+document.getElementById('btnLinkFile').addEventListener('click', async () => {
+  if (!window.showSaveFilePicker) {
+    showToast('Tu navegador no soporta guardar archivos directamente (usá Chrome/Edge). Usá Exportar/Importar.');
+    return;
+  }
+  try {
+    fileHandle = await window.showSaveFilePicker({
+      suggestedName: 'hat-review.json',
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+    });
+    document.getElementById('linkedFileName').textContent = '📄 ' + fileHandle.name;
+    await saveToFile();
+  } catch (e) {
+    if (e.name !== 'AbortError') console.error(e);
+  }
+});
+
+document.getElementById('btnExport').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(buildExportObject(), null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'hat-review.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('importInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const text = await file.text();
+  try {
+    const parsed = JSON.parse(text);
+    decisions = {};
+    for (const [cardId, d] of Object.entries(parsed.decisions || {})) {
+      if (d.status && d.status !== 'pending') {
+        decisions[cardId] = { selected: d.selected_current_printing_id, status: d.status, reviewed_at: d.reviewed_at };
+      }
+    }
+    saveLocal();
+    renderAll();
+    showToast('Progreso importado ✓');
+  } catch (err) {
+    showToast('Error al importar: ' + err.message);
+  }
+  e.target.value = '';
+});
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  if (!confirm('¿Borrar todo el progreso guardado localmente en este navegador? (el archivo vinculado no se toca)')) return;
+  decisions = {};
+  saveLocal();
+  renderAll();
+});
+
+loadLocal();
+renderAll();
+</script>

@@ -93,8 +93,8 @@
 <script>
 const BASE = 'https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/reports/';
 const TARGET = { titulos: 'title-review.html', keywords: 'keyword-review.html' };
-const LABEL = { titulos: 'Títulos', keywords: 'Keywords' };
-const TIPO_ORDER = ['titulos', 'keywords'];
+const LABEL = { titulos: 'Títulos', keywords: 'Keywords', versions: 'Versiones (Current)' };
+const TIPO_ORDER = ['versions', 'titulos', 'keywords'];
 
 // Orden cronológico de salida (confirmado por Guillermo).
 const SET_ORDER = [
@@ -109,9 +109,10 @@ const setOrderIndex = code => {
   return i === -1 ? SET_ORDER.length : i;
 };
 
-let sets = [];       // [{set, imagenes}]
-let reports = [];    // reports[] del índice
-let tipos = [];      // tipos derivados, en orden de columnas
+let sets = [];         // [{set, imagenes}]
+let reports = [];      // reports[] del índice (tools/reports/index.json, vía bucket)
+let versionsFiles = []; // [{set, file}] desde versions-manifest.json (páginas estáticas, mismo origen)
+let tipos = [];        // tipos derivados, en orden de columnas
 let tipoFilter = 'all';
 let estadoFilter = 'all';
 
@@ -122,8 +123,12 @@ function tipoOf(analisis) {
   return (analisis || '').split('-')[0];
 }
 
-// para cada (set, tipo): el reporte más reciente, si hay alguno
+// para cada (set, tipo): el reporte/página más reciente, si hay alguno
 function findReport(set, tipo) {
+  if (tipo === 'versions') {
+    const f = versionsFiles.find(v => v.set === set);
+    return f ? { file: f.file } : null;
+  }
   const cand = reports.filter(r => r.set === set && tipoOf(r.analisis) === tipo);
   if (!cand.length) return null;
   cand.sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
@@ -137,8 +142,11 @@ function estadoOf(r) {
   return 'analizado';
 }
 
-function cellContent(r, estado) {
+function cellContent(r, estado, tipo) {
   if (estado === 'pendiente') return { main: '—', sub: '' };
+  // las páginas de versiones son estáticas (datos embebidos): no hay ok/diff/review
+  // que leer del bucket, solo "existe, tocá para revisar".
+  if (tipo === 'versions') return { main: 'Revisar', sub: 'Current' };
   if (estado === 'aplicado') return { main: 'aplicado', sub: r.aplicado.fecha || '' };
   if (estado === 'revisado') return { main: 'Enviado ✓', sub: `${r.review.decididas} decisiones · ${r.review.fecha || ''}` };
   const pendientes = (r.casi || 0) + (r.diff || 0) + (r.error || 0);
@@ -147,10 +155,23 @@ function cellContent(r, estado) {
     : { main: `${r.ok ?? 0}/${r.total ?? ''} ok`, sub: `${pendientes} a revisar` };
 }
 
-fetch(`/api/download?url=${encodeURIComponent(BASE + 'index.json')}&name=index.json`).then(r => r.json()).then(j => {
+function cellHref(c) {
+  if (!c.r) return null;
+  if (c.tipo === 'versions') return c.r.file;
+  return TARGET[c.tipo] ? `${TARGET[c.tipo]}?report=${encodeURIComponent(BASE + c.r.file)}` : null;
+}
+
+Promise.all([
+  fetch(`/api/download?url=${encodeURIComponent(BASE + 'index.json')}&name=index.json`).then(r => r.json()),
+  // manifest generado en build/dev por scripts/gen.mjs (escanea public/reviews/ por
+  // nombre de archivo) — mismo origen, sin CORS. Si no existe todavía, seguimos sin esa columna.
+  fetch('versions-manifest.json').then(r => r.ok ? r.json() : { files: [] }).catch(() => ({ files: [] })),
+]).then(([j, versionsManifest]) => {
   reports = j.reports || [];
+  versionsFiles = versionsManifest.files || [];
   sets = (j.sets || []).slice().sort((a, b) => setOrderIndex(a.set) - setOrderIndex(b.set) || a.set.localeCompare(b.set));
   const present = [...new Set(reports.map(r => tipoOf(r.analisis)))];
+  if (versionsFiles.length) present.push('versions');
   tipos = [...TIPO_ORDER.filter(t => present.includes(t)), ...present.filter(t => !TIPO_ORDER.includes(t)).sort()];
   for (const t of tipos) {
     const b = document.createElement('button');
@@ -196,10 +217,10 @@ function render() {
   for (const row of rowsData) {
     html += `<tr><td class="set-name">${row.set}</td>`;
     for (const c of row.cells) {
-      const content = cellContent(c.r, c.estado);
+      const content = cellContent(c.r, c.estado, c.tipo);
       const inner = `<span class="main">${content.main}</span>${content.sub ? `<span class="sub">${content.sub}</span>` : ''}`;
-      if (c.r && TARGET[c.tipo]) {
-        const href = `${TARGET[c.tipo]}?report=${encodeURIComponent(BASE + c.r.file)}`;
+      const href = cellHref(c);
+      if (href) {
         html += `<td><a class="cell ${c.estado}" href="${href}">${inner}</a></td>`;
       } else {
         html += `<td><span class="cell ${c.estado}">${inner}</span></td>`;
