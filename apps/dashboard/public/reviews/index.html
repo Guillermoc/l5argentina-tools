@@ -96,6 +96,19 @@ const TARGET = { titulos: 'title-review.html', keywords: 'keyword-review.html' }
 const LABEL = { titulos: 'Títulos', keywords: 'Keywords' };
 const TIPO_ORDER = ['titulos', 'keywords'];
 
+// Orden cronológico de salida (confirmado por Guillermo).
+const SET_ORDER = [
+  'KD', 'Tomorrow', 'TTT', 'CotM', 'Samurai', 'SamuraiBanzai', 'STS', 'EJC', 'HV', 'WaD',
+  'THW', 'GotE', 'IG1', 'DaK', 'Celestial', 'CE15', 'CE15MRP', 'IG2', 'PotD', 'TH', 'TPW',
+  'IG3', 'BoKT', 'EaW', 'TDoW', 'BtD', 'FL', 'SC', 'WoH', 'Emperor', 'EmperorMRP', 'EoW',
+  'TSE', 'SoD', 'HaT', 'EEGempukku', 'TA', 'CoM', 'GoC', 'AM', 'AMoH', 'Ivory', 'TCS',
+  'ALitS', 'TNO', 'TCW', 'TwentyFestivals', 'ThA', 'EP', 'SCW', 'SExMRP', 'Promo',
+];
+const setOrderIndex = code => {
+  const i = SET_ORDER.indexOf(code);
+  return i === -1 ? SET_ORDER.length : i;
+};
+
 let sets = [];       // [{set, imagenes}]
 let reports = [];    // reports[] del índice
 let tipos = [];      // tipos derivados, en orden de columnas
@@ -127,7 +140,7 @@ function estadoOf(r) {
 function cellContent(r, estado) {
   if (estado === 'pendiente') return { main: '—', sub: '' };
   if (estado === 'aplicado') return { main: 'aplicado', sub: r.aplicado.fecha || '' };
-  if (estado === 'revisado') return { main: `${r.review.decididas} revisadas`, sub: r.review.fecha || '' };
+  if (estado === 'revisado') return { main: 'Enviado ✓', sub: `${r.review.decididas} decisiones · ${r.review.fecha || ''}` };
   const pendientes = (r.casi || 0) + (r.diff || 0) + (r.error || 0);
   return pendientes === 0
     ? { main: `${r.ok ?? 0} ok`, sub: 'todo ok' }
@@ -136,7 +149,7 @@ function cellContent(r, estado) {
 
 fetch(`/api/download?url=${encodeURIComponent(BASE + 'index.json')}&name=index.json`).then(r => r.json()).then(j => {
   reports = j.reports || [];
-  sets = (j.sets || []).slice().sort((a, b) => a.set.localeCompare(b.set));
+  sets = (j.sets || []).slice().sort((a, b) => setOrderIndex(a.set) - setOrderIndex(b.set) || a.set.localeCompare(b.set));
   const present = [...new Set(reports.map(r => tipoOf(r.analisis)))];
   tipos = [...TIPO_ORDER.filter(t => present.includes(t)), ...present.filter(t => !TIPO_ORDER.includes(t)).sort()];
   for (const t of tipos) {
