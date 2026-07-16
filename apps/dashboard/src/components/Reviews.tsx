@@ -8,8 +8,8 @@ type ReviewLink = {
 const REVIEWS: ReviewLink[] = [
   {
     id: "index",
-    title: "Selector de reportes",
-    description: "Lista los reportes de auditoría de imágenes subidos al bucket (tools/reports/) y abre la revisión que corresponda. Pensado para usar desde el celular, sin cargar el JSON a mano.",
+    title: "Grilla de estado (sets × análisis)",
+    description: "Set por fila, tipo de análisis por columna: pendiente / analizado / revisado / aplicado. Tocá una celda para revisar. Pensado para usar desde el celular.",
     href: "/reviews/index.html",
   },
   {

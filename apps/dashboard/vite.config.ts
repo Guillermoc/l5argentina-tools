@@ -115,6 +115,12 @@ function devApi() {
               const { listRules } = await import("./src/lib/rules");
               return json(200, await listRules(process.env as never));
             }
+            if (url.startsWith("/api/reviews") && req.method === "POST") {
+              const { runSubmitReview } = await import("./src/lib/reviews");
+              const input = JSON.parse((await readBody(req)) || "{}");
+              const { status, body } = await runSubmitReview(input, process.env as never);
+              return json(status, body);
+            }
             if (url.startsWith("/api/inbox")) {
               if (req.method === "POST") {
                 const { runInbox } = await import("./src/lib/inbox");

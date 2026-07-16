@@ -28,35 +28,59 @@ usable desde el celular, fuera de casa.
   `keywords-*` = keywords → abre `keyword-review.html`.
   (Regla general: el campo `analisis` es `<tipo>-<set>`.)
 
+## Modelo de estados (decidido 2026-07-15)
+
+Cada par **(set × análisis)** tiene un estado, visible en el índice:
+
+1. **Pendiente** — sin reporte. El índice trae `sets` (todos los sets con su
+   cantidad de imágenes) para poder listarlos.
+2. **Analizado** — hay reporte en `tools/reports/` (entrada en `index.json`).
+3. **Revisado** — hay decisiones en `tools/reports/decisions/<analisis>-review.json`
+   y la entrada del índice tiene `review: { file, fecha, decididas }`.
+4. **Aplicado** — la entrada tiene `aplicado: { fecha }`. Lo marca Guillermo
+   desde la PC (`mark-applied.mjs`) después de aplicar localmente.
+
+**Explícitamente FUERA de alcance**: nada modifica la base de cartas de forma
+automática — ni PRs ni aplicación server-side. Las decisiones se acumulan en el
+bucket; aplicarlas es un paso manual local (`apply-*-review.mjs`, acepta la URL
+del bucket), cuando Guillermo quiera.
+
 ## Qué construir
 
-Una página `public/reviews/index.html` (o sección del dashboard, a criterio) que:
+### 1. Índice = grilla de estado (`public/reviews/index.html`)
 
-1. **Lista los reportes** del índice, agrupados por set, mostrando: tipo de
-   análisis, set, fecha, y el resumen `ok / casi / diff` con color (verde si
-   `casi+diff+error == 0`, naranja/rojo si hay pendientes).
-2. **Selectores/filtros**: por tipo de análisis (títulos / keywords / futuros)
-   y por set. Con pocos reportes alcanza una lista; los selectores importan
-   cuando haya decenas.
-3. **Abrir en revisión**: cada entrada linkea a la página de revisión que
-   corresponda con `?report=<url del reporte>`.
-4. **Mobile-first**: esto se usa desde el teléfono fuera de casa — tarjetas
-   apiladas, tipografía legible, targets táctiles grandes.
+- Una **fila por set** (universo: `index.sets`), una **celda por análisis**
+  (títulos, keywords, futuros — derivar los tipos de los `analisis` presentes).
+- Semáforo por celda: gris = pendiente · azul = analizado (mostrar `ok/diff`) ·
+  naranja = revisado sin aplicar · verde = aplicado.
+- Tap en celda con reporte → la página de revisión correspondiente con
+  `?report=<url>`. Filtros por tipo de análisis y por estado.
+- **Mobile-first**: se usa desde el teléfono fuera de casa.
 
-## Retoques a las páginas de revisión existentes (mismo PR)
+### 2. Envío de decisiones server-side (nueva Pages Function)
 
-- **Responsive**: hoy `.row` es flex horizontal con imagen de 220px — en
-  pantallas angostas (< ~700px) apilar: imagen arriba (ancho completo,
-  máx ~350px), campos abajo. Botones con altura táctil cómoda.
-- **Volver al índice**: link arriba para volver al selector.
-- (Las decisiones se exportan como descarga de archivo; en el celu funciona,
-  el JSON queda en Descargas y se aplica después desde la PC. Un endpoint de
-  guardado server-side queda explícitamente FUERA de esta spec.)
+- `POST /api/reviews` con el JSON de decisiones. La function (mismo patrón
+  aws4fetch que promote/upload) escribe
+  `tools/reports/decisions/<analysis>-review.json` y actualiza la entrada del
+  índice con `review: { file, fecha, decididas: N }`.
+- En las páginas de revisión, reemplazar/acompañar "Exportar decisiones" con
+  **"Enviar decisiones"**, habilitado SOLO cuando todas las marcadas están
+  decididas (regla: revisiones completas, sin parciales). Mantener la descarga
+  local como alternativa.
+
+### 3. Retoques a las páginas de revisión
+
+- Responsive (ya aplicado: apilar en < 700px, targets táctiles).
+- Link "volver al índice" (ya aplicado).
 
 ## Restricciones
 
-- Solo assets estáticos + fetch al índice público: sin backend nuevo, sin
-  dependencias nuevas, sin credenciales en el cliente.
+- Sin credenciales en el cliente (la Function nueva usa env vars server-side,
+  mismo patrón que promote/upload). Sin dependencias nuevas en las páginas.
+- Al actualizar `index.json` desde la Function: leer-modificar-escribir
+  preservando campos ajenos (`sets`, `aplicado`); matchear entradas por el
+  campo `analisis` (no por nombre de archivo: los reportes de títulos se
+  llaman `audit-*` pero su `analisis` es `titulos-*`).
 - Mantener el estilo visual de `woh-review.html` (variables CSS, tema
   claro/oscuro automático).
 - El bucket es público: los reportes no contienen nada sensible (nombres de
@@ -64,7 +88,9 @@ Una página `public/reviews/index.html` (o sección del dashboard, a criterio) q
 
 ## Criterio de aceptación
 
-Desde el teléfono: abrir el dashboard → sección revisiones → ver el reporte de
-keywords de ALitS con su "150 ok / 15 a revisar" → tocarlo → revisar las 15
-cartas viendo imagen + DB + lectura → exportar decisiones. Sin pasos manuales
-de URLs.
+Desde el teléfono: abrir el dashboard → grilla de sets → ver ALitS con títulos
+en azul "163 ok / 2 a revisar" → tocarlo → decidir las 2 cartas viendo imagen +
+DB + lectura → al decidir la última se habilita "Enviar decisiones" → enviar →
+la celda pasa a naranja. Días después, en la PC: `apply-title-review.mjs` con la
+URL de las decisiones + `mark-applied.mjs` → la celda pasa a verde. Sin pasos
+manuales de URLs en el teléfono.

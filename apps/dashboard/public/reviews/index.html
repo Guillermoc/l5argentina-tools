@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Revisiones — selector de reportes</title>
+<title>Revisiones — grilla de estado</title>
 <style>
   :root {
     --bg: #0f1115; --panel: #171a21; --border: #2a2e38; --text: #e6e8ec;
@@ -20,33 +20,38 @@
   h1 { font-size: 20px; margin: 0 0 4px; }
   .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
 
-  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--panel);
+  .toolbar { display: flex; flex-direction: column; gap: 10px; background: var(--panel);
     border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 16px;
     position: sticky; top: 0; z-index: 10; }
-  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
-  button { font: inherit; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 6px;
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .filters .filters-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-right: 2px; }
+  button { font: inherit; font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 6px;
     border: 1px solid var(--border); background: rgba(127,127,127,0.08); color: var(--text); cursor: pointer; }
   button:hover { background: rgba(127,127,127,0.18); }
   button.active { outline: 2px solid var(--accent); }
-  select { font: inherit; font-size: 13px; font-weight: 600; padding: 8px 10px; border-radius: 6px;
-    border: 1px solid var(--border); background: rgba(127,127,127,0.08); color: var(--text); margin-left: auto; }
 
-  .set-heading { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
-    color: var(--muted); margin: 20px 0 8px; }
-  .set-heading:first-of-type { margin-top: 0; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: var(--muted); }
+  .legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
 
-  a.card { display: flex; flex-direction: column; gap: 8px; background: var(--panel); border: 1px solid var(--border);
-    border-radius: 10px; padding: 16px; margin-bottom: 12px; text-decoration: none; color: inherit; }
-  a.card:hover { border-color: var(--accent); }
-  .card-top { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
-  .tipo { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 10px;
-    background: rgba(91,141,239,0.15); color: var(--accent); }
-  .fecha { font-size: 12px; color: var(--muted); }
-  .card-summary { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .pill { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 10px; }
-  .pill.clean { background: rgba(62,207,142,.15); color: var(--ok); }
-  .pill.pending { background: rgba(240,166,58,.15); color: var(--warn); }
-  .breakdown { font-size: 12px; color: var(--muted); }
+  .grid-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  thead th { text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted);
+    padding: 8px 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  thead th:first-child { text-align: left; }
+  tbody td { padding: 4px; border-bottom: 1px solid var(--border); text-align: center; vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.set-name { text-align: left; font-weight: 600; padding: 8px 10px; white-space: nowrap;
+    position: sticky; left: 0; background: var(--panel); }
+
+  a.cell, span.cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+    border-radius: 6px; padding: 6px 4px; min-width: 64px; min-height: 40px; text-decoration: none; color: inherit; }
+  a.cell:hover { outline: 2px solid var(--accent); }
+  .cell .main { font-size: 12px; font-weight: 700; }
+  .cell .sub { font-size: 10px; opacity: .85; }
+  .cell.pendiente { background: rgba(127,127,127,0.08); color: var(--muted); }
+  .cell.analizado { background: rgba(91,141,239,0.15); color: var(--accent); }
+  .cell.revisado { background: rgba(240,166,58,0.15); color: var(--warn); }
+  .cell.aplicado { background: rgba(62,207,142,0.15); color: var(--ok); }
 
   .empty { color: var(--muted); text-align: center; padding: 60px 0; }
   .updated { color: var(--muted); font-size: 11px; text-align: center; margin-top: 20px; }
@@ -54,96 +59,143 @@
   @media (max-width: 500px) {
     body { padding: 12px; }
     .toolbar { position: static; }
-    select { margin-left: 0; width: 100%; }
   }
 </style>
 </head>
 <body>
 <h1>Revisiones</h1>
-<div class="subtitle">Reportes de auditoría de imágenes disponibles. Tocá uno para revisar las cartas marcadas.</div>
+<div class="subtitle">Estado de auditoría de imágenes por set. Tocá una celda con reporte para revisar las cartas marcadas.</div>
 
 <div class="toolbar">
   <span class="filters" id="tipoFilters">
+    <span class="filters-label">Tipo</span>
     <button data-t="all" class="active">Todos</button>
-    <button data-t="audit">Títulos</button>
-    <button data-t="keywords">Keywords</button>
   </span>
-  <select id="setFilter"><option value="all">Todos los sets</option></select>
+  <span class="filters" id="estadoFilters">
+    <span class="filters-label">Estado</span>
+    <button data-e="all" class="active">Todos</button>
+    <button data-e="pendiente">Pendiente</button>
+    <button data-e="analizado">Analizado</button>
+    <button data-e="revisado">Revisado</button>
+    <button data-e="aplicado">Aplicado</button>
+  </span>
+  <span class="legend">
+    <span><span class="dot" style="background:var(--muted)"></span>Pendiente</span>
+    <span><span class="dot" style="background:var(--accent)"></span>Analizado</span>
+    <span><span class="dot" style="background:var(--warn)"></span>Revisado</span>
+    <span><span class="dot" style="background:var(--ok)"></span>Aplicado</span>
+  </span>
 </div>
 
-<div id="list"><div class="empty">Cargando índice…</div></div>
+<div class="grid-wrap"><div class="empty" id="list">Cargando índice…</div></div>
 <div class="updated" id="updated"></div>
 
 <script>
 const BASE = 'https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/reports/';
-const TARGET = { audit: 'title-review.html', keywords: 'keyword-review.html' };
-const LABEL = { audit: 'Títulos', keywords: 'Keywords' };
+const TARGET = { titulos: 'title-review.html', keywords: 'keyword-review.html' };
+const LABEL = { titulos: 'Títulos', keywords: 'Keywords' };
+const TIPO_ORDER = ['titulos', 'keywords'];
 
-let reports = [];
+let sets = [];       // [{set, imagenes}]
+let reports = [];    // reports[] del índice
+let tipos = [];      // tipos derivados, en orden de columnas
 let tipoFilter = 'all';
-let setFilter = 'all';
+let estadoFilter = 'all';
 
 const $ = s => document.querySelector(s);
+const label = t => LABEL[t] || (t.charAt(0).toUpperCase() + t.slice(1));
 
-function tipoOf(r) {
-  return (r.analisis || r.file || '').startsWith('keywords') ? 'keywords' : 'audit';
+function tipoOf(analisis) {
+  return (analisis || '').split('-')[0];
 }
 
-document.querySelectorAll('#tipoFilters button').forEach(b => b.onclick = () => {
-  document.querySelectorAll('#tipoFilters button').forEach(x => x.classList.remove('active'));
-  b.classList.add('active'); tipoFilter = b.dataset.t; render();
-});
-$('#setFilter').onchange = e => { setFilter = e.target.value; render(); };
+// para cada (set, tipo): el reporte más reciente, si hay alguno
+function findReport(set, tipo) {
+  const cand = reports.filter(r => r.set === set && tipoOf(r.analisis) === tipo);
+  if (!cand.length) return null;
+  cand.sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+  return cand[0];
+}
+
+function estadoOf(r) {
+  if (!r) return 'pendiente';
+  if (r.aplicado) return 'aplicado';
+  if (r.review) return 'revisado';
+  return 'analizado';
+}
+
+function cellContent(r, estado) {
+  if (estado === 'pendiente') return { main: '—', sub: '' };
+  if (estado === 'aplicado') return { main: 'aplicado', sub: r.aplicado.fecha || '' };
+  if (estado === 'revisado') return { main: `${r.review.decididas} revisadas`, sub: r.review.fecha || '' };
+  const pendientes = (r.casi || 0) + (r.diff || 0) + (r.error || 0);
+  return pendientes === 0
+    ? { main: `${r.ok ?? 0} ok`, sub: 'todo ok' }
+    : { main: `${r.ok ?? 0}/${r.total ?? ''} ok`, sub: `${pendientes} a revisar` };
+}
 
 fetch(`/api/download?url=${encodeURIComponent(BASE + 'index.json')}&name=index.json`).then(r => r.json()).then(j => {
   reports = j.reports || [];
-  const sets = [...new Set(reports.map(r => r.set))].sort();
-  for (const s of sets) {
-    const opt = document.createElement('option');
-    opt.value = s; opt.textContent = s;
-    $('#setFilter').appendChild(opt);
+  sets = (j.sets || []).slice().sort((a, b) => a.set.localeCompare(b.set));
+  const present = [...new Set(reports.map(r => tipoOf(r.analisis)))];
+  tipos = [...TIPO_ORDER.filter(t => present.includes(t)), ...present.filter(t => !TIPO_ORDER.includes(t)).sort()];
+  for (const t of tipos) {
+    const b = document.createElement('button');
+    b.dataset.t = t; b.textContent = label(t);
+    b.onclick = () => { document.querySelectorAll('#tipoFilters button').forEach(x => x.classList.remove('active')); b.classList.add('active'); tipoFilter = t; render(); };
+    $('#tipoFilters').appendChild(b);
   }
+  $('#tipoFilters button[data-t=all]').onclick = () => { document.querySelectorAll('#tipoFilters button').forEach(x => x.classList.remove('active')); $('#tipoFilters button[data-t=all]').classList.add('active'); tipoFilter = 'all'; render(); };
   if ($('#updated')) $('#updated').textContent = j.actualizado ? `Índice actualizado: ${j.actualizado}` : '';
   render();
 }).catch(e => {
   $('#list').innerHTML = `<div class="empty">No pude cargar el índice de reportes: ${e.message}</div>`;
 });
 
-function render() {
-  const list = $('#list'); list.innerHTML = '';
-  let visible = reports.filter(r => (tipoFilter === 'all' || tipoOf(r) === tipoFilter) && (setFilter === 'all' || r.set === setFilter));
-  visible.sort((a, b) => (a.set || '').localeCompare(b.set) || (b.fecha || '').localeCompare(a.fecha));
+document.querySelectorAll('#estadoFilters button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#estadoFilters button').forEach(x => x.classList.remove('active'));
+  b.classList.add('active'); estadoFilter = b.dataset.e; render();
+});
 
-  if (!visible.length) {
-    list.innerHTML = '<div class="empty">No hay reportes con este filtro.</div>';
+function render() {
+  const wrap = document.querySelector('.grid-wrap');
+  const cols = tipoFilter === 'all' ? tipos : [tipoFilter];
+  if (!sets.length || !cols.length) {
+    wrap.innerHTML = '<div class="empty">No hay reportes todavía.</div>';
     return;
   }
 
-  let lastSet = null;
-  for (const r of visible) {
-    if (r.set !== lastSet) {
-      const h = document.createElement('div');
-      h.className = 'set-heading'; h.textContent = r.set;
-      list.appendChild(h);
-      lastSet = r.set;
-    }
-    const tipo = tipoOf(r);
-    const pending = (r.casi || 0) + (r.diff || 0) + (r.error || 0);
-    const clean = pending === 0;
-    const a = document.createElement('a');
-    a.className = 'card';
-    a.href = `${TARGET[tipo]}?report=${encodeURIComponent(BASE + r.file)}`;
-    a.innerHTML = `
-      <div class="card-top">
-        <span class="tipo">${LABEL[tipo]}</span>
-        <span class="fecha">${r.fecha || ''}</span>
-      </div>
-      <div class="card-summary">
-        <span class="pill ${clean ? 'clean' : 'pending'}">${clean ? `${r.ok ?? 0} ok` : `${pending} a revisar`}</span>
-        <span class="breakdown">${r.ok ?? 0} ok · ${r.casi ?? 0} casi · ${r.diff ?? 0} diff${r.error ? ` · ${r.error} error` : ''} · ${r.total ?? ''} total</span>
-      </div>`;
-    list.appendChild(a);
+  const rowsData = sets.map(s => {
+    const cells = cols.map(t => {
+      const r = findReport(s.set, t);
+      const estado = estadoOf(r);
+      return { tipo: t, r, estado };
+    });
+    return { set: s.set, imagenes: s.imagenes, cells };
+  }).filter(row => estadoFilter === 'all' || row.cells.some(c => c.estado === estadoFilter));
+
+  if (!rowsData.length) {
+    wrap.innerHTML = '<div class="empty">Ningún set con este filtro.</div>';
+    return;
   }
+
+  let html = '<table><thead><tr><th>Set</th>' + cols.map(t => `<th>${label(t)}</th>`).join('') + '</tr></thead><tbody>';
+  for (const row of rowsData) {
+    html += `<tr><td class="set-name">${row.set}</td>`;
+    for (const c of row.cells) {
+      const content = cellContent(c.r, c.estado);
+      const inner = `<span class="main">${content.main}</span>${content.sub ? `<span class="sub">${content.sub}</span>` : ''}`;
+      if (c.r && TARGET[c.tipo]) {
+        const href = `${TARGET[c.tipo]}?report=${encodeURIComponent(BASE + c.r.file)}`;
+        html += `<td><a class="cell ${c.estado}" href="${href}">${inner}</a></td>`;
+      } else {
+        html += `<td><span class="cell ${c.estado}">${inner}</span></td>`;
+      }
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
 }
 </script>
 </body>

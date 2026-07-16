@@ -25,6 +25,8 @@
     border: 1px solid var(--border); background: rgba(127,127,127,0.08); color: var(--text); cursor: pointer; }
   button:hover, .file-btn:hover { background: rgba(127,127,127,0.18); }
   button.primary { background: var(--accent); color: #06133a; border-color: var(--accent); }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  button:disabled:hover { background: rgba(127,127,127,0.08); }
   .toolbar .status-line { font-size: 12px; color: var(--muted); margin-left: auto; display: flex; gap: 12px; align-items: center; }
   .progress-bar { width: 160px; height: 6px; background: rgba(127,127,127,0.2); border-radius: 3px; overflow: hidden; }
   .progress-bar > div { height: 100%; background: var(--ok); }
@@ -79,7 +81,8 @@ elegí la verdad (DB, lo leído por el modelo, o texto editado) y exportá las d
     <button data-f="all">Todas</button>
     <button data-f="pending">Sin decidir</button>
   </span>
-  <button class="primary" id="export">Exportar decisiones</button>
+  <button id="export">Exportar decisiones</button>
+  <button class="primary" id="send" disabled>Enviar decisiones</button>
   <span class="status-line">
     <span id="stat">sin reporte</span>
     <span class="progress-bar"><div id="prog" style="width:0"></div></span>
@@ -93,6 +96,8 @@ const IMG_BASE = 'https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/';
 let report = null;
 let decisions = {}; // cardId -> {printing_id, db_name, model_name, chosen_name, source}
 let filter = 'flag';
+let sent = false;
+let sending = false;
 
 const $ = s => document.querySelector(s);
 const storeKey = () => 'title-review:' + (report?.analisis || '') + ':' + (report?.fecha || '');
@@ -127,6 +132,7 @@ function rows() {
 function decide(r, name, source) {
   decisions[r.cardId] = { printing_id: r.id, db_name: r.name, model_name: r.leido, chosen_name: name, source };
   localStorage.setItem(storeKey(), JSON.stringify(decisions));
+  sent = false;
   render();
 }
 
@@ -136,6 +142,8 @@ function render() {
   const done = flagged.filter(r => decisions[r.cardId]).length;
   $('#stat').textContent = `${report.analisis} · ${report.fecha} · ${done}/${flagged.length} decididas`;
   $('#prog').style.width = flagged.length ? (100 * done / flagged.length) + '%' : '100%';
+  $('#send').disabled = sending || !(flagged.length > 0 && done === flagged.length);
+  $('#send').textContent = sent ? 'Enviado ✓' : 'Enviar decisiones';
   const list = $('#list'); list.innerHTML = '';
   for (const r of rows()) {
     const d = decisions[r.cardId];
@@ -168,6 +176,25 @@ $('#export').onclick = () => {
   a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' }));
   a.download = `${report.analisis}-review.json`;
   a.click();
+};
+
+$('#send').onclick = async () => {
+  if (!report || sending) return;
+  sending = true; render();
+  try {
+    const res = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ analisis: report.analisis, fecha_reporte: report.fecha, db: report.db, decisions }),
+    });
+    const j = await res.json();
+    if (!res.ok) throw new Error(j.error || `HTTP ${res.status}`);
+    sent = true;
+  } catch (e) {
+    alert('No pude enviar las decisiones: ' + e.message);
+  } finally {
+    sending = false; render();
+  }
 };
 </script>
 </body>
