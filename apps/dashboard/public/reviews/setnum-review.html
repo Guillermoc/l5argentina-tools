@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set+número — Revisión de auditoría de imágenes</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --border: #2a2e38; --text: #e6e8ec;
+    --muted: #9aa1ac; --ok: #3ecf8e; --warn: #f0a63a; --accent: #5b8def; --corrected: #a48af5;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f6f8; --panel: #ffffff; --border: #dde1e7; --text: #1b1e24;
+      --muted: #5b6270; --ok: #1a9c63; --warn: #b5720a; --accent: #2f5fd6; --corrected: #6a3fd6;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 24px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 16px; position: sticky; top: 0; z-index: 10; }
+  button, .file-btn { font: inherit; font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 6px;
+    border: 1px solid var(--border); background: rgba(127,127,127,0.08); color: var(--text); cursor: pointer; }
+  button:hover, .file-btn:hover { background: rgba(127,127,127,0.18); }
+  button.primary { background: var(--accent); color: #06133a; border-color: var(--accent); }
+  button.danger { border-color: #e05b5b; color: #e05b5b; }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  button:disabled:hover { background: rgba(127,127,127,0.08); }
+  .toolbar .status-line { font-size: 12px; color: var(--muted); margin-left: auto; display: flex; gap: 12px; align-items: center; }
+  .progress-bar { width: 160px; height: 6px; background: rgba(127,127,127,0.2); border-radius: 3px; overflow: hidden; }
+  .progress-bar > div { height: 100%; background: var(--ok); }
+  .filters { display: flex; gap: 6px; }
+  .filters button.active { outline: 2px solid var(--accent); }
+  .row { display: flex; gap: 16px; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px; margin-bottom: 12px; align-items: flex-start; }
+  .row.decided { border-color: var(--ok); }
+  .row img { width: 220px; border-radius: 6px; flex-shrink: 0; cursor: zoom-in; }
+  .row img.zoom { width: 440px; cursor: zoom-out; }
+  .fields { flex: 1; min-width: 0; }
+  .cardname { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+  .cardid { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .verdict { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+  .verdict.DIFF { background: rgba(240,166,58,.15); color: var(--warn); }
+  .verdict.ERROR { background: rgba(240,80,80,.3); color: #e05b5b; }
+  .verdict.OK { background: rgba(62,207,142,.15); color: var(--ok); }
+  .compare { display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0; font-size: 13px; }
+  .compare .field { min-width: 120px; }
+  .compare .flabel { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .compare .fvalue { font-weight: 700; }
+  .compare .fvalue.bad { color: #e05b5b; }
+  .compare .fvalue.good { color: var(--ok); }
+  .transcripcion { font-family: ui-monospace, Consolas, monospace; font-size: 11.5px; color: var(--muted);
+    background: rgba(127,127,127,0.08); border-radius: 6px; padding: 6px 8px; margin: 6px 0; white-space: pre-wrap; word-break: break-word; }
+  .errormsg { font-size: 12px; color: #e05b5b; margin: 4px 0; }
+  .opt { display: flex; gap: 8px; align-items: center; margin: 6px 0; flex-wrap: wrap; }
+  .opt input { font: inherit; font-size: 14px; flex: 1; min-width: 180px; padding: 6px 8px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+  .chosen { margin-top: 10px; font-size: 13px; }
+  .chosen b { color: var(--ok); }
+  .chosen.iserror b { color: #e05b5b; }
+  .chosen.pending b { color: var(--warn); }
+  .chosen .nota { color: var(--muted); }
+  .empty { color: var(--muted); text-align: center; padding: 60px 0; }
+  .back-link { display: inline-block; font-size: 12px; color: var(--muted); text-decoration: none; margin-bottom: 8px; }
+  .back-link:hover { color: var(--accent); }
+  @media (max-width: 700px) {
+    body { padding: 12px; }
+    .row { flex-direction: column; }
+    .row img, .row img.zoom { width: 100%; max-width: 350px; margin: 0 auto; }
+    .toolbar { position: static; }
+    .toolbar .status-line { margin-left: 0; }
+    button, .file-btn { padding: 10px 14px; font-size: 13px; }
+    .opt input { min-width: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<a class="back-link" href="index.html">← Volver al índice</a>
+<h1>Set+número — Revisión de auditoría de imágenes</h1>
+<div class="subtitle">Cargá un reporte <code>setnum-*.json</code> de <code>image-audit/reports/</code>. Verifica que el set y
+número impresos en la línea inferior de la carta coincidan con el nombre del archivo (audita TODOS los printings, no solo
+current). Para cada carta marcada: mirá la imagen (con zoom, la línea es chica), compará archivo vs lo leído y marcá si es
+una falsa alarma del modelo o un error real que hay que corregir a mano.</div>
+
+<div class="toolbar">
+  <label class="file-btn">Cargar reporte <input id="file" type="file" accept=".json" hidden></label>
+  <span class="filters">
+    <button data-f="flag" class="active">Marcadas</button>
+    <button data-f="all">Todas</button>
+    <button data-f="pending">Sin decidir</button>
+  </span>
+  <button id="export">Exportar decisiones</button>
+  <button class="primary" id="send" disabled>Enviar decisiones</button>
+  <span class="status-line">
+    <span id="stat">sin reporte</span>
+    <span class="progress-bar"><div id="prog" style="width:0"></div></span>
+  </span>
+</div>
+
+<div id="list"><div class="empty">Cargá un reporte JSON para empezar.</div></div>
+
+<script>
+const IMG_BASE = 'https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/';
+let report = null;
+let decisions = {}; // cardId -> {printing_id, archivo, resultado: 'ok'|'error', nota}
+let filter = 'flag';
+let sent = false;
+let sending = false;
+
+const $ = s => document.querySelector(s);
+const storeKey = () => 'setnum-review:' + (report?.analisis || '') + ':' + (report?.fecha || '');
+
+document.querySelectorAll('.filters button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.filters button').forEach(x => x.classList.remove('active'));
+  b.classList.add('active'); filter = b.dataset.f; render();
+});
+
+$('#file').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  report = JSON.parse(await f.text());
+  decisions = JSON.parse(localStorage.getItem(storeKey()) || '{}');
+  render();
+};
+
+// también se puede cargar por URL: ?report=https://.../reporte.json
+const reportUrl = new URLSearchParams(location.search).get('report');
+if (reportUrl) fetch(`/api/download?url=${encodeURIComponent(reportUrl)}&name=report.json`).then(r => r.json()).then(j => {
+  report = j;
+  decisions = JSON.parse(localStorage.getItem(storeKey()) || '{}');
+  render();
+}).catch(e => alert('No pude cargar el reporte de la URL: ' + e.message));
+
+function rows() {
+  const all = report?.resultados || [];
+  if (filter === 'all') return all;
+  if (filter === 'pending') return all.filter(r => r.veredicto !== 'OK' && !decisions[r.cardId]);
+  return all.filter(r => r.veredicto !== 'OK');
+}
+
+function decide(r, resultado, nota) {
+  decisions[r.cardId] = { printing_id: r.id, archivo: r.archivo, resultado, nota: nota || '' };
+  localStorage.setItem(storeKey(), JSON.stringify(decisions));
+  sent = false;
+  render();
+}
+
+function render() {
+  if (!report) return;
+  const flagged = (report.resultados || []).filter(r => r.veredicto !== 'OK');
+  const done = flagged.filter(r => decisions[r.cardId]).length;
+  $('#stat').textContent = `${report.analisis} · ${report.fecha} · ${done}/${flagged.length} decididas`;
+  $('#prog').style.width = flagged.length ? (100 * done / flagged.length) + '%' : '100%';
+  $('#send').disabled = sending || !(flagged.length > 0 && done === flagged.length);
+  $('#send').textContent = sent ? 'Enviado ✓' : 'Enviar decisiones';
+  const list = $('#list'); list.innerHTML = '';
+  for (const r of rows()) {
+    const d = decisions[r.cardId];
+    const row = document.createElement('div');
+    row.className = 'row' + (d ? ' decided' : '');
+    row.innerHTML = `
+      <img src="${IMG_BASE}${r.image}" loading="lazy" onclick="this.classList.toggle('zoom')">
+      <div class="fields">
+        <div class="cardname">${r.name}</div>
+        <div class="cardid">${r.id}<span class="verdict ${r.veredicto}">${r.veredicto}</span></div>
+        ${r.error ? `<div class="errormsg">Error: ${r.error}</div>` : ''}
+        <div class="compare">
+          <div class="field"><div class="flabel">Archivo</div><div class="fvalue">${r.archivo} <span style="color:var(--muted);font-weight:400">(num ${r.numeroArchivo})</span></div></div>
+          <div class="field"><div class="flabel">Set leído</div><div class="fvalue ${r.setOk ? 'good' : 'bad'}">${r.setLeido ?? '—'}</div></div>
+          <div class="field"><div class="flabel">Número leído</div><div class="fvalue ${r.numOk ? 'good' : 'bad'}">${r.numeroLeido ?? '—'} <span style="color:var(--muted);font-weight:400">/ ${r.totalLeido ?? '—'}</span></div></div>
+        </div>
+        ${r.transcripcion ? `<div class="transcripcion">${r.transcripcion}</div>` : ''}
+        <div class="opt">
+          <button data-a="ok">✓ Archivo correcto</button>
+          <input placeholder="Nota: qué corregir (renombrar archivo, imagen equivocada, etc.)" value="${(d?.resultado === 'error' ? d.nota : '').replace(/"/g, '&quot;')}">
+          <button class="danger" data-a="error">✗ Marcar error</button>
+        </div>
+        <div class="chosen ${d ? (d.resultado === 'error' ? 'iserror' : '') : 'pending'}">${
+          d
+            ? (d.resultado === 'error' ? `Decidido: <b>error real</b>${d.nota ? ` — <span class="nota">${d.nota}</span>` : ''}` : 'Decidido: <b>archivo correcto</b>')
+            : 'Decidido: <b>pendiente</b>'
+        }</div>
+      </div>`;
+    row.querySelector('[data-a=ok]').onclick = () => decide(r, 'ok', '');
+    row.querySelector('[data-a=error]').onclick = () => {
+      const nota = row.querySelector('input').value.trim();
+      if (!nota) return alert('Escribí una nota: qué habría que corregir (renombrar archivo, imagen equivocada, etc.).');
+      decide(r, 'error', nota);
+    };
+    list.appendChild(row);
+  }
+  if (!list.children.length) list.innerHTML = '<div class="empty">Nada que mostrar con este filtro.</div>';
+}
+
+$('#export').onclick = () => {
+  if (!report) return alert('Cargá un reporte primero.');
+  const out = {
+    analysis: report.analisis, fecha_reporte: report.fecha,
+    exportado: new Date().toISOString(), decisions,
+  };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' }));
+  a.download = `${report.analisis}-review.json`;
+  a.click();
+};
+
+$('#send').onclick = async () => {
+  if (!report || sending) return;
+  sending = true; render();
+  try {
+    const res = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ analisis: report.analisis, fecha_reporte: report.fecha, decisions }),
+    });
+    const j = await res.json();
+    if (!res.ok) throw new Error(j.error || `HTTP ${res.status}`);
+    sent = true;
+  } catch (e) {
+    alert('No pude enviar las decisiones: ' + e.message);
+  } finally {
+    sending = false; render();
+  }
+};
+</script>
+</body>
+</html>

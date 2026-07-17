@@ -30,6 +30,12 @@ const REVIEWS: ReviewLink[] = [
     description: "Cargá un reporte keywords-*.json de image-audit/reports/. Para cada carta marcada: mirá la línea de keywords en la imagen y elegí la verdad. Las decisiones se exportan como JSON para apply-keyword-review.mjs.",
     href: "/reviews/keyword-review.html",
   },
+  {
+    id: "setnum",
+    title: "Set+número — Revisión de auditoría de imágenes",
+    description: "Cargá un reporte setnum-*.json de image-audit/reports/. Verifica que el set y número impresos en la carta coincidan con el nombre del archivo (todos los printings, no solo current). Marcá cada carta como falsa alarma o error real con nota.",
+    href: "/reviews/setnum-review.html",
+  },
 ];
 
 export default function Reviews() {
