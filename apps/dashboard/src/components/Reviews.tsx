@@ -36,6 +36,12 @@ const REVIEWS: ReviewLink[] = [
     description: "Cargá un reporte setnum-*.json de image-audit/reports/. Verifica que el set y número impresos en la carta coincidan con el nombre del archivo (todos los printings, no solo current). Marcá cada carta como falsa alarma o error real con nota.",
     href: "/reviews/setnum-review.html",
   },
+  {
+    id: "reglas",
+    title: "Reglas — Revisión de auditoría de imágenes",
+    description: "Cargá un reporte reglas-*.json de image-audit/reports/. Compara el texto de reglas de la DB (solo current) contra una transcripción del cuadro de texto — busca redacciones de otro printing o de otra carta. Marcá cada carta como falsa alarma o error real con nota.",
+    href: "/reviews/reglas-review.html",
+  },
 ];
 
 export default function Reviews() {
