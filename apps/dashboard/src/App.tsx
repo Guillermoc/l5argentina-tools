@@ -207,6 +207,14 @@ export default function App() {
             {t === "canales" ? "Canales" : t === "reglas" ? "Reglas" : t === "launcher" ? "Launcher" : "Reviews"}
           </button>
         ))}
+        <a
+          href="/artistas.html"
+          target="_blank"
+          rel="noreferrer"
+          className="-mb-px border-b-2 border-transparent px-3 py-2 text-sm font-medium text-slate-500 transition hover:text-slate-300"
+        >
+          Artistas
+        </a>
       </nav>
 
       {tab === "reglas" && <Rules />}

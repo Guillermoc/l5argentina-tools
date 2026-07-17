@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artistas — L5Argentina</title>
+  <meta name="description" content="Los ilustradores más prolíficos de Legend of the Five Rings: una muestra de cinco cartas por artista.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500&family=Noto+Serif:wght@400;600&display=swap" rel="stylesheet">
+  <script>if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');</script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:             #FAF7F0;
+      --border:         #E2D9C8;
+      --text:           #222222;
+      --text-secondary: #5F5A52;
+      --accent:         #B89A57;
+      --accent-hover:   #D6BE82;
+    }
+
+    .dark {
+      --bg:             #1a1410;
+      --border:         #3a2e20;
+      --text:           #e8dcc8;
+      --text-secondary: #7a6a55;
+      --accent:         #c8a96e;
+      --accent-hover:   #e8c888;
+    }
+
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    header a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    header a:hover { color: var(--accent-hover); }
+
+    header h1 {
+      font-family: 'Noto Serif', serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    #theme-toggle {
+      margin-left: auto;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      cursor: pointer;
+      font-family: 'Noto Sans', sans-serif;
+      letter-spacing: 0.03em;
+    }
+
+    #theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+    main {
+      max-width: 1080px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .intro {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      max-width: 640px;
+    }
+
+    .block {
+      margin-bottom: 3rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .block:last-child { border-bottom: none; }
+
+    .block h2 {
+      font-family: 'Noto Serif', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 1.1rem;
+    }
+
+    .count {
+      font-family: 'Noto Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-left: 0.6rem;
+    }
+
+    .cartas {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    figure img {
+      width: 100%;
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: zoom-in;
+    }
+
+    figcaption {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      margin-top: 0.35rem;
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+      z-index: 10;
+      padding: 1.5rem;
+    }
+
+    #lightbox.open { display: flex; }
+
+    #lightbox img { max-width: 100%; max-height: 100%; border-radius: 8px; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      max-width: 720px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 1.75rem 1.5rem 2.5rem;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 0.72rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 600px) {
+      header { gap: 1rem; padding: 0.85rem 1rem; }
+      .cartas { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/">← Dashboard</a>
+    <h1>Artistas</h1>
+    <button id="theme-toggle">Tema</button>
+  </header>
+  <main>
+    <p class="intro">Los 24 ilustradores más prolíficos de Legend of the Five Rings
+    según nuestra base de datos — todos con cincuenta o más cartas publicadas.
+    Cinco cartas de muestra por artista, elegidas a lo largo de su producción.
+    Tocá una carta para verla en grande.</p>
+
+    <section class="block">
+      <h2>IFS <span class="count">183 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial289.jpg" alt="The Hundred-Hand Strike" loading="lazy" onclick="zoom(this)">
+          <figcaption>The Hundred-Hand Strike</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/DaK/DAK013.jpg" alt="Kakita Aichiko" loading="lazy" onclick="zoom(this)">
+          <figcaption>Kakita Aichiko</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/DaK/DAK008.jpg" alt="Hida Kagura" loading="lazy" onclick="zoom(this)">
+          <figcaption>Hida Kagura</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor143.jpg" alt="Isawa Tomohiro" loading="lazy" onclick="zoom(this)">
+          <figcaption>Isawa Tomohiro</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Promo/Promo261.jpg" alt="Lion and Unicorn" loading="lazy" onclick="zoom(this)">
+          <figcaption>Lion and Unicorn</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Gong Studios <span class="count">132 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TPW/TPW079.jpg" alt="The Cursed Dead" loading="lazy" onclick="zoom(this)">
+          <figcaption>The Cursed Dead</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor045.jpg" alt="Public Records" loading="lazy" onclick="zoom(this)">
+          <figcaption>Public Records</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/FL/FL007.jpg" alt="Border Keep - exp" loading="lazy" onclick="zoom(this)">
+          <figcaption>Border Keep - exp</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TwentyFestivals/TwentyFestivals031.jpg" alt="Secret Dojo" loading="lazy" onclick="zoom(this)">
+          <figcaption>Secret Dojo</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH096.jpg" alt="Dance of the Void" loading="lazy" onclick="zoom(this)">
+          <figcaption>Dance of the Void</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Edwin David <span class="count">124 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial086.jpg" alt="Tamori Wotan" loading="lazy" onclick="zoom(this)">
+          <figcaption>Tamori Wotan</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TH/TH023.jpg" alt="Doji Nenkai" loading="lazy" onclick="zoom(this)">
+          <figcaption>Doji Nenkai</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/BtD/BtD060.jpg" alt="Daigotsu Bukaro" loading="lazy" onclick="zoom(this)">
+          <figcaption>Daigotsu Bukaro</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/CoM/CoM031.jpg" alt="Kakita Hideo, the Fallen Keeper" loading="lazy" onclick="zoom(this)">
+          <figcaption>Kakita Hideo, the Fallen Keeper</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TSE/TSE052.jpg" alt="Shiba Kudome - exp" loading="lazy" onclick="zoom(this)">
+          <figcaption>Shiba Kudome - exp</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Albert Tavira <span class="count">115 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TPW/TPW025.jpg" alt="Doji Tadanori" loading="lazy" onclick="zoom(this)">
+          <figcaption>Doji Tadanori</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TSE/TSE074.jpg" alt="Shinjo Jong-Ho" loading="lazy" onclick="zoom(this)">
+          <figcaption>Shinjo Jong-Ho</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TCS/TCS107.jpg" alt="Look Into the Soul" loading="lazy" onclick="zoom(this)">
+          <figcaption>Look Into the Soul</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TwentyFestivals/TwentyFestivals355.jpg" alt="Dijuro Sensei" loading="lazy" onclick="zoom(this)">
+          <figcaption>Dijuro Sensei</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TDoW/TDoW128.jpg" alt="Infamous Strike" loading="lazy" onclick="zoom(this)">
+          <figcaption>Infamous Strike</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>David Horne <span class="count">113 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial201.jpg" alt="Arrival of the Emerald Champion" loading="lazy" onclick="zoom(this)">
+          <figcaption>Arrival of the Emerald Champion</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/BtD/BtD070.jpg" alt="Shinjo Dak-ho" loading="lazy" onclick="zoom(this)">
+          <figcaption>Shinjo Dak-ho</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/CoM/CoM052.jpg" alt="Asako Chukage - exp2" loading="lazy" onclick="zoom(this)">
+          <figcaption>Asako Chukage - exp2</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TNO/TNO001.jpg" alt="Devastating Betrayal" loading="lazy" onclick="zoom(this)">
+          <figcaption>Devastating Betrayal</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH040.jpg" alt="Togashi Taro" loading="lazy" onclick="zoom(this)">
+          <figcaption>Togashi Taro</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Sergio Camarena <span class="count">86 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/SC/SC030.jpg" alt="Tamori Yayu" loading="lazy" onclick="zoom(this)">
+          <figcaption>Tamori Yayu</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT050.jpg" alt="Crushing Strength" loading="lazy" onclick="zoom(this)">
+          <figcaption>Crushing Strength</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory117.jpg" alt="Tsuruchi Rin" loading="lazy" onclick="zoom(this)">
+          <figcaption>Tsuruchi Rin</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TNO/TNO080.jpg" alt="Bound Spirit" loading="lazy" onclick="zoom(this)">
+          <figcaption>Bound Spirit</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor315.jpg" alt="Introspection" loading="lazy" onclick="zoom(this)">
+          <figcaption>Introspection</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Shen Fei <span class="count">84 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor160.jpg" alt="Shosuro Tanzaki" loading="lazy" onclick="zoom(this)">
+          <figcaption>Shosuro Tanzaki</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/CoM/CoM014.jpg" alt="Colonial Dojo" loading="lazy" onclick="zoom(this)">
+          <figcaption>Colonial Dojo</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/AM/AM044.jpg" alt="Yoritomo Toganin" loading="lazy" onclick="zoom(this)">
+          <figcaption>Yoritomo Toganin</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TwentyFestivals/TwentyFestivals130.jpg" alt="Bayushi Manora" loading="lazy" onclick="zoom(this)">
+          <figcaption>Bayushi Manora</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Promo/Promo592.jpg" alt="Mystical Augmentation" loading="lazy" onclick="zoom(this)">
+          <figcaption>Mystical Augmentation</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Steve Argyle <span class="count">83 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial303.jpg" alt="Unstoppable Force" loading="lazy" onclick="zoom(this)">
+          <figcaption>Unstoppable Force</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/EaW/EaW090.jpg" alt="Night Watchers" loading="lazy" onclick="zoom(this)">
+          <figcaption>Night Watchers</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor165.jpg" alt="Daigotsu Kanpeki - exp" loading="lazy" onclick="zoom(this)">
+          <figcaption>Daigotsu Kanpeki - exp</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TA/TA077.jpg" alt="Cavalry Flankers" loading="lazy" onclick="zoom(this)">
+          <figcaption>Cavalry Flankers</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH043.jpg" alt="Matsu Fumiyo" loading="lazy" onclick="zoom(this)">
+          <figcaption>Matsu Fumiyo</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Jason Engle <span class="count">73 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial364.jpg" alt="Castle of Water" loading="lazy" onclick="zoom(this)">
+          <figcaption>Castle of Water</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TDoW/TDoW012.jpg" alt="Hida Akeno" loading="lazy" onclick="zoom(this)">
+          <figcaption>Hida Akeno</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT029.jpg" alt="Shosuro Konishi" loading="lazy" onclick="zoom(this)">
+          <figcaption>Shosuro Konishi</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory262.jpg" alt="Todori Sensei" loading="lazy" onclick="zoom(this)">
+          <figcaption>Todori Sensei</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH121.jpg" alt="Unstoppable Power" loading="lazy" onclick="zoom(this)">
+          <figcaption>Unstoppable Power</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Hector Herrera <span class="count">71 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TPW/TPW094.jpg" alt="Excellent Armor" loading="lazy" onclick="zoom(this)">
+          <figcaption>Excellent Armor</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/SoD/SoD009.jpg" alt="Incense Mill" loading="lazy" onclick="zoom(this)">
+          <figcaption>Incense Mill</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory163.jpg" alt="Gekido no Oni" loading="lazy" onclick="zoom(this)">
+          <figcaption>Gekido no Oni</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TwentyFestivals/TwentyFestivals051.jpg" alt="Kaiu Watsuki - exp" loading="lazy" onclick="zoom(this)">
+          <figcaption>Kaiu Watsuki - exp</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH026.jpg" alt="Simple Men" loading="lazy" onclick="zoom(this)">
+          <figcaption>Simple Men</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Drew Baker <span class="count">64 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial169.jpg" alt="Akuma no Oni - exp2" loading="lazy" onclick="zoom(this)">
+          <figcaption>Akuma no Oni - exp2</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TPW/TPW119.jpg" alt="Deathly Aura" loading="lazy" onclick="zoom(this)">
+          <figcaption>Deathly Aura</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/SC/SC050.jpg" alt="Isawa Mitsuko - exp" loading="lazy" onclick="zoom(this)">
+          <figcaption>Isawa Mitsuko - exp</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TSE/TSE020.jpg" alt="Kuni Renyu" loading="lazy" onclick="zoom(this)">
+          <figcaption>Kuni Renyu</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Tomorrow/Tomorrow010.jpg" alt="Shinsei's Tomb" loading="lazy" onclick="zoom(this)">
+          <figcaption>Shinsei's Tomb</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Paul (Prof.) Herbert <span class="count">62 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial268.jpg" alt="Relief" loading="lazy" onclick="zoom(this)">
+          <figcaption>Relief</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/PotD/PotD095.jpg" alt="Desperate Throw" loading="lazy" onclick="zoom(this)">
+          <figcaption>Desperate Throw</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/SoD/SoD077.jpg" alt="Utaku Hirononri" loading="lazy" onclick="zoom(this)">
+          <figcaption>Utaku Hirononri</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/ALitS/ALitS054.jpg" alt="Shiba Yinfuo" loading="lazy" onclick="zoom(this)">
+          <figcaption>Shiba Yinfuo</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/STS/STS037.jpg" alt="Matsu Sakaki" loading="lazy" onclick="zoom(this)">
+          <figcaption>Matsu Sakaki</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Veronica V. Jones <span class="count">61 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TPW/TPW021.jpg" alt="Daidoji Gisei" loading="lazy" onclick="zoom(this)">
+          <figcaption>Daidoji Gisei</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor037.jpg" alt="Governor's Court" loading="lazy" onclick="zoom(this)">
+          <figcaption>Governor's Court</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TA/TA024.jpg" alt="Daidoji Ibara" loading="lazy" onclick="zoom(this)">
+          <figcaption>Daidoji Ibara</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory111.jpg" alt="Kitsune Parumba" loading="lazy" onclick="zoom(this)">
+          <figcaption>Kitsune Parumba</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Promo/Promo616.jpg" alt="No Hiding Place" loading="lazy" onclick="zoom(this)">
+          <figcaption>No Hiding Place</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Jason Behnke <span class="count">59 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Samurai/Samurai376.jpg" alt="A Terrible Oath" loading="lazy" onclick="zoom(this)">
+          <figcaption>A Terrible Oath</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/CoM/CoM113.jpg" alt="Blade of Storms" loading="lazy" onclick="zoom(this)">
+          <figcaption>Blade of Storms</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/ALitS/ALitS034.jpg" alt="Tamori Ginrao" loading="lazy" onclick="zoom(this)">
+          <figcaption>Tamori Ginrao</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TwentyFestivals/TwentyFestivals109.jpg" alt="Yoritomo Nintai" loading="lazy" onclick="zoom(this)">
+          <figcaption>Yoritomo Nintai</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/ALitS/ALitS142.jpg" alt="Show of Power" loading="lazy" onclick="zoom(this)">
+          <figcaption>Show of Power</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Jason Juta <span class="count">59 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial241.jpg" alt="Hitsu-do" loading="lazy" onclick="zoom(this)">
+          <figcaption>Hitsu-do</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/SC/SC005.jpg" alt="Rebuilding Kyuden Hida" loading="lazy" onclick="zoom(this)">
+          <figcaption>Rebuilding Kyuden Hida</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/SoD/SoD129.jpg" alt="Learning" loading="lazy" onclick="zoom(this)">
+          <figcaption>Learning</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TCS/TCS118.jpg" alt="Contained at Court" loading="lazy" onclick="zoom(this)">
+          <figcaption>Contained at Court</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH091.jpg" alt="Charge" loading="lazy" onclick="zoom(this)">
+          <figcaption>Charge</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Charles Urbach <span class="count">58 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial128.jpg" alt="Shiba Rae" loading="lazy" onclick="zoom(this)">
+          <figcaption>Shiba Rae</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TH/TH164.jpg" alt="Last Step Castle" loading="lazy" onclick="zoom(this)">
+          <figcaption>Last Step Castle</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/SoD/SoD013.jpg" alt="Temple to Fudo" loading="lazy" onclick="zoom(this)">
+          <figcaption>Temple to Fudo</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory038.jpg" alt="Merchant Atoll" loading="lazy" onclick="zoom(this)">
+          <figcaption>Merchant Atoll</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH125.jpg" alt="Venerable Plains of the Ikoma" loading="lazy" onclick="zoom(this)">
+          <figcaption>Venerable Plains of the Ikoma</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Mario Wibisono <span class="count">55 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/IG1/IG1004.jpg" alt="Kakita Taminoko" loading="lazy" onclick="zoom(this)">
+          <figcaption>Kakita Taminoko</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TH/TH060.jpg" alt="Soshi Miroki" loading="lazy" onclick="zoom(this)">
+          <figcaption>Soshi Miroki</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/SoD/SoD041.jpg" alt="Thunder Dragon - exp2" loading="lazy" onclick="zoom(this)">
+          <figcaption>Thunder Dragon - exp2</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/GoC/GoC001.jpg" alt="Blood of Shahai" loading="lazy" onclick="zoom(this)">
+          <figcaption>Blood of Shahai</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TCS/TCS028.jpg" alt="Doji Natsuyo" loading="lazy" onclick="zoom(this)">
+          <figcaption>Doji Natsuyo</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Florian Stitz <span class="count">52 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TPW/TPW027.jpg" alt="Kitsuki Yukari" loading="lazy" onclick="zoom(this)">
+          <figcaption>Kitsuki Yukari</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TDoW/TDoW068.jpg" alt="Iuchi Katamari - exp" loading="lazy" onclick="zoom(this)">
+          <figcaption>Iuchi Katamari - exp</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TA/TA112.jpg" alt="Defensive Stance" loading="lazy" onclick="zoom(this)">
+          <figcaption>Defensive Stance</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TCS/TCS021.jpg" alt="Hiruma Maiko" loading="lazy" onclick="zoom(this)">
+          <figcaption>Hiruma Maiko</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory362.jpg" alt="Wheels within Wheels" loading="lazy" onclick="zoom(this)">
+          <figcaption>Wheels within Wheels</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Noah Bradley <span class="count">52 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/FL/FL090.jpg" alt="The Forgotten Temple" loading="lazy" onclick="zoom(this)">
+          <figcaption>The Forgotten Temple</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor398.jpg" alt="Shinden Asahina" loading="lazy" onclick="zoom(this)">
+          <figcaption>Shinden Asahina</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Emperor/Emperor405.jpg" alt="Halls of Memory" loading="lazy" onclick="zoom(this)">
+          <figcaption>Halls of Memory</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/EoW/EoW159.jpg" alt="The Ki-Rin's Path" loading="lazy" onclick="zoom(this)">
+          <figcaption>The Ki-Rin's Path</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TwentyFestivals/TwentyFestivals014.jpg" alt="Elemental Library" loading="lazy" onclick="zoom(this)">
+          <figcaption>Elemental Library</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Brent Chumley <span class="count">51 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/THW/THW004.jpg" alt="Fortune's Favor" loading="lazy" onclick="zoom(this)">
+          <figcaption>Fortune's Favor</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/EoW/EoW117.jpg" alt="Honest Assessment" loading="lazy" onclick="zoom(this)">
+          <figcaption>Honest Assessment</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/AM/AM009.jpg" alt="Exotic Market" loading="lazy" onclick="zoom(this)">
+          <figcaption>Exotic Market</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TNO/TNO093.jpg" alt="Forge Hammer" loading="lazy" onclick="zoom(this)">
+          <figcaption>Forge Hammer</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH016.jpg" alt="Expendable Resources" loading="lazy" onclick="zoom(this)">
+          <figcaption>Expendable Resources</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Erich Schreiner <span class="count">50 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial005.jpg" alt="Celestial Vision" loading="lazy" onclick="zoom(this)">
+          <figcaption>Celestial Vision</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/IG2/IG2006.jpg" alt="Under Siege" loading="lazy" onclick="zoom(this)">
+          <figcaption>Under Siege</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/FL/FL081.jpg" alt="Returning Home" loading="lazy" onclick="zoom(this)">
+          <figcaption>Returning Home</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/GoC/GoC066.jpg" alt="Chuda Hikano" loading="lazy" onclick="zoom(this)">
+          <figcaption>Chuda Hikano</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH021.jpg" alt="Permanent Encampment" loading="lazy" onclick="zoom(this)">
+          <figcaption>Permanent Encampment</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Britt Martin <span class="count">50 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Celestial/Celestial032.jpg" alt="Imperial Artificer" loading="lazy" onclick="zoom(this)">
+          <figcaption>Imperial Artificer</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/GotE/GotE116.jpg" alt="Phantom Blade Kata" loading="lazy" onclick="zoom(this)">
+          <figcaption>Phantom Blade Kata</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TDoW/TDoW086.jpg" alt="Fifth Wind Cavalry" loading="lazy" onclick="zoom(this)">
+          <figcaption>Fifth Wind Cavalry</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/HaT/HaT014.jpg" alt="Tamori Kusugi" loading="lazy" onclick="zoom(this)">
+          <figcaption>Tamori Kusugi</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH057.jpg" alt="Bayushi Hikoko" loading="lazy" onclick="zoom(this)">
+          <figcaption>Bayushi Hikoko</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>John Donahue <span class="count">50 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/THW/THW109.jpg" alt="Only the Well-Trained Listen" loading="lazy" onclick="zoom(this)">
+          <figcaption>Only the Well-Trained Listen</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/EoW/EoW062.jpg" alt="Sugihara" loading="lazy" onclick="zoom(this)">
+          <figcaption>Sugihara</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/GoC/GoC140.jpg" alt="Strength of the Bear" loading="lazy" onclick="zoom(this)">
+          <figcaption>Strength of the Bear</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TNO/TNO120.jpg" alt="Cautious Contemplation" loading="lazy" onclick="zoom(this)">
+          <figcaption>Cautious Contemplation</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/WoH/WoH033.jpg" alt="Togashi Akagi" loading="lazy" onclick="zoom(this)">
+          <figcaption>Togashi Akagi</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Alayna Lemmer <span class="count">50 cartas</span></h2>
+      <div class="cartas">
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/BtD/BtD017.jpg" alt="Asahina Nanae" loading="lazy" onclick="zoom(this)">
+          <figcaption>Asahina Nanae</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/SoD/SoD010.jpg" alt="Overlooked Palace" loading="lazy" onclick="zoom(this)">
+          <figcaption>Overlooked Palace</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory371.jpg" alt="The Sinister Citadel of the Spider (1)" loading="lazy" onclick="zoom(this)">
+          <figcaption>The Sinister Citadel of the Spider (1)</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/TwentyFestivals/TwentyFestivals365.jpg" alt="The Esteemed Palace of the Crane (1)" loading="lazy" onclick="zoom(this)">
+          <figcaption>The Esteemed Palace of the Crane (1)</figcaption>
+        </figure>
+        <figure>
+          <img src="https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/images/cards/Ivory/Ivory295.jpg" alt="Come One at a Time" loading="lazy" onclick="zoom(this)">
+          <figcaption>Come One at a Time</figcaption>
+        </figure>
+      </div>
+    </section>
+  </main>
+  <div id="lightbox" onclick="this.classList.remove('open')"><img alt=""></div>
+  <footer>
+    <p>El arte pertenece a sus ilustradores. Legend of the Five Rings y sus imágenes
+    son propiedad de sus respectivos dueños. Sitio hecho por fans, sin fines comerciales.</p>
+  </footer>
+  <script>
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const dark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    });
+    function zoom(img) {
+      const lb = document.getElementById('lightbox');
+      lb.querySelector('img').src = img.src;
+      lb.querySelector('img').alt = img.alt;
+      lb.classList.add('open');
+    }
+  </script>
+</body>
+</html>
