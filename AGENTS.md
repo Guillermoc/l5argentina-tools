@@ -20,8 +20,10 @@ cd apps/dashboard && npm run build             # dashboard
 ## Reglas que NO se rompen
 
 - Los comandos `--apply` escriben a un bucket en vivo que usan ~25 usuarios reales: **dry-run
-  primero, mostrar el plan, confirmar antes de ejecutar**. No hacer pushes ni acciones
-  outward-facing sin pedido explícito del usuario.
+  primero, mostrar el plan, confirmar antes de ejecutar**. Probar en `debug`, nunca en `production`.
+- **Commit, push y cualquier acción outward-facing requieren un sí explícito del usuario.** Esta y
+  las demás reglas de conducta salen de [`metodo/protocolo.md`](../Proyectos/metodo/protocolo.md)
+  del hub (v1.1 · bloques A, B, C, E) — no se redactan acá ni en `CLAUDE.md`.
 - No commitear `assets/`, `dist/`, `.env` ni `apps/dashboard/src/generated/` (gitignored).
 - No tocar `sunandmoon/` (otra app) ni las sub-features `*/history|news|tournament|rulebooks/`
   del bucket (contenido real, aún no gestionado por el tooling).

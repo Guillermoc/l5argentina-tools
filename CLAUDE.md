@@ -4,13 +4,30 @@ Guía para asistentes de IA (Claude Code y compatibles) que trabajen en este rep
 empezá por [README.md](README.md), [docs/COMO-FUNCIONA.md](docs/COMO-FUNCIONA.md) y
 [docs/COMMANDS.md](docs/COMMANDS.md).
 
-## Qué es
+**Protocolo:** [`metodo/protocolo.md`](../Proyectos/metodo/protocolo.md) **v1.2** · Bloques
+**A** (git), **B** (verificación), **C** (usuarios reales), **E** (archivos ajenos).
+
+⚠️ **Sin verificar (2026-08-11):** si pushear a `main` redeploya el dashboard de Cloudflare Pages.
+No hay workflows en el repo ni rama de autoconfig de Cloudflare, así que **no se sabe** si el
+proyecto de Pages está conectado al git. Hasta confirmarlo, tratá el push como si publicara: decilo
+al pedir el sí. Cuando se verifique, anotarlo acá.
+
+**Excepciones declaradas (2026-08-11):** **D no aplica** — este repo *publica* al bucket, no consume
+de internet; las reglas de verificar origen y hash de lo descargado son para el lado consumidor
+(launcher, app). Acá el hash se **genera**, y su corrección está cubierta por el bloque C y por §9.
+
+Las reglas generales de conducta —autorización, honestidad del reporte, cómo se responde— viven en el
+`CLAUDE.md` global y en `protocolo.md`. **Este archivo no las repite.**
+
+---
+
+## 1. Qué es
 
 Tooling (CLI + dashboard) para gestionar el bucket **Cloudflare R2** de **L5Argentina (L5A)**,
 un buscador de cartas fanmade de Legend of the Five Rings. El bucket es un CDN de solo-lectura
 que sirve datos a las apps; este repo es la **fuente de verdad** y el bucket es output regenerable.
 
-## Arquitectura en 30 segundos
+### Arquitectura en 30 segundos
 
 - **Canales** `debug → staging → production`. Se publica/prueba en debug y se **promueve** hacia adelante.
 - **Pool content-addressed**: cada blob vive una vez en `pool/<tipo>/<id>/<versión>/`; los manifests
@@ -29,7 +46,7 @@ que sirve datos a las apps; este repo es la **fuente de verdad** y el bucket es 
   **Enviar a debug** = copia server-side a la pool + registry + lock(debug) + `debug/manifest.json`,
   y se borra del buzón. CLI: `l5a inbox`; dashboard: sección "Buzón → debug" (`GET/POST /api/inbox`).
 
-## Layout
+## 2. Layout
 
 ```
 packages/core   motor TS: config, hash, pack (zip determinista), manifest, registry, r2, migrate, build
@@ -39,7 +56,7 @@ apps/dashboard  panel web React+Vite+Tailwind v4, deploy a Cloudflare Pages (pro
 docs/           COMO-FUNCIONA (funcional), COMMANDS (referencia), BUCKET (estructura del bucket), MIGRATION
 ```
 
-## Cómo correr / verificar
+## 3. Cómo correr
 
 Raíz (CLI):
 ```bash
@@ -71,15 +88,51 @@ npm run build                     # tsc --noEmit && vite build
 - **Promover desde el dashboard** escribe en R2 vía `aws4fetch` con credenciales que en producción
   salen de las **env vars del proyecto de Pages** (`R2_*`), y en dev del `.env` de la raíz.
 
-## Convenciones
+---
 
-- Mensajes de commit y comentarios de código en **español** (es el idioma del proyecto).
+# Protocolo — cómo se aplica acá
+
+## 4. Verificación — bloque B
+
+No hay batería de tests: la verificación es de tipos, y alcanza para lo que rompe acá.
+
+- **Antes de proponer un commit:** `npm run typecheck` en la raíz. Si el cambio toca el dashboard,
+  además `cd apps/dashboard && npm run build` (que corre `tsc --noEmit` y el build de Vite).
+- Cambios que solo tocan docs o comentarios no necesitan corrida.
+- **Si no se corrió, se dice.** Nunca reportar "listo" sobre un cambio de código sin haber pasado
+  typecheck al menos una vez.
+- El typecheck **no cubre** el comportamiento contra R2. Un cambio en `r2write`, `promote`, `inbox`
+  o `migrate` no está verificado por compilar: se prueba con dry-run contra el canal `debug`, nunca
+  contra `production` (§6).
+
+## 5. Git — bloque A
+
+Commits y comentarios en **español** (es el idioma del proyecto). Commit y push requieren el sí
+explícito de siempre; `--apply` y las escrituras a R2 **no son commits** y tienen su propia regla
+(§6): que haya un sí para commitear no autoriza a tocar el bucket.
+
+## 6. Escrituras al bucket — bloques C y E
+
+Los comandos que escriben R2 (`publish`, `promote`, `migrate --apply`, `gc --apply`) son
+**operaciones sobre datos en vivo**: la app la usan ~25 usuarios reales.
+
+- **Patrón obligatorio: dry-run primero, mostrar el plan, y pedir confirmación explícita antes del
+  `--apply`/escritura.** Nunca el `--apply` de una.
+- **Probar en `debug`**, no en `staging` ni `production`. Promover es una decisión del usuario.
+- **Nunca borrar en el bucket lo que el tooling no gestiona** (bloque E): las sub-features
+  `*/history/`, `*/news/`, `*/tournament/`, `*/rulebooks/` tienen contenido real con su propio
+  sub-manifest y el tooling todavía no las maneja. Lo que no se entiende, se deja intacto.
+- `gc --apply` borra del pool: revisar el plan blob por blob antes de confirmar.
+
+---
+
+# Reglas de esta plataforma
+
+## 7. Convenciones
+
 - No introducir dependencias pesadas sin razón. El core usa `@aws-sdk/client-s3`, `fflate`, `zod`.
-- Los comandos que escriben R2 (`publish`, `promote`, `migrate --apply`, `gc --apply`) son
-  **operaciones sobre datos en vivo** (la app la usan ~25 usuarios). Patrón obligatorio: **dry-run
-  primero, mostrar el plan, y pedir confirmación explícita antes del `--apply`/escritura**.
 
-## Gotchas (aprendidos a los golpes)
+## 8. Gotchas (aprendidos a los golpes)
 
 - **Zip determinista**: `fflate` rechaza mtime fuera de 1980-2099. Se usa una fecha fija con
   componentes **locales** (`new Date(2000,0,1)`), no UTC, para que sea reproducible en cualquier
@@ -90,14 +143,24 @@ npm run build                     # tsc --noEmit && vite build
 - **Tamaños**: los manifests viejos (hechos a mano) tenían `sizeBytes` mal; el tooling los calcula
   bien. La app deduplica por versión, así que corregir tamaños no dispara re-descargas.
 
-## NO hacer
+## 9. NO hacer
 
 - ❌ Commitear `assets/`, `dist/`, `.env`, ni `apps/dashboard/src/generated/` (todos gitignored).
 - ❌ Editar `sunandmoon/` a mano: lo gestiona la pestaña **Launcher** del dashboard (buzón en
   `sunandmoon/inbox/`, arma el manifest con sha256+size). El `.exe` va por GitHub Releases, no al
   bucket. Tampoco borrar la carpeta.
-- ❌ Borrar en el bucket las sub-features `*/history/`, `*/news/`, `*/tournament/`, `*/rulebooks/`
-  (tienen contenido real con su propio sub-manifest; el tooling todavía no las maneja).
+- ❌ Publicar un manifest con `sha256` o `size` calculados a mano: los genera el tooling. Del otro
+  lado hay consumidores que los verifican y abortan si no coinciden.
 - ❌ Cambiar el Public Dev URL del bucket ni pasar las URLs del manifest a relativas (la app vive
   de eso; rompería a los usuarios actuales).
-- ❌ Pushear o hacer cambios outward-facing sin que el usuario lo pida.
+
+## 10. Qué actualizar según el cambio
+
+| Si cambiaste… | Actualizar |
+|---|---|
+| Comandos del CLI, flags, comportamiento | `docs/COMMANDS.md` |
+| El flujo funcional (canales, pool, buzón, promoción) | `docs/COMO-FUNCIONA.md` |
+| La estructura del bucket | `docs/BUCKET.md` |
+| Arquitectura, layout o convenciones | este archivo + `AGENTS.md` si cambia lo esencial |
+| **Una regla de cómo trabajamos** (verificación, reporte, autorización, permisos) | **[`metodo/protocolo.md`](../Proyectos/metodo/protocolo.md) del hub**, no solo este archivo — con el caso que la originó y un bump de versión |
+| **El formato del manifest** | es contrato con la app **y** el launcher: se tocan juntos (ver `MAPA.md` del hub) |
