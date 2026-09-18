@@ -4,6 +4,7 @@ import type {
   LauncherPublishResult,
   LauncherSlotStatus,
   LauncherStatusResponse,
+  LauncherSyncResult,
 } from "../types";
 import { fmtBytes, timeAgo } from "../lib/format";
 
@@ -100,6 +101,34 @@ export default function Launcher() {
     [reload],
   );
 
+  const syncImages = useCallback(async () => {
+    const plan = await postLauncher({ op: "sync-images", apply: false });
+    if (!plan.ok) {
+      window.alert(`No se puede sincronizar: ${plan.data.error ?? "error"}`);
+      return;
+    }
+    const p = plan.data as LauncherSyncResult;
+    if (p.alreadyInSync) {
+      window.alert(`Ya está sincronizado (samuraiEx v${p.to}).`);
+      return;
+    }
+    const msg =
+      `Sincronizar imágenes desde companion ("samuraiEx")\n\n` +
+      `versión: ${p.from ?? "—"} → ${p.to}\n` +
+      `tamaño: ${fmtBytes(p.sizeBytes ?? 0)}\n\n` +
+      `Copia el archivo ya publicado en producción de companion (sin re-subir bytes) y reescribe ` +
+      `sunandmoon/manifest.json.\n\n¿Confirmás?`;
+    if (!window.confirm(msg)) return;
+    setBusy("sync-images");
+    const out = await postLauncher({ op: "sync-images", apply: true });
+    setBusy(null);
+    if (!out.ok) {
+      window.alert(`Error al sincronizar: ${out.data.error ?? "error"}`);
+      return;
+    }
+    await reload();
+  }, [reload]);
+
   return (
     <section>
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -128,7 +157,20 @@ export default function Launcher() {
       <LauncherCard state={state} busy={busy} setBusy={setBusy} onSaved={reload} />
 
       {/* slots (base + imágenes) */}
-      <div className="mt-5 overflow-hidden rounded-xl border border-slate-800 bg-slate-900/40">
+      <div className="mt-5 flex items-center justify-between">
+        <p className="text-xs text-slate-500">
+          "Imágenes" acá y el paquete <code className="text-slate-400">samuraiEx</code> de companion
+          son el mismo contenido publicado por separado — sincronizar copia server-side, no re-sube.
+        </p>
+        <button
+          onClick={() => void syncImages()}
+          disabled={!state?.hasCreds || busy === "sync-images"}
+          className="shrink-0 rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-200 ring-1 ring-slate-700 transition hover:bg-slate-700 disabled:opacity-50"
+        >
+          {busy === "sync-images" ? "Sincronizando…" : "Sincronizar imágenes ↻"}
+        </button>
+      </div>
+      <div className="mt-2 overflow-hidden rounded-xl border border-slate-800 bg-slate-900/40">
         <table className="w-full text-sm">
           <thead className="bg-slate-900/80">
             <tr>

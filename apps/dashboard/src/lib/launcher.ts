@@ -6,6 +6,7 @@ import type {
   LauncherSlot,
   LauncherSlotStatus,
   LauncherStatusResponse,
+  LauncherSyncResult,
   PackageHealth,
   R2Env,
 } from "../types";
@@ -18,6 +19,22 @@ import { sha256hex } from "./hash";
 // sin pool/canales/registry. Esta lib arma ese manifest desde el dashboard.
 
 const BASE_URL = appConfig.baseUrl;
+
+// El pack de imágenes "incluido" del launcher (slot images, stem samuraiEx) es EL MISMO
+// contenido que el paquete `samuraiEx` de companion — hoy se publican por separado (acá y por
+// `l5a inbox send`), lo que los deja desincronizados si solo se actualiza uno. `runSyncImages`
+// cierra esa brecha copiando server-side desde la producción de companion en vez de requerir un
+// segundo upload manual del mismo zip.
+const COMPANION_IMAGE_PKG_ID = "samuraiEx";
+const COMPANION_PRODUCTION_MANIFEST_KEY = "production/manifest.json";
+
+interface CompanionManifestEntry {
+  id: string;
+  version: string;
+  url: string;
+  sha256: string;
+  sizeBytes: number;
+}
 export const LAUNCHER_PREFIX = "sunandmoon/";
 export const LAUNCHER_INBOX_PREFIX = "sunandmoon/inbox/";
 const MANIFEST_KEY = "sunandmoon/manifest.json";
@@ -185,7 +202,11 @@ export interface LauncherSetInput {
   notes: string;
   apply?: boolean;
 }
-export type LauncherInput = LauncherPublishInput | LauncherDiscardInput | LauncherSetInput;
+export interface LauncherSyncImagesInput {
+  op: "sync-images";
+  apply?: boolean;
+}
+export type LauncherInput = LauncherPublishInput | LauncherDiscardInput | LauncherSetInput | LauncherSyncImagesInput;
 
 type Reply = { status: number; body: unknown };
 const err = (status: number, message: string): Reply => ({ status, body: { error: message } });
@@ -198,9 +219,26 @@ export async function runLauncher(input: LauncherInput, env: Partial<R2Env> | un
       return runDiscard(input, env);
     case "set-launcher":
       return runSetLauncher(input, env);
+    case "sync-images":
+      return runSyncImages(input, env);
     default:
-      return err(400, "operación desconocida (op: publish | discard | set-launcher)");
+      return err(400, "operación desconocida (op: publish | discard | set-launcher | sync-images)");
   }
+}
+
+/** Lee `production/manifest.json` de companion y devuelve la entry de un pkgId, o null. */
+async function readCompanionProductionEntry(
+  writer: R2Writer,
+  pkgId: string,
+): Promise<CompanionManifestEntry | null> {
+  let bytes: ArrayBuffer;
+  try {
+    bytes = await writer.getBytes(COMPANION_PRODUCTION_MANIFEST_KEY);
+  } catch {
+    return null;
+  }
+  const manifest = JSON.parse(new TextDecoder().decode(bytes)) as { packages?: CompanionManifestEntry[] };
+  return manifest.packages?.find((p) => p.id === pkgId) ?? null;
 }
 
 /** Sube un archivo adjunto al buzón del launcher: sunandmoon/inbox/<nombre>. */
@@ -304,6 +342,65 @@ function applySlot(
     next.images = { ...next.images, ...patch };
   }
   return next;
+}
+
+/**
+ * Sincroniza el slot `images` del launcher con lo que companion tiene publicado en `production`
+ * para `samuraiEx` — mismo contenido, dos copias separadas hasta ahora (ver comentario junto a
+ * `COMPANION_IMAGE_PKG_ID`). Sin flags: solo dice si están en sync o qué cambiaría. `apply`: copia
+ * server-side desde la pool de companion (no re-sube bytes) y reescribe sunandmoon/manifest.json.
+ */
+async function runSyncImages(input: LauncherSyncImagesInput, env: Partial<R2Env> | undefined): Promise<Reply> {
+  if (!hasR2Env(env)) return err(503, "faltan credenciales R2 en el entorno");
+  const writer = new R2Writer(env);
+
+  const source = await readCompanionProductionEntry(writer, COMPANION_IMAGE_PKG_ID);
+  if (!source) {
+    return err(404, `"${COMPANION_IMAGE_PKG_ID}" no está publicado en production/manifest.json de companion`);
+  }
+  if (!source.url.startsWith(BASE_URL)) {
+    return err(500, `la URL de companion para "${COMPANION_IMAGE_PKG_ID}" no es del origen esperado: ${source.url}`);
+  }
+  const poolKey = source.url.slice(BASE_URL.length);
+
+  let manifest: LauncherManifest;
+  try {
+    manifest = await readManifestAuthed(writer);
+  } catch (e) {
+    return err(502, `no se pudo leer el manifest del launcher: ${(e as Error).message}`);
+  }
+  const current = manifest.images;
+
+  const result: LauncherSyncResult = {
+    sourcePkgId: COMPANION_IMAGE_PKG_ID,
+    from: current?.version,
+    to: source.version,
+    sizeBytes: source.sizeBytes,
+    sha256: source.sha256,
+    alreadyInSync: current?.sha256 === source.sha256,
+    applied: false,
+  };
+  if (result.alreadyInSync || !input.apply) return { status: 200, body: result };
+
+  const dot = poolKey.lastIndexOf(".");
+  const ext = dot > 0 ? poolKey.slice(dot + 1) : "zip";
+  const finalFile = `samuraiEx-${source.version}.${ext}`;
+  const finalKey = `${LAUNCHER_PREFIX}${finalFile}`;
+
+  const next = applySlot(manifest, "images", {
+    version: source.version,
+    file: finalFile,
+    sha256: source.sha256,
+    size: source.sizeBytes,
+  });
+  const bad = validateManifest(next);
+  if (bad) return err(500, `manifest inválido tras sincronizar: ${bad}`);
+
+  await writer.copy(poolKey, finalKey, contentTypeForExt(ext), CACHE_IMMUTABLE);
+  await writer.putText(MANIFEST_KEY, JSON.stringify(next, null, 2) + "\n", CONTENT_TYPE.json!, CACHE_MANIFEST);
+
+  result.applied = true;
+  return { status: 200, body: result };
 }
 
 /** Chequeo mínimo del manifest antes de persistir. Devuelve el problema, o null si está OK. */

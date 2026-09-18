@@ -222,6 +222,22 @@ export interface LauncherPublishResult {
   error?: string;
 }
 
+/**
+ * Plan/resultado de sincronizar el slot `images` del launcher con el paquete `samuraiEx` de
+ * companion (mismo contenido, publicado por separado hasta ahora — ver ADR de PIPE-1/DAT-15
+ * en el hub). No hay upload: se copia server-side desde la pool de companion.
+ */
+export interface LauncherSyncResult {
+  sourcePkgId: string;
+  from?: string;
+  to?: string;
+  sizeBytes?: number;
+  sha256?: string;
+  alreadyInSync: boolean;
+  applied: boolean;
+  error?: string;
+}
+
 export type HealthLevel = "ok" | "warn" | "error";
 
 export interface PackageHealth {
