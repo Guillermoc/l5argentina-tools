@@ -10,7 +10,7 @@ usable desde el celular, fuera de casa.
 
 ## Datos disponibles (ya en producción, lectura pública)
 
-- Índice: `https://pub-4ab8e43f10604d7fa0f9402a8259a855.r2.dev/tools/reports/index.json`
+- Índice: `https://l5a-tools-gateway.guillermoecarranza.workers.dev/reports/index.json`
 
 ```json
 {
