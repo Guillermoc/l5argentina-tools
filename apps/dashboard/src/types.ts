@@ -132,6 +132,8 @@ export interface InboxSendResult {
   error?: string;
   /** si era cards_db, error al regenerar card-titles.json (best-effort, no bloquea). */
   titlesError?: string;
+  /** error al refrescar el espejo crudo en tools/ (best-effort, no bloquea). */
+  rawMirrorError?: string;
 }
 
 // --- Launcher (Sun and Moon): otra app del mismo bucket, schema propio ---

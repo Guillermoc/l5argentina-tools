@@ -10,6 +10,7 @@ import type {
 import { R2Writer, hasR2Env, type R2Object } from "./r2write";
 import { buildManifest } from "./promote";
 import { refreshCardTitlesFromUrl } from "./cardTitles";
+import { refreshRawMirror } from "./rawMirror";
 import { sha256hex } from "./hash";
 
 export const INBOX_PREFIX = "inbox/";
@@ -244,6 +245,14 @@ async function runSend(input: InboxSendInput, env: Partial<R2Env> | undefined): 
     } catch (e) {
       result.titlesError = (e as Error).message;
     }
+  }
+
+  // 6) espejo crudo en tools/ (filters/rules/cards_db) -- ver rawMirror.ts. Best-effort, igual
+  //    criterio que el refresh de títulos de arriba.
+  try {
+    await refreshRawMirror(pkgId, url, env);
+  } catch (e) {
+    result.rawMirrorError = (e as Error).message;
   }
 
   result.applied = true;
