@@ -6,8 +6,7 @@ import { R2Writer, hasR2Env } from "./r2write";
 // que scripts/publish/publish-raw.mjs de L5Argentina DB subía a mano) igual a lo que acaba de
 // quedar en debug. Reemplaza ese paso manual para filters/rules/cards_db: ahora es un efecto de
 // "enviar a debug" en vez de un tercer camino que puede desincronizarse solo. Solo se dispara
-// desde el dashboard (mismo alcance que refreshCardTitlesFromUrl en cardTitles.ts) — el CLI
-// (`l5a inbox send`) no lo llama todavía.
+// desde el dashboard — el CLI (`l5a inbox send`) no lo llama todavía.
 const RAW_KEY_BY_PKG: Record<string, string> = {
   filters: "tools/filters.json",
   rules: "tools/rules.json",

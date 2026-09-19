@@ -88,33 +88,6 @@ function devApi() {
               const { listLauncher } = await import("./src/lib/launcher");
               return json(200, await listLauncher(process.env as never));
             }
-            if (url.startsWith("/api/rules/emit") && req.method === "POST") {
-              const { emitRules } = await import("./src/lib/rules");
-              const { version, apply } = JSON.parse((await readBody(req)) || "{}");
-              const { status, body } = await emitRules(version, Boolean(apply), process.env as never);
-              return json(status, body);
-            }
-            if (url.startsWith("/api/rules/import-channel") && req.method === "POST") {
-              const { importRulesFromChannel } = await import("./src/lib/rules");
-              const { channel } = JSON.parse((await readBody(req)) || "{}");
-              const { status, body } = await importRulesFromChannel(channel || "debug", process.env as never);
-              return json(status, body);
-            }
-            if (url.startsWith("/api/rules/refresh-titles") && req.method === "POST") {
-              const { refreshCardTitlesFromDebug } = await import("./src/lib/cardTitles");
-              const count = await refreshCardTitlesFromDebug(process.env as never);
-              return json(200, { ok: true, count });
-            }
-            if (url.startsWith("/api/rules")) {
-              if (req.method === "POST") {
-                const { runRules } = await import("./src/lib/rules");
-                const input = JSON.parse((await readBody(req)) || "{}");
-                const { status, body } = await runRules(input, process.env as never);
-                return json(status, body);
-              }
-              const { listRules } = await import("./src/lib/rules");
-              return json(200, await listRules(process.env as never));
-            }
             if (url.startsWith("/api/reviews") && req.method === "POST") {
               const { runSubmitReview } = await import("./src/lib/reviews");
               const input = JSON.parse((await readBody(req)) || "{}");

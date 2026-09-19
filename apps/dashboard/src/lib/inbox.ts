@@ -9,7 +9,6 @@ import type {
 } from "../types";
 import { R2Writer, hasR2Env, type R2Object } from "./r2write";
 import { buildManifest } from "./promote";
-import { refreshCardTitlesFromUrl } from "./cardTitles";
 import { refreshRawMirror } from "./rawMirror";
 import { sha256hex } from "./hash";
 
@@ -236,19 +235,8 @@ async function runSend(input: InboxSendInput, env: Partial<R2Env> | undefined): 
   // 4) consumido: se saca del buzón (ya vive inmutable en la pool)
   await writer.delete(obj.key);
 
-  // 5) si entró una base de cartas nueva, regeneramos el índice de nombres
-  //    (card-titles.json) que usa el editor de reglas. Best-effort: no rompe el
-  //    envío si falla (p. ej. límite de CPU al descomprimir).
-  if (pkgId === "cards_db") {
-    try {
-      await refreshCardTitlesFromUrl(url, env);
-    } catch (e) {
-      result.titlesError = (e as Error).message;
-    }
-  }
-
-  // 6) espejo crudo en tools/ (filters/rules/cards_db) -- ver rawMirror.ts. Best-effort, igual
-  //    criterio que el refresh de títulos de arriba.
+  // 5) espejo crudo en tools/ (filters/rules/cards_db) -- ver rawMirror.ts. Best-effort: no rompe
+  //    el envío si falla.
   try {
     await refreshRawMirror(pkgId, url, env);
   } catch (e) {

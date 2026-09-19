@@ -4,7 +4,6 @@ import { appConfig } from "./generated/companion";
 import { fmtBytes, timeAgo, compareVersions } from "./lib/format";
 import type { PromoteChange } from "./lib/promote";
 import Inbox from "./components/Inbox";
-import Rules from "./components/Rules";
 import Launcher from "./components/Launcher";
 import Reviews from "./components/Reviews";
 
@@ -70,7 +69,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [promoting, setPromoting] = useState<string | null>(null);
-  const [tab, setTab] = useState<"canales" | "reglas" | "launcher" | "reviews">("canales");
+  const [tab, setTab] = useState<"canales" | "launcher" | "reviews">("canales");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -194,7 +193,7 @@ export default function App() {
 
       {/* tabs */}
       <nav className="mb-5 flex gap-1 border-b border-slate-800">
-        {(["canales", "reglas", "launcher", "reviews"] as const).map((t) => (
+        {(["canales", "launcher", "reviews"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -204,7 +203,7 @@ export default function App() {
                 : "border-transparent text-slate-500 hover:text-slate-300"
             }`}
           >
-            {t === "canales" ? "Canales" : t === "reglas" ? "Reglas" : t === "launcher" ? "Launcher" : "Reviews"}
+            {t === "canales" ? "Canales" : t === "launcher" ? "Launcher" : "Reviews"}
           </button>
         ))}
         <a
@@ -216,8 +215,6 @@ export default function App() {
           Artistas
         </a>
       </nav>
-
-      {tab === "reglas" && <Rules />}
 
       {tab === "launcher" && <Launcher />}
 
