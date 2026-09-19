@@ -5,6 +5,9 @@
 // upstream tal cual (sin bufferear), así aguanta archivos grandes. Solo `fetch`,
 // corre igual en Node (dev), en el dev server de Vite y en la Pages Function.
 
+/** Puerta del gateway anti-hotlink para tools/ — ver docs/IMAGES-GATEWAY.md. */
+export const TOOLS_GATEWAY_BASE = "https://l5a-tools-gateway.guillermoecarranza.workers.dev/";
+
 export interface DownloadResult {
   status: number;
   error?: string;
@@ -32,18 +35,20 @@ function lastSegment(url: string): string {
 }
 
 /**
- * Abre `rawUrl` (que DEBE vivir bajo `baseUrl`, el bucket público — evita
- * convertir el endpoint en un open-proxy) y devuelve el stream del cuerpo + el
- * nombre con el que hay que ofrecer la descarga. NO lee el cuerpo: el que llama
- * lo pasa directo a su respuesta (streaming).
+ * Abre `rawUrl` (que DEBE vivir bajo uno de `allowedBaseUrls` — el bucket
+ * público o el gateway anti-hotlink de tools/ — evita convertir el endpoint
+ * en un open-proxy) y devuelve el stream del cuerpo + el nombre con el que
+ * hay que ofrecer la descarga. NO lee el cuerpo: el que llama lo pasa directo
+ * a su respuesta (streaming).
  */
 export async function fetchDownload(
   rawUrl: string,
   filenameHint: string,
-  baseUrl: string,
+  allowedBaseUrls: string | string[],
 ): Promise<DownloadResult> {
+  const bases = Array.isArray(allowedBaseUrls) ? allowedBaseUrls : [allowedBaseUrls];
   if (!rawUrl) return { status: 400, error: "falta url" };
-  if (!rawUrl.startsWith(baseUrl)) return { status: 400, error: "url fuera del bucket" };
+  if (!bases.some((b) => rawUrl.startsWith(b))) return { status: 400, error: "url fuera del bucket" };
 
   try {
     const res = await fetch(rawUrl, { headers: { "cache-control": "no-cache" } });

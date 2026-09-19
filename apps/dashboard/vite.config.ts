@@ -44,10 +44,10 @@ function devApi() {
               return json(200, await fetchStatus(appConfig));
             }
             if (url.startsWith("/api/download")) {
-              const { fetchDownload, contentDisposition } = await import("./src/lib/download");
+              const { fetchDownload, contentDisposition, TOOLS_GATEWAY_BASE } = await import("./src/lib/download");
               const { appConfig } = await import("./src/generated/companion");
               const q = new URL(url, "http://localhost").searchParams;
-              const out = await fetchDownload(q.get("url") ?? "", q.get("name") ?? "", appConfig.baseUrl);
+              const out = await fetchDownload(q.get("url") ?? "", q.get("name") ?? "", [appConfig.baseUrl, TOOLS_GATEWAY_BASE]);
               if (out.error) return json(out.status, { error: out.error });
               res.statusCode = 200;
               res.setHeader("content-type", out.contentType);

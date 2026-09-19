@@ -1,4 +1,4 @@
-import { contentDisposition, fetchDownload } from "../../src/lib/download";
+import { contentDisposition, fetchDownload, TOOLS_GATEWAY_BASE } from "../../src/lib/download";
 import { appConfig } from "../../src/generated/companion";
 
 // Pages Function: GET /api/download?url=<urlDelBucket>&name=<nombre>
@@ -7,7 +7,7 @@ export const onRequest = async (context: { request: Request }): Promise<Response
   const u = new URL(context.request.url);
   const rawUrl = u.searchParams.get("url") ?? "";
   const name = u.searchParams.get("name") ?? "";
-  const out = await fetchDownload(rawUrl, name, appConfig.baseUrl);
+  const out = await fetchDownload(rawUrl, name, [appConfig.baseUrl, TOOLS_GATEWAY_BASE]);
   if (out.error) {
     return new Response(JSON.stringify({ error: out.error }), {
       status: out.status,
